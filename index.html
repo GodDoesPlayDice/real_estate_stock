@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_self">
+     <!-- CSS -->
+    <script src="https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js"></script>
+    
+  </head>
+  <body>
+    <div id="root">
+      <!-- Здесь будет все наше приложение -->
+    </div>
+      <!-- Загрузим React и Babel -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!-- Примечание: для деплоя на продакшен замените окончание «development.js» на «production.min.js». -->
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+  <!-- Загрузим наш React-компонент. -->
+  <!-- приходится делать так, потому что файл со скриптом имеет расширение html -->
+  <?!= include("app");?>
+  </body>
+</html>
+
+
