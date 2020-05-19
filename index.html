@@ -2,13 +2,19 @@
 <html>
   <head>
     <base target="_self">
-     <!-- CSS -->
-    <script src="https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js"></script>
-    
+     <!-- materialize and icons -->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
     <div id="root">
       <!-- Здесь будет все наше приложение -->
+    </div>
+    <div id="mainworkspace" class="container">
+
     </div>
       <!-- Загрузим React и Babel -->
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -18,6 +24,7 @@
 
   <!-- Загрузим наш React-компонент. -->
   <!-- приходится делать так, потому что файл со скриптом имеет расширение html -->
+  <?!= include("react_components");?>
   <?!= include("app");?>
   </body>
 </html>
