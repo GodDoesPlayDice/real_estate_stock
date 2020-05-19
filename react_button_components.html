@@ -1,0 +1,23 @@
+<script type="text/babel">
+
+class TopMenuButton extends React.Component {
+    constructor (props) {
+        super(props);
+        this.purpose = this.props.purpose
+        this.handleClick = this.handleClick.bind(this);
+    };
+    handleClick() {
+        if (this.purpose == "Новый документ") {
+            newDoc();
+        };
+        if (this.purpose == "Статистика") {
+            renderApp();
+        }; //stats();}
+    }
+    render () {
+        return (
+            <li><a href="#" onClick={this.handleClick}>{this.purpose}</a></li>
+        )
+    }
+}
+</script>

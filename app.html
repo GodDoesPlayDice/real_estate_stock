@@ -1,12 +1,19 @@
 <script type="text/babel">
 // данныe с сервера
 var serverSideData = {};
-// данные со страницы 
-var frontEndData = {};
+
+function getDocNames () {
+    let raw = serverSideData.docsSheet
+    let position = raw.shift().findIndex((el) => el === "ID");
+    let result = []
+    raw.forEach((elem) => {
+        result.push(elem[position]);
+    })
+    return result;
+}
 
 // запуск приложения при загрузке страницы
 main();
-
 function main() {
     google.script.run.withSuccessHandler(onSuccess).getServerData();
 
@@ -18,7 +25,7 @@ function main() {
 
 function newDoc() {
     ReactDOM.render(
-    <Select />,
+    <NewDoc value="1"/>,
         document.getElementById('mainworkspace')
     );
 };

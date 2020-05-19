@@ -5,42 +5,47 @@ class App extends React.Component {
         this.state = {mode: "default"};
     };
     render () {
+        let docNamesObj = {};
+        console.log(docNamesObj)
+        getDocNames().forEach((elem) => {
+            {elem != '' &&
+                (docNamesObj[elem] = null)
+            }  
+        });
         return (
-            <Navbar logo="Виноград 2" />
+            <Navbar 
+                logo="Виноград 2" 
+                docsList={docNamesObj}
+            />
         );
     };
 };
 
-
-class Select extends React.Component {
+class NewDoc extends React.Component {
     constructor (props) {
         super(props);
-    };
-    componentDidMount(){
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems, {});
-    };
+    }
     render () {
         return (
-            <div class="input-field col s12">
-                <select>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-                <label>Materialize Select</label>
+            <div class="container">
+                <Select value="1" />
             </div>
         )
     }
-};
+}
+
 
 class Navbar extends React.Component {
     constructor (props) {
         super(props);
         this.logo = this.props.logo
+        this.autocompleteData = this.props.docsList
     };
     componentDidMount () {
-        
+        var elems = document.querySelectorAll('.autocomplete');
+        var instances = M.Autocomplete.init(elems, {
+                data: this.autocompleteData
+        });
     }
     render () {
         return (
@@ -51,8 +56,8 @@ class Navbar extends React.Component {
                         </div>
                         <form class="col s6">
                             <div class="input-field">
-                                <input id="search" type="search" required />
-                                <label class="label-icon" for="search"><i class="material-icons">Поиск документа</i></label>
+                                <input id="search" type="search" class="autocomplete" required />
+                                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                                 <i class="material-icons">close</i>
                             </div>
                         </form>
@@ -74,28 +79,6 @@ class Template extends React.Component {
     }
     render () {
         return
-    }
-}
-
-class TopMenuButton extends React.Component {
-    constructor (props) {
-        super(props);
-        this.purpose = this.props.purpose
-        this.handleClick = this.handleClick.bind(this);
-    };
-    handleClick(e) {
-        e.preventDefault();
-        if (this.purpose == "Новый документ") {
-            newDoc();
-        };
-        if (this.purpose == "Статистика") {
-            renderApp();
-        }; //stats();}
-    }
-    render () {
-        return (
-            <li><a href="#" onClick={this.handleClick()}>{this.purpose}</a></li>
-        )
     }
 }
 
