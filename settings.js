@@ -31,7 +31,7 @@ var fieldProps = {
 }
 
 var reactComponents = {
-    TextInput: [
+    SimpleText: [
         "ClientName",
         "ActualCost",
         "LegalCost",

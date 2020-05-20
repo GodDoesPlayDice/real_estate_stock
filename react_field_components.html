@@ -1,8 +1,33 @@
 <script type="text/babel">
+class SimpleText extends React.Component {
+    constructor (props) {
+        super(props);
+        this.label = this.props.label;
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {value: ''}
+    }
+    componentDidMount(){
+        M.updateTextFields();
+    }
+    handleChange(e) {
+        this.state.value = e.target.value;
+    }
+    render() {
+        return (
+        <div class="row">
+            <div class="input-field col s6">
+                <input id="" value={this.state.value} type="text" class="validate" />
+                <label for="" >{this.label}</label>
+            </div>
+        </div>
+        )
+    }
+}
 
 class Select extends React.Component {
     constructor (props) {
         super(props);
+        this.label = this.props.label;
         this.handleChange = this.handleChange.bind(this);
         this.state ={value: ''};
     };
@@ -20,13 +45,15 @@ class Select extends React.Component {
 
     render () {         
         return (
-            <div class="input-field col s12">
-                <select value={this.state.value} onChange={this.handleChange}>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-                <label>Materialize Select</label>
+            <div class="row">
+                <div class="input-field col s6">
+                    <select value={this.state.value} onChange={this.handleChange}>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                    <label>{this.label}</label>
+                </div>
             </div>
         )
     }

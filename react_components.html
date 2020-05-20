@@ -5,18 +5,24 @@ class App extends React.Component {
         this.state = {mode: "default"};
     };
     render () {
+        // создание объекта для поиска сделок в автокомплите
         let docNamesObj = {};
-        console.log(docNamesObj)
         getDocNames().forEach((elem) => {
             {elem != '' &&
                 (docNamesObj[elem] = null)
             }  
         });
+        //
         return (
-            <Navbar 
-                logo="Виноград 2" 
-                docsList={docNamesObj}
-            />
+            <div>
+                <Navbar 
+                    logo="Виноград 2" 
+                    docsList={docNamesObj}
+                />
+                <div class="container">
+                    <NewDoc />
+                </div>
+            </div>
         );
     };
 };
@@ -27,8 +33,15 @@ class NewDoc extends React.Component {
     }
     render () {
         return (
-            <div class="container">
-                <Select value="1" />
+            <div>
+                <Select 
+                    value="1" 
+                    label="Выбор менеджера:" 
+                />
+                <SimpleText 
+                    value=''
+                    label="ФИО клиента:"
+                />
             </div>
         )
     }
@@ -56,8 +69,8 @@ class Navbar extends React.Component {
                         </div>
                         <form class="col s6">
                             <div class="input-field">
-                                <input id="search" type="search" class="autocomplete" required />
-                                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                                <input id="search" type="search" class="autocomplete" placeholder="Поиск сделки" required />
+                                
                                 <i class="material-icons">close</i>
                             </div>
                         </form>

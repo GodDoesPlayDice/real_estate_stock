@@ -2,8 +2,9 @@
 // данныe с сервера
 var serverSideData = {};
 
+// выдает массив с айдишниками документов
 function getDocNames () {
-    let raw = serverSideData.docsSheet
+    let raw = serverSideData.docsSheet;
     let position = raw.shift().findIndex((el) => el === "ID");
     let result = []
     raw.forEach((elem) => {
@@ -22,14 +23,6 @@ function main() {
         renderApp();
     };
 };
-
-function newDoc() {
-    ReactDOM.render(
-    <NewDoc value="1"/>,
-        document.getElementById('mainworkspace')
-    );
-};
-
 
 function renderApp() {
     ReactDOM.render(
