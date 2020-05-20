@@ -55,21 +55,155 @@ class DatePicker extends React.Component {
         this.label = this.props.label;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({value: ''});
-       
     }
     componentDidMount() {
-
+        let options = {
+                format: "dd/mm/yyyy",
+                firstDay: 1,
+                i18n: {
+                        cancel: "Отмена",
+                        clear: "Очистить",
+                        done: "Готово",
+                            months: ['Январь',
+                                'Февраль',
+                                'Март',
+                                'Апрель',
+                                'Май',
+                                'Июнь',
+                                'Июль',
+                                'Август',
+                                'Сентябрь',
+                                'Октябрь',
+                                'Ноябрь',
+                                'Декабрь'
+                        ],
+                            monthsShort: [
+                                'Янв',
+                                'Фев',
+                                'Мар',
+                                'Апр',
+                                'Май',
+                                'Июн',
+                                'Июл',
+                                'Авг',
+                                'Сен',
+                                'Окт',
+                                'Ноя',
+                                'Дек'
+                        ],
+                            weekdays: [
+                                'Воскресенье',
+                                'Понедельник',
+                                'Вторник',
+                                'Среда',
+                                'Четверг',
+                                'Пятница',
+                                'Суббота'
+                        ],
+                            weekdaysShort: [
+                                'Вос',
+                                'Пон',
+                                'Вт',
+                                'Ср',
+                                'Чет',
+                                'Пят',
+                                'Суб'
+                        ],
+                            weekdaysAbbrev: ['В', 'П', 'В', 'С', 'Ч', 'П', 'С']
+                    }
+                }
+        var elems = document.querySelectorAll('.datepicker');
+        var instances = M.Datepicker.init(elems, options);
     }
 
-    handleChange() {
-
+    handleChange(e) {
+        this.setState({value: e.target.value});
     };
     render() {
         return (
             <div class="row">
                 <div class="input-field col s6">
-                    <input type="text" class="datepicker" />
+                    <input  value={this.state.value} onChange={this.handleChange}  type="text" class="datepicker" />
+                    <label>{this.label}</label>
                 </div>
+            </div>
+        )
+    }
+};
+
+class Radio extends React.Component {
+    constructor (props) {
+        super(props);
+        this.label = this.props.label;
+        this.fistOption = this.props.first;
+        this.secondOption = this.props.second;
+        this.handleChange = this.handleChange.bind(this);
+        this.state = ({
+            value: this.fistOption
+        })
+    }
+    componentDidMount() {
+
+    }
+    handleChange(e) {
+        this.setState({
+            value: e.target.value
+        });
+    }
+    render() {
+        return (
+            <div class="row">
+                <label>{this.label}</label>
+                 <form>
+                    <p>
+                    <label>
+                        <input name="group1" type="radio" value={this.fistOption} onClick={this.handleChange} />
+                        <span>{this.fistOption}</span>
+                    </label>
+                    </p>
+                    <p>
+                    <label>
+                        <input name="group1" type="radio" value={this.secondOption} onClick={this.handleChange} />
+                        <span>{this.secondOption}</span>
+                    </label>
+                    </p>
+                </form>
+            </div>
+        )
+    }
+};
+
+class CheckBox extends React.Component {
+    constructor (props) {
+        super(props);
+        this.label = this.props.label;
+        this.purpose = this.props.purpose;
+        this.handleChange = this.handleChange.bind(this);
+        this.state = ({
+            value: true,
+            checked: false
+        })
+    }
+    componentDidMount() {
+    }
+    handleChange(e) {
+        // мутная херня, лучше не спрашивай 
+        this.setState({
+            checked: this.state.checked ? false : true,
+        });
+        this.setState({
+            value: this.state.checked,
+        });
+    }
+    render() {
+        return (
+            <div class="row">
+                <p>
+                    <label>
+                        <input type="checkbox"  class="filled-in" checked={this.state.checked ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
+                    <span>{this.purpose}</span>
+                    </label>
+                </p>
             </div>
         )
     }

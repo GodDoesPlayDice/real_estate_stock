@@ -58,7 +58,7 @@ var reactComponents = {
     Checkbox: [
         "RemainsOnSale"
     ],
-    Switch: [
+    Radio: [
         "DealType"
     ]
 
