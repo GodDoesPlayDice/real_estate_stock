@@ -10,17 +10,43 @@ class SimpleText extends React.Component {
         M.updateTextFields();
     }
     handleChange(e) {
-        this.state.value = e.target.value;
+        this.setState({value: e.target.value});
     }
     render() {
         return (
         <div class="row">
             <div class="input-field col s6">
-                <input id="" value={this.state.value} type="text" class="validate" />
+                <input id="" value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
                 <label for="" >{this.label}</label>
             </div>
         </div>
         )
+    }
+}
+
+class TextArea extends React.Component {
+    constructor(props) {
+        super(props);
+        super(props);
+        this.label = this.props.label;
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {value: ''}
+    };
+    handleChange(e) {
+        this.setState({value: e.target.value});
+    };
+    componentDidMount(){
+        M.updateTextFields();
+    }
+    render() {
+        return (
+            <div class="row">
+                <div class="input-field col s6">
+                    <textarea id="" class="materialize-textarea" value={this.state.value} onChange={this.handleChange}></textarea>
+                    <label for="">{this.label}</label>
+                </div>
+            </div>
+        );
     }
 }
 
