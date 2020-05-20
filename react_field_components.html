@@ -177,7 +177,6 @@ class CheckBox extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
-        this.purpose = this.props.purpose;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
             value: true,
@@ -201,7 +200,7 @@ class CheckBox extends React.Component {
                 <p>
                     <label>
                         <input type="checkbox"  class="filled-in" checked={this.state.checked ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
-                    <span>{this.purpose}</span>
+                    <span>{this.label}</span>
                     </label>
                 </p>
             </div>

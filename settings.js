@@ -15,20 +15,133 @@ var dataSources = {
     }
 }
 // параметры полей 
-var fieldProps = {
-    V2: {
-        SelectLiter: {
-            reactComponent: "",
-            label: "Выберите литер",
-            dataForOptions: dataSources.V2.stockSheet
-        },
-        SelectFlat: {
-            reactComponent: "",
-            label: "",
-            dataForOptions: dataSources.V2.stockSheet
-        },
+var newDocFields = {
+    V2: [ 
+        <Select
+            id = "DocStatus"
+            label = "Текущий статус документа:"
+            value = ""
+            others = {
+                ["список возможных статусов"]
+            }
+        />,
+        <DatePicker
+            id = "CurrentStatusDate"
+            label = "Дата текущего статуса:"
+            value = ""
+        />,
+        <DatePicker
+            id = "NextStatusEstimatedDate"
+            label = "Предполагаемая дата следующего статуса:"
+            value = ""
+        />,
+        <Select
+            id = "SelectLiter"
+            label = "Литер:"
+            value = ""
+            others = {
+                ["все литеры"]
+            }
+        />,
+        <Select
+            id = "SelectFlat"
+            label = "Номер квартиры:"
+            value = ""
+            others = {
+                ["все свободные квартиры"]
+            }
+        />,
+        <SimpleText
+            id = "ClientName"
+            label = "ФИО клиента:"
+            value = ""
+            inputTesting = "noStrangeSymbols();"
+        />,
+        <Select
+            id = "SelectManager"
+            label = "Менеджер:"
+            value = ""
+            others = {
+                ["все менеджеры работающие сейчас"]
+            }
+        />,
+        <CheckBox
+            id = "RemainsOnSale"
+            label = "В продаже от физ. лица:"
+        />,
+        <Radio
+            id = "DealType"
+            label = "Тип сделки:"
+            first='Л'
+            second='АН'
+        />,
+        <Select
+            id = "PayMethod"
+            label = "Способ оплаты:"
+            value = ""
+            others = {
+                ["все доступные способы оплаты"]
+            }
+        />,
+        <SimpleText
+            id = "ActualCost"
+            label = "Стоимость для расчета комиссии:"
+            value = ""
+            inputTesting = "onlyFloat();"
+        />,        
+        <SimpleText
+            id = "LegalCost"
+            label = "Стоимость по ДДУ:"
+            value = ""
+            inputTesting = "onlyFloat();"
+        />,
+        <SimpleText
+            id = "LegalServiceCost"
+            label = "Оплата юр. услуг:"
+            value = ""
+            inputTesting = "onlyFloat();"
+        />,
+        <Select
+            id = "LegalServiceNoPayment"
+            label = "Юр. услуги без оплаты:"
+            value = ""
+            others = {
+                ["бесплатно, не оплачиваются"]
+            }
+        />,
+        <SimpleText
+            id = "RealEstateAgency"
+            label = "Агентство недвижимости:"
+            value = ""
+            inputTesting = "noStrangeSymbols();"
+        />,
+        <SimpleText
+            id = "EstateAgent"
+            label = "Сотрудник агентства:"
+            value = ""
+            inputTesting = "noStrangeSymbols();"
+        />,
+        <TextArea
+            id = "Comment"
+            label = "Комментарий к документу:"
+            value = ""
+        />,
+
+
+    ]
     }
+
+// общие пропы
+{
+    label: "красивое название поля для человека",
+    id: "системный идентификатор - совпадает с полями таблицы",
+    value: "непосредственно само значение поля, которое отправляется в бд и часто отображается в поле",
+    input testing: "проверочная функция, которая не позволить изменять state.value если не вернет true",
+    waytoUpdateAppState: ""
+    oters: ["массив с доп  опциями для отдельных полей"]
+
 }
+
 
 var reactComponents = {
     SimpleText: [
@@ -63,4 +176,5 @@ var reactComponents = {
     ]
 
 }
+
 
