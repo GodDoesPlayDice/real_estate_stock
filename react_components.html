@@ -59,14 +59,21 @@ class Navbar extends React.Component {
         this.autocompleteData = this.props.docsList
     };
     componentDidMount () {
-        var elems = document.querySelectorAll('.autocomplete');
-        var instances = M.Autocomplete.init(elems, {
+        // инициализация автокомплита
+        let elems = document.querySelectorAll('.autocomplete');
+        let instances = M.Autocomplete.init(elems, {
                 data: this.autocompleteData
         });
+
+        // инициализация пушпин
+        let elems2 = document.querySelectorAll('.pushpin');
+        let instances2 = M.Pushpin.init(elems2, {});
     }
     render () {
+        // для того, чтобы верхнее меню было поверх всего остального
+        let styles = {"z-index": "2147483637"};
         return (
-                <nav class="indigo">
+                <nav class="indigo pushpin" style={styles}>
                     <div class="nav-wrapper container row">
                         <div class="col s2">
                             <a href="#" class="brand-logo">{this.logo}</a>
