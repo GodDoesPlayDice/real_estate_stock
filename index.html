@@ -13,9 +13,6 @@
     <div id="root">
       <!-- Здесь будет все наше приложение -->
     </div>
-    <div id="mainworkspace" class="container">
-
-    </div>
       <!-- Загрузим React и Babel -->
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <!-- Примечание: для деплоя на продакшен замените окончание «development.js» на «production.min.js». -->
@@ -26,6 +23,7 @@
   <!-- приходится делать так, потому что файл со скриптом имеет расширение html -->
   <?!= include("react_field_components");?>
   <?!= include("react_button_components");?>
+  <?!= include("react_settings");?>
   <?!= include("react_components");?>
   <?!= include("app");?>
   </body>
