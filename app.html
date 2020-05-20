@@ -1,28 +1,38 @@
 <script type="text/babel">
-// данныe с сервера
-var serverSideData = {};
-
-// выдает массив с айдишниками документов
-function getDocNames () {
-    let raw = serverSideData.docsSheet;
-    let position = raw.shift().findIndex((el) => el === "ID");
-    let result = []
-    raw.forEach((elem) => {
-        result.push(elem[position]);
-    })
-    return result;
-}
-
 // запуск приложения при загрузке страницы
 main();
+
 function main() {
     google.script.run.withSuccessHandler(onSuccess).getServerData();
 
     function onSuccess (obj) {
         serverSideData = JSON.parse(obj);
         renderApp();
+        //getSingleCol("managers", "utilitySheet")
     };
 };
+
+// данныe с сервера
+var serverSideData = {};
+
+// выдает массив с айдишниками документов
+
+function getSingleCol(col, sheetName) {
+    // col is text
+    let result = [];
+    let rawObj = serverSideData[sheetName];
+    let colPosition = rawObj.headers.findIndex((el) => el === col);
+    for (let key in serverSideData[sheetName]) {
+        let elem = rawObj[key][colPosition];
+        if (elem === '') {
+            continue;
+        } else {
+         result.push(elem)
+        }
+    }    
+    result.pop();
+    return result;
+}
 
 function renderApp() {
     ReactDOM.render(

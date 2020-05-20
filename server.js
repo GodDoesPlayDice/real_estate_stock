@@ -58,7 +58,8 @@ function setDataForSession () {
   try {
     docsSheet = dataSources[department].docsSheet;
     stockSheet = dataSources[department].stockSheet;
-    return [docsSheet, stockSheet];
+    utilitySheet = dataSources[department].utilitySheet;
+    return [docsSheet, stockSheet, utilitySheet];
   } catch (e) {
     console.log(`Произошла ошибка при сборе табличных данных для сессии пользователя.`);
     console.log(e);

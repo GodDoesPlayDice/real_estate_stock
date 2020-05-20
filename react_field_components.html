@@ -14,12 +14,14 @@ class SimpleText extends React.Component {
     }
     render() {
         return (
-        <div class="row">
-            <div class="input-field col s6">
-                <input id="" value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
-                <label for="" >{this.label}</label>
-            </div>
-        </div>
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="" value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
+                        <label for="" >{this.label}</label>
+                    </div>
+                </div>
+            </form>
         )
     }
 }
@@ -179,19 +181,14 @@ class CheckBox extends React.Component {
         this.label = this.props.label;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
-            value: true,
-            checked: false
+            value: false
         })
     }
     componentDidMount() {
     }
     handleChange(e) {
-        // мутная херня, лучше не спрашивай 
         this.setState({
-            checked: this.state.checked ? false : true,
-        });
-        this.setState({
-            value: this.state.checked,
+            value: !this.state.value,
         });
     }
     render() {
@@ -199,8 +196,8 @@ class CheckBox extends React.Component {
             <div class="row">
                 <p>
                     <label>
-                        <input type="checkbox"  class="filled-in" checked={this.state.checked ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
-                    <span>{this.label}</span>
+                        <input type="checkbox"  class="filled-in" checked={this.state.value ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
+                        <span>{this.label}</span>
                     </label>
                 </p>
             </div>
@@ -212,6 +209,7 @@ class Select extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
+        this.options = this.props.options;
         this.handleChange = this.handleChange.bind(this);
         this.state ={value: ''};
     };
@@ -227,14 +225,17 @@ class Select extends React.Component {
         });
     }
 
-    render () {         
+    render () { 
+        let arr = getSingleCol(this.options, "utilitySheet");     
+        let options = arr.map((el) => {
+            return <option key={el} >{el}</option>
+        });
         return (
             <div class="row">
                 <div class="input-field col s6">
-                    <select value={this.state.value} onChange={this.handleChange}>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
+                    <select onChange={this.handleChange} value={this.state.value} >
+                        <option></option>
+                        {options}
                     </select>
                     <label>{this.label}</label>
                 </div>

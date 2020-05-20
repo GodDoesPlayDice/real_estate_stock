@@ -7,19 +7,17 @@ class App extends React.Component {
     render () {
         // создание объекта для поиска сделок в автокомплите
         let docNamesObj = {};
-        getDocNames().forEach((elem) => {
-            {elem != '' &&
-                (docNamesObj[elem] = null)
-            }  
+        getSingleCol("ID", "docsSheet").forEach((elem) => {
+            docNamesObj[elem] = null
         });
         //
         return (
             <div>
-                <Navbar 
+                <Header 
                     logo="Виноград 2" 
                     docsList={docNamesObj}
                 />
-                <div class="container">
+                <div class="container row">
                     <NewDoc />
                 </div>
             </div>
@@ -32,46 +30,17 @@ class NewDoc extends React.Component {
         super(props);
     }
     render () {
+        let components = newDocFields.V2.map((el) => el);
         return (
             <div>
-                <Select 
-                    value="1" 
-                    label="Выбор менеджера:" 
-                />
-                <SimpleText 
-                    value=''
-                    label="ФИО клиента:"
-                />
-                <TextArea
-                    value=''
-                    label="Комментарий к документу:"
-                />
-                <DatePicker
-                    value=''
-                    label="Дата текущего статуса:"
-                />
-                <DatePicker
-                    value=''
-                    label="
-                    Предполагаемая дата следующего статуса:"
-                />
-                <Radio
-                    value=''
-                    first='Л'
-                    second='АН'
-                    label="
-                    Тип сделки:"
-                />
-                <CheckBox
-                    label="остается в продаже от физ лица"
-                />
+                {components}    
             </div>
         )
     }
 }
 
 
-class Navbar extends React.Component {
+class Header extends React.Component {
     constructor (props) {
         super(props);
         this.logo = this.props.logo
@@ -115,16 +84,6 @@ class Navbar extends React.Component {
         );
     }
 }
-
-class Template extends React.Component {
-    constructor (props) {
-        super(props);
-    }
-    render () {
-        return
-    }
-}
-
 </script>
 
 

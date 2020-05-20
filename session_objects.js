@@ -6,7 +6,21 @@ var sessionParameters = {};
 function getServerData () {
     let result = {};
     result.sessionParameters = setSessionParameters ();
-    result.docsSheet = setDataForSession()[0];
-    result.stockSheet = setDataForSession()[1];
+    let singleArr = setDataForSession();
+    result.docsSheet = getObjFromTable(singleArr[0]);
+    result.stockSheet = getObjFromTable(singleArr[1]);
+    result.utilitySheet = getObjFromTable(singleArr[2]);
     return JSON.stringify(result);
+}
+
+function getObjFromTable (table) {
+    let result = {};
+    table.forEach((elem, index) => {
+        if (index == 0) {
+            result.headers = elem;
+        } else {
+            result[index] = elem;
+        }
+    });
+    return result;
 }
