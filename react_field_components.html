@@ -27,7 +27,6 @@ class SimpleText extends React.Component {
 class TextArea extends React.Component {
     constructor(props) {
         super(props);
-        super(props);
         this.label = this.props.label;
         this.handleChange = this.handleChange.bind(this);
         this.state = {value: ''}
@@ -47,6 +46,32 @@ class TextArea extends React.Component {
                 </div>
             </div>
         );
+    }
+}
+
+class DatePicker extends React.Component {
+    constructor(props) {
+        super(props);
+        this.label = this.props.label;
+        this.handleChange = this.handleChange.bind(this);
+        this.state = ({value: ''});
+       
+    }
+    componentDidMount() {
+
+    }
+
+    handleChange() {
+
+    };
+    render() {
+        return (
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="text" class="datepicker" />
+                </div>
+            </div>
+        )
     }
 }
 
