@@ -141,7 +141,8 @@ class Radio extends React.Component {
         this.secondOption = this.props.second;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
-            value: this.fistOption
+            value: this.fistOption,
+            span: "normal"
         })
     }
     componentDidMount() {
@@ -151,6 +152,7 @@ class Radio extends React.Component {
         this.setState({
             value: e.target.value
         });
+        console.log(e.target);
     }
     render() {
         return (
@@ -160,13 +162,13 @@ class Radio extends React.Component {
                     <p>
                     <label>
                         <input name="group1" type="radio" value={this.fistOption} onClick={this.handleChange} />
-                        <span>{this.fistOption}</span>
+                        <span style={{"font-weight": this.state.span}} >{this.fistOption}</span>
                     </label>
                     </p>
                     <p>
                     <label>
                         <input name="group1" type="radio" value={this.secondOption} onClick={this.handleChange} />
-                        <span>{this.secondOption}</span>
+                        <span style={{"font-weight": this.state.span}} >{this.secondOption}</span>
                     </label>
                     </p>
                 </form>
@@ -181,7 +183,8 @@ class CheckBox extends React.Component {
         this.label = this.props.label;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
-            value: false
+            value: false,
+            span: "normal"
         })
     }
     componentDidMount() {
@@ -189,6 +192,7 @@ class CheckBox extends React.Component {
     handleChange(e) {
         this.setState({
             value: !this.state.value,
+            span:  (this.state.value ? "normal" : "bolder")
         });
     }
     render() {
@@ -197,7 +201,7 @@ class CheckBox extends React.Component {
                 <p>
                     <label>
                         <input type="checkbox"  class="filled-in" checked={this.state.value ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
-                        <span>{this.label}</span>
+                        <span style={{"font-weight": this.state.span}} >{this.label}</span>
                     </label>
                 </p>
             </div>
