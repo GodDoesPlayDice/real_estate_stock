@@ -21,23 +21,23 @@ var newDocFields = {
             label = "Предполагаемая дата следующего статуса:"
             value = ""
         />,
-        <Select
-            id = "SelectLiter"
-            label = "Литер:"
-            value = ""
-            options={"liters"}
-            others = {
-                ["все литеры"]
-            }
-        />,
-        <SimpleText
-            id = "SelectFlat"
-            label = "Номер квартиры:"
-            value = ""
-            others = {
-                ["все свободные квартиры"]
-            }
-        />,
+        <div>
+            <Select
+                id = "SelectLiter"
+                label = "Литер:"
+                value = ""
+                options={"liters"}
+                onLiterSelect
+            />
+            <Select
+                id = "SelectFlat"
+                label = "Номер квартиры:"
+                value = ""
+                others = {
+                    ["все свободные квартиры"]
+                }
+            />
+        </div>,
         <SimpleText
             id = "ClientName"
             label = "ФИО клиента:"

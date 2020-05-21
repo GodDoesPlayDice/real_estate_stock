@@ -141,8 +141,9 @@ class Radio extends React.Component {
         this.secondOption = this.props.second;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
-            value: this.fistOption,
-            span: "normal"
+            value: '',
+            span1: 'normal',
+            span2: 'normal'
         })
     }
     componentDidMount() {
@@ -150,9 +151,10 @@ class Radio extends React.Component {
     }
     handleChange(e) {
         this.setState({
-            value: e.target.value
+            value: e.target.value,
+            span1: e.target.value === this.fistOption ? "bolder" : "normal",
+            span2: e.target.value === this.secondOption ? "bolder" : "normal",
         });
-        console.log(e.target);
     }
     render() {
         return (
@@ -162,13 +164,13 @@ class Radio extends React.Component {
                     <p>
                     <label>
                         <input name="group1" type="radio" value={this.fistOption} onClick={this.handleChange} />
-                        <span style={{"font-weight": this.state.span}} >{this.fistOption}</span>
+                        <span style={{"font-weight": this.state.span1}} >{this.fistOption}</span>
                     </label>
                     </p>
                     <p>
                     <label>
                         <input name="group1" type="radio" value={this.secondOption} onClick={this.handleChange} />
-                        <span style={{"font-weight": this.state.span}} >{this.secondOption}</span>
+                        <span style={{"font-weight": this.state.span2}} >{this.secondOption}</span>
                     </label>
                     </p>
                 </form>
@@ -247,4 +249,45 @@ class Select extends React.Component {
         )
     }
 };
+
+class LiterAndFlatHandler extends React.Component {
+    constructor (props) {
+        super(props);
+        this.handleLiterChange = this.handleLiterChange.bind(this);
+        this.handleFlatChange = this.handleLiterChange.bind(this);
+        this.state = {
+            liter: '',
+            flat: ''
+        }
+    };
+    handleLiterChange(liter) {
+        this.setState({
+            liter: liter
+        })
+    };
+    handleFlatChange(flat) {
+        this.setState({
+            flat: flat
+        })
+    };
+    render () {
+            let liter = this.state.liter;
+            <div>
+                <Select
+                    id = "SelectLiter"
+                    label = "Литер:"
+                    value = ""
+                    options={"liters"}
+                    onLiterSelect={this.handleLiterChange}
+                />
+                <Select
+                    id = "SelectFlat"
+                    label = "Номер квартиры:"
+                    value = ""
+                    onFlatSelect={this.handleLiterChange}
+                />
+            </div>
+    }
+
+}
 </script>

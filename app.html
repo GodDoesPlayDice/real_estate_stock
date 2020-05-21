@@ -8,7 +8,7 @@ function main() {
     function onSuccess (obj) {
         serverSideData = JSON.parse(obj);
         renderApp();
-        //getSingleCol("managers", "utilitySheet")
+        //console.log(getFlatsInStock('7', 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet"));
     };
 };
 
@@ -32,6 +32,26 @@ function getSingleCol(col, sheetName) {
     }    
     result.pop();
     return result;
+}
+
+function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
+    let result = {};
+    let twoCols = {
+        flats: getSingleCol(flatsCol, sheetName),
+        liters: getSingleCol(lirersCol, sheetName),
+    }
+    let flats = twoCols.flats;
+    let liters = twoCols.liters;
+    
+    flats.forEach((elem, index) => {
+        let flat = elem;
+        let liter = liters[index];
+        if (!Array.isArray(result[liter])) {
+            result[liter] = [];
+        } 
+        result[liter].push(flat);
+    });
+    return result[forLiter];
 }
 
 function renderApp() {
