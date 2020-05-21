@@ -215,38 +215,73 @@ class Select extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
-        this.options = this.props.options;
+        this.options = this.props.staticOptions;
+        // пропсы для тех эксемпляров, которые поднимают свое состояние до предка
+        this.purpose = this.props.purpose;
+        this.value = this.props.value
+        this.triggered = this.props.triggered;
+        //
         this.handleChange = this.handleChange.bind(this);
-        this.state ={value: ''};
+        // value хранится в state только если это обычный селект
+        this.state = !this.triggered ? {value: ''} : {triggered: true}
     };
     componentDidMount(){
         var elems = document.querySelectorAll('select');
         var instances = M.FormSelect.init(elems, {});
     };
-    componentWillUnmount(){
-    }
     handleChange(event) {
-        this.setState({
-            value: event.target.value
-        });
+        // первые два для тех эксемпляров, которые поднимают свое состояние до предка
+        if (this.purpose == "liter") {
+            this.props.onLiterChange(event.target.value);
+            return;
+        }
+        if (this.purpose == "flat") {
+            this.props.onFlatChange(event.target.value);
+            return;
+        } else {
+            this.setState({
+                value: event.target.value
+            });
+        }
     }
 
-    render () { 
+    render () {
+        if (this.triggered) {
+            console.log("тут все ок")
+            // динамический select 
+            let options = this.value === null ? <option>""</option> : this.value.map((el) => {
+                return <option key={el} >{el}</option>
+            });
+            return (
+                <div class="row">
+                    <div class="input-field col s6">
+                        <select onChange={this.handleChange} value='' >
+                             <option>""</option>
+                             {options}
+                        </select>
+                        <label>{this.label}</label>
+                    </div>
+                </div>
+            )
+        };
+
+        // статический  select
         let arr = getSingleCol(this.options, "utilitySheet");     
         let options = arr.map((el) => {
             return <option key={el} >{el}</option>
-        });
+            });
         return (
             <div class="row">
                 <div class="input-field col s6">
                     <select onChange={this.handleChange} value={this.state.value} >
-                        <option></option>
+                        <option>""</option>
                         {options}
                     </select>
                     <label>{this.label}</label>
                 </div>
             </div>
         )
+
     }
 };
 
@@ -254,39 +289,49 @@ class LiterAndFlatHandler extends React.Component {
     constructor (props) {
         super(props);
         this.handleLiterChange = this.handleLiterChange.bind(this);
-        this.handleFlatChange = this.handleLiterChange.bind(this);
+        this.handleFlatChange = this.handleFlatChange.bind(this);
         this.state = {
             liter: '',
-            flat: ''
+            flat: '',
+            triggered: false
         }
     };
     handleLiterChange(liter) {
         this.setState({
-            liter: liter
+            liter: liter,
+        });
+        this.setState({
+            triggered: true
         })
     };
-    handleFlatChange(flat) {
+    handleFlatChange(flat ) {
         this.setState({
-            flat: flat
+            flat: flat,
         })
     };
     render () {
-            let liter = this.state.liter;
+        let flatsInCurrentLiter = getFlatsInStock(this.state.liter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet");
+        return (
             <div>
                 <Select
                     id = "SelectLiter"
                     label = "Литер:"
-                    value = ""
-                    options={"liters"}
-                    onLiterSelect={this.handleLiterChange}
+                    staticOptions={"liters"}
+                    triggered={false}
+                    purpose = "liter"
+                    onLiterChange={this.handleLiterChange}
                 />
                 <Select
                     id = "SelectFlat"
                     label = "Номер квартиры:"
-                    value = ""
-                    onFlatSelect={this.handleLiterChange}
+                    
+                    value = {flatsInCurrentLiter}
+                    purpose = "flat"
+                    triggered = {this.state.triggered}
+                    onFlatChange={this.handleFlatChange}
                 />
             </div>
+        )
     }
 
 }

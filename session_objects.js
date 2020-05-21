@@ -1,6 +1,4 @@
 var sessionParameters = {};
-//var docsSheet;
-//var stockSheet;
 
 // функция для фронтенда (с ее помощью он получает данные с сервера)
 function getServerData () {

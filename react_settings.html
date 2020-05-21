@@ -6,7 +6,7 @@ var newDocFields = {
             id = "DocStatus"
             label = "Текущий статус документа:"
             value = ""
-            options={"doc_statuses"}
+            staticOptions={"doc_statuses"}
             others = {
                 ["список возможных статусов"]
             }
@@ -21,23 +21,8 @@ var newDocFields = {
             label = "Предполагаемая дата следующего статуса:"
             value = ""
         />,
-        <div>
-            <Select
-                id = "SelectLiter"
-                label = "Литер:"
-                value = ""
-                options={"liters"}
-                onLiterSelect
-            />
-            <Select
-                id = "SelectFlat"
-                label = "Номер квартиры:"
-                value = ""
-                others = {
-                    ["все свободные квартиры"]
-                }
-            />
-        </div>,
+        <LiterAndFlatHandler />
+        ,
         <SimpleText
             id = "ClientName"
             label = "ФИО клиента:"
@@ -48,7 +33,7 @@ var newDocFields = {
             id = "SelectManager"
             label = "Менеджер:"
             value = ""
-            options={"managers"}
+            staticOptions={"managers"}
             others = {
                 ["все менеджеры работающие сейчас"]
             }
@@ -67,7 +52,7 @@ var newDocFields = {
             id = "PayMethod"
             label = "Способ оплаты:"
             value = ""
-            options={"pay_method"}
+            staticOptions={"pay_method"}
             others = {
                 ["все доступные способы оплаты"]
             }
@@ -94,7 +79,7 @@ var newDocFields = {
             id = "LegalServiceNoPayment"
             label = "Юр. услуги без оплаты:"
             value = ""
-            options={"legal_service_no_payment"}
+            staticOptions={"legal_service_no_payment"}
             others = {
                 ["бесплатно, не оплачиваются"]
             }
