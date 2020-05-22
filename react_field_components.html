@@ -234,26 +234,62 @@ class Select extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
-        this.id = this.props.id;
-        this.key = this.props.key;
+        this.id = this.props.id
+        this.options = this.props.staticOptions;
+        // пропсы для тех эксемпляров, которые поднимают свое состояние до предка
         this.purpose = this.props.purpose;
+<<<<<<< HEAD
 
         this.handleChange = this.handleChange.bind(this);
         // массив элементов для рендера опций
         this.value = this.props.value;
         this.state =  {value: ''};
+=======
+        //this.triggered = this.props.triggered;
+        //
+        this.handleDynamicSelectChange = this.handleDynamicSelectChange.bind(this);
+        this.handleStaticSelectChange = this.handleStaticSelectChange.bind(this);
+        // value хранится в state только если это обычный селект
+        this.state =  {value: ''} //!this.triggered ?: {triggered: true}
+>>>>>>> parent of c743f53... fields handler almost done
     };
     componentDidMount(){
-        let elem = document.getElementById(this.id);
-        let instance = M.FormSelect.init(elem, {});
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems, {});
     };
+<<<<<<< HEAD
     handleChange(e) {
         this.setState({
             value: e.target.value
         });
         this.props.onChange(this.id, e.target.value);
 
+=======
+    componentWillUnmount() {
+       console.log("unmount select") 
     }
+    handleDynamicSelectChange(event) {
+        if (this.purpose == "flat") {
+            this.props.onFlatChange(event.target.value);
+            this.setState({
+                value: event.target.value
+            })
+            return;
+        }
+    }
+    handleStaticSelectChange(event) {
+        // первые два для тех эксемпляров, которые поднимают свое состояние до предка
+        if (this.purpose == "liter") {
+            this.props.onLiterChange(event.target.value);
+            return;
+        } else {
+            this.setState({
+                value: event.target.value
+            });
+        }
+>>>>>>> parent of c743f53... fields handler almost done
+    }
+
     render () {
         function generateOptions (arr) {
             if (arr != null) {
@@ -264,25 +300,38 @@ class Select extends React.Component {
                 return <option></option>
             } 
         };
-        let options = generateOptions(this.value);
-        let label = this.label;
+        let changeHandler;
+        let options;
         let specialClass;
+<<<<<<< HEAD
         if (this.purpose != "flat") {} else {
             console.log(this.value, "ушло на отрисовку")
             specialClass = "browser-default";
         }
+=======
+        let label;
+>>>>>>> parent of c743f53... fields handler almost done
 
         /*switch (this.purpose) {
             case "flat":
-                console.log(this.liter, "ушло на отрисовку")
+                changeHandler = this.handleDynamicSelectChange;
+                options = generateOptions(this.props.value);
                 specialClass = "browser-default";
+                label = this.label;
                 break;
             default:
+<<<<<<< HEAD
         };*/
+=======
+                changeHandler = this.handleStaticSelectChange;
+                options = generateOptions (getSingleCol(this.options, "utilitySheet"));
+                label = this.label;
+        };
+>>>>>>> parent of c743f53... fields handler almost done
         return (
             <div class="row">
                 <div class="input-field col s6">
-                    {<select class={specialClass} key={this.key} id={this.id} onChange={this.handleChange} value={this.state.value} >
+                    {<select class={specialClass} id={this.id} onChange={changeHandler} value={this.state.value} >
                         <option></option>
                         {options}
                     </select>}
@@ -349,37 +398,19 @@ class DocFieldsHandler extends React.Component {
             ClientName: '',
             RemainsOnSale: 'no',
             DealType: '',
-            SelectLiter: '',
-            SelectFlat: '',
-            DocStatus: '',
-            SelectManager: '',
-            PayMethod: '',
-            ActualCost: '',
-            LegalCost: '',
-            LegalServiceCost: '',
-            LegalServiceNoPayment: '',
-            RealEstateAgency: '',
-            EstateAgent: '',
-            Comment: ''
+
         };
     };
     handleChildChange(field, value) {
         this.setState({
             [field]: value,
         });
-        //console.log(`поле: ${field} значение: ${value} `)
+        console.log(value)
     };
     render () {
-        console.log(this.state);
+        let flatsInCurrentLiter = getFlatsInStock(this.state.liter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet");
         return (
             <div>
-                <Select
-                    id = "DocStatus"
-                    key = "DocStatus"
-                    label = "Текущий статус документа:"
-                    value = {getSingleCol("doc_statuses", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />
                 <DatePicker
                     id = "CurrentStatusDate"
                     key = "CurrentStatusDate"
@@ -389,11 +420,11 @@ class DocFieldsHandler extends React.Component {
                 />
                 <DatePicker
                     id = "NextStatusEstimatedDate"
-                    key = "NextStatusEstimatedDate"
                     label = "Предполагаемая дата следующего статуса:"
                     value = {this.state.NextStatusEstimatedDate}
                     onChange={this.handleChildChange}
                 />
+<<<<<<< HEAD
                 <Select
                     id = "SelectLiter"
                     key = "SelectLiter"
@@ -409,18 +440,14 @@ class DocFieldsHandler extends React.Component {
                     purpose = "flat"
                     onChange={this.handleChildChange}
                 />
+=======
+>>>>>>> parent of c743f53... fields handler almost done
                 <TextField
                     id = "ClientName"
                     key = "ClientName"
                     label = "ФИО клиента:"
+                    purpose = ""
                     value = {this.state.ClientName}
-                    onChange={this.handleChildChange}
-                />
-                <Select
-                    id = "SelectManager"
-                    label = "Менеджер:"
-                    key = "SelectManager"
-                    value = {getSingleCol("managers", "utilitySheet")}
                     onChange={this.handleChildChange}
                 />
                 <CheckBox
@@ -437,63 +464,6 @@ class DocFieldsHandler extends React.Component {
                     first='Л'
                     second='АН'
                     value = {this.state.DealType}
-                    onChange={this.handleChildChange}
-                />
-                <Select
-                    id = "PayMethod"
-                    label = "Способ оплаты:"
-                    key = "PayMethod"
-                    value = {getSingleCol("pay_method", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />
-                <TextField
-                    id = "ActualCost"
-                    label = "Стоимость для расчета комиссии:"
-                    key = "ActualCost"
-                    value = {this.state.ActualCost}
-                    onChange={this.handleChildChange}
-                />
-                <TextField
-                    id = "LegalCost"
-                    label = "Стоимость по ДДУ:"
-                    key = "LegalCost"
-                    value = {this.state.LegalCost}
-                    onChange={this.handleChildChange}
-                />
-                <TextField
-                    id = "LegalServiceCost"
-                    label = "Оплата юр. услуг:"
-                    key = "LegalServiceCost"
-                    value = {this.state.LegalServiceCost}
-                    onChange={this.handleChildChange}
-                />,
-                <Select
-                    id = "LegalServiceNoPayment"
-                    label = "Юр. услуги без оплаты:"
-                    key = "LegalServiceNoPayment"
-                    value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />,
-                <TextField
-                    id = "RealEstateAgency"
-                    label = "Агентство недвижимости:"
-                    key = "RealEstateAgency"
-                    value = {this.state.RealEstateAgency}
-                    onChange={this.handleChildChange}
-                />,
-                <TextField
-                    id = "EstateAgent"
-                    label = "Сотрудник агентства:"
-                    key = "EstateAgent"
-                    value = {this.state.EstateAgent}
-                    onChange={this.handleChildChange}
-                />,
-                <TextField
-                    id = "Comment"
-                    label = "Комментарий к документу:"
-                    key = "Comment"
-                    purpose = "area"
-                    value = {this.state.Comment}
                     onChange={this.handleChildChange}
                 />
             </div>
