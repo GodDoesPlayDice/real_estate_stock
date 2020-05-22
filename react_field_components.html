@@ -244,7 +244,6 @@ class Select extends React.Component {
         // массив элементов для рендера опций
         this.value = this.props.value;
 <<<<<<< HEAD
-<<<<<<< HEAD
         this.state =  {value: ''};
 =======
         //this.triggered = this.props.triggered;
@@ -254,10 +253,6 @@ class Select extends React.Component {
         // value хранится в state только если это обычный селект
         this.state =  {value: ''} //!this.triggered ?: {triggered: true}
 >>>>>>> parent of c743f53... fields handler almost done
-=======
-        this.liter = this.props.liter;
-        this.state =  {value: ''}
->>>>>>> parent of 7f1fd96... minor
 =======
         this.liter = this.props.liter;
         this.state =  {value: ''}
@@ -273,16 +268,12 @@ class Select extends React.Component {
         this.setState({
             value: e.target.value
 <<<<<<< HEAD
-<<<<<<< HEAD
         });
         this.props.onChange(this.id, e.target.value);
 
 =======
     componentWillUnmount() {
        console.log("unmount select") 
-=======
-        })
->>>>>>> parent of 7f1fd96... minor
     }
     handleDynamicSelectChange(event) {
         if (this.purpose == "flat") {
@@ -324,7 +315,6 @@ class Select extends React.Component {
         let specialClass;
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
         if (this.purpose != "flat") {} else {
             console.log(this.value, "ушло на отрисовку")
             specialClass = "browser-default";
@@ -332,9 +322,6 @@ class Select extends React.Component {
 =======
         let label;
 >>>>>>> parent of c743f53... fields handler almost done
-=======
-        
->>>>>>> parent of 7f1fd96... minor
 =======
         
 >>>>>>> parent of 7f1fd96... minor
@@ -349,7 +336,6 @@ class Select extends React.Component {
             default:
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
         };*/
 =======
                 changeHandler = this.handleStaticSelectChange;
@@ -357,9 +343,6 @@ class Select extends React.Component {
                 label = this.label;
         };
 >>>>>>> parent of c743f53... fields handler almost done
-=======
-        };
->>>>>>> parent of 7f1fd96... minor
 =======
         };
 >>>>>>> parent of 7f1fd96... minor
