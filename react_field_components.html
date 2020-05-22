@@ -241,32 +241,7 @@ class Select extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         // массив элементов для рендера опций
         this.value = this.props.value;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> parent of ef27f87... Revert "minor"
         this.state =  {value: ''};
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        //this.triggered = this.props.triggered;
-        //
-        this.handleDynamicSelectChange = this.handleDynamicSelectChange.bind(this);
-        this.handleStaticSelectChange = this.handleStaticSelectChange.bind(this);
-        // value хранится в state только если это обычный селект
-        this.state =  {value: ''} //!this.triggered ?: {triggered: true}
->>>>>>> parent of c743f53... fields handler almost done
-<<<<<<< HEAD
-=======
-=======
-        this.liter = this.props.liter;
-        this.state =  {value: ''}
->>>>>>> parent of 7f1fd96... minor
->>>>>>> parent of ef27f87... Revert "minor"
-=======
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
-=======
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
     };
     componentDidMount(){
         let elem = document.getElementById(this.id);
@@ -275,10 +250,6 @@ class Select extends React.Component {
     handleChange(e) {
         this.setState({
             value: e.target.value
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> parent of ef27f87... Revert "minor"
         });
         this.props.onChange(this.id, e.target.value);
 
@@ -296,36 +267,10 @@ class Select extends React.Component {
         let options = generateOptions(this.value);
         let label = this.label;
         let specialClass;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> parent of ef27f87... Revert "minor"
-=======
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
-=======
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
         if (this.purpose != "flat") {} else {
             console.log(this.value, "ушло на отрисовку")
             specialClass = "browser-default";
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        let label;
->>>>>>> parent of c743f53... fields handler almost done
-<<<<<<< HEAD
-=======
-=======
-        
->>>>>>> parent of 7f1fd96... minor
->>>>>>> parent of ef27f87... Revert "minor"
-=======
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
-=======
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
 
         /*switch (this.purpose) {
             case "flat":
@@ -333,32 +278,7 @@ class Select extends React.Component {
                 specialClass = "browser-default";
                 break;
             default:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> parent of ef27f87... Revert "minor"
         };*/
-=======
-                changeHandler = this.handleStaticSelectChange;
-                options = generateOptions (getSingleCol(this.options, "utilitySheet"));
-                label = this.label;
-        };
->>>>>>> parent of c743f53... fields handler almost done
-<<<<<<< HEAD
-=======
-=======
-        };
->>>>>>> parent of 7f1fd96... minor
->>>>>>> parent of ef27f87... Revert "minor"
-=======
-        };*/
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
-=======
-        };*/
->>>>>>> parent of 7e4d871... Revert "fields handler almost done"
         return (
             <div class="row">
                 <div class="input-field col s6">
