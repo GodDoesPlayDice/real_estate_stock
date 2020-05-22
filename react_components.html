@@ -2,6 +2,7 @@
 class App extends React.Component {
     constructor (props) {
         super(props);
+        this.state = {mode: "default"};
     };
     render () {
         // создание объекта для поиска сделок в автокомплите
@@ -17,13 +18,26 @@ class App extends React.Component {
                     docsList={docNamesObj}
                 />
                 <div class="container row">
-                    <DocFieldsHandler />
+                    <NewDoc />
                 </div>
             </div>
         );
     };
 };
 
+class NewDoc extends React.Component {
+    constructor (props) {
+        super(props);
+    }
+    render () {
+        let components = newDocFields.V2.map((el) => el);
+        return (
+            <div>
+                {components}    
+            </div>
+        )
+    }
+}
 
 
 class Header extends React.Component {
