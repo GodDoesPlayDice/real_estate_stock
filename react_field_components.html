@@ -241,18 +241,18 @@ class Select extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         // массив элементов для рендера опций
         this.value = this.props.value;
-        this.liter = this.props.liter;
-        this.state =  {value: ''}
+        this.state =  {value: ''};
     };
     componentDidMount(){
         let elem = document.getElementById(this.id);
         let instance = M.FormSelect.init(elem, {});
     };
     handleChange(e) {
-        this.props.onChange(this.id, e.target.value);
         this.setState({
             value: e.target.value
-        })
+        });
+        this.props.onChange(this.id, e.target.value);
+
     }
     render () {
         function generateOptions (arr) {
@@ -267,15 +267,18 @@ class Select extends React.Component {
         let options = generateOptions(this.value);
         let label = this.label;
         let specialClass;
-        
+        if (this.purpose != "flat") {} else {
+            console.log(this.value, "ушло на отрисовку")
+            specialClass = "browser-default";
+        }
 
-        switch (this.purpose) {
+        /*switch (this.purpose) {
             case "flat":
                 console.log(this.liter, "ушло на отрисовку")
                 specialClass = "browser-default";
                 break;
             default:
-        };
+        };*/
         return (
             <div class="row">
                 <div class="input-field col s6">
@@ -395,7 +398,6 @@ class DocFieldsHandler extends React.Component {
                     id = "SelectLiter"
                     key = "SelectLiter"
                     label = "Литер:"
-    
                     value = {getSingleCol("liters", "utilitySheet")}
                     onChange={this.handleChildChange}
                 />
@@ -403,7 +405,6 @@ class DocFieldsHandler extends React.Component {
                     id = "SelectFlat"
                     key = "SelectFlat"
                     label = "Номер квартиры:"
-                    
                     value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
                     purpose = "flat"
                     onChange={this.handleChildChange}
