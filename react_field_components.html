@@ -1,23 +1,39 @@
 <script type="text/babel">
-class SimpleText extends React.Component {
+class TextField extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
+        this.id = this.props.id;
+        this.key = this.props.key;
         this.handleChange = this.handleChange.bind(this);
-        this.state = {value: ''}
+        this.value = this.props.value;
+        this.purpose = this.props.purpose;
+        this.state = {value: this.value}
     }
     componentDidMount(){
+        let elem = document.getElementById(this.id);
+        elem.addEventListener('focusout', (e) => {
+            this.props.onChange(this.id, e.target.value);
+        });
         M.updateTextFields();
     }
     handleChange(e) {
         this.setState({value: e.target.value});
     }
     render() {
+        let element;
+        switch (this.purpose) {
+            case "area":
+                element = <textarea id={this.id} key={this.key} value={this.state.value} class="materialize-textarea" onChange={this.handleChange}></textarea>;
+                break;
+            default:
+                element = <input id={this.id} key={this.key} value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
+        }
         return (
             <form class="col s12">
                 <div class="row">
                     <div class="input-field col s6">
-                        <input id="" value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
+                        {element}
                         <label for="" >{this.label}</label>
                     </div>
                 </div>
@@ -26,37 +42,14 @@ class SimpleText extends React.Component {
     }
 }
 
-class TextArea extends React.Component {
-    constructor(props) {
-        super(props);
-        this.label = this.props.label;
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {value: ''}
-    };
-    handleChange(e) {
-        this.setState({value: e.target.value});
-    };
-    componentDidMount(){
-        M.updateTextFields();
-    }
-    render() {
-        return (
-            <div class="row">
-                <div class="input-field col s6">
-                    <textarea id="" class="materialize-textarea" value={this.state.value} onChange={this.handleChange}></textarea>
-                    <label for="">{this.label}</label>
-                </div>
-            </div>
-        );
-    }
-}
-
 class DatePicker extends React.Component {
     constructor(props) {
         super(props);
         this.label = this.props.label;
+        this.id = this.props.id;
+        this.key = this.props.key
         this.handleChange = this.handleChange.bind(this);
-        this.state = ({value: ''});
+        this.value = this.props.value;
     }
     componentDidMount() {
         let options = {
@@ -114,20 +107,32 @@ class DatePicker extends React.Component {
                             weekdaysAbbrev: ['В', 'П', 'В', 'С', 'Ч', 'П', 'С']
                     }
                 }
-        var elems = document.querySelectorAll('.datepicker');
-        var instances = M.Datepicker.init(elems, options);
+        let elem = document.getElementById(this.id);
+        let instance = M.Datepicker.init(elem, options);
+        elem.addEventListener('change', (e) => {
+            this.props.onChange(this.id, e.target.value)
+        });
+    }
+    componentWillUnmount() {
+        let elem = document.getElementById(this.id);
+        let instance = M.Datepicker.init(elem, {});
+        instance.destroy();
     }
 
     handleChange(e) {
-        this.setState({value: e.target.value});
+
     };
+
     render() {
         return (
             <div class="row">
-                <div class="input-field col s6">
-                    <input  value={this.state.value} onChange={this.handleChange}  type="text" class="datepicker" />
-                    <label>{this.label}</label>
-                </div>
+                <form>
+                    <div  class="input-field col s6">
+                        <input id={this.id} key={this.key} type="text" class="datepicker"  />
+                        <label>{this.label}
+                        </label>
+                    </div>
+                </form>
             </div>
         )
     }
@@ -137,11 +142,12 @@ class Radio extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
+        this.key = this.props.key;
+        this.id = this.props.id;
         this.fistOption = this.props.first;
         this.secondOption = this.props.second;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
-            value: '',
             span1: 'normal',
             span2: 'normal'
         })
@@ -150,8 +156,8 @@ class Radio extends React.Component {
 
     }
     handleChange(e) {
+        this.props.onChange(this.id, e.target.value);
         this.setState({
-            value: e.target.value,
             span1: e.target.value === this.fistOption ? "bolder" : "normal",
             span2: e.target.value === this.secondOption ? "bolder" : "normal",
         });
@@ -160,7 +166,7 @@ class Radio extends React.Component {
         return (
             <div class="row">
                 <label>{this.label}</label>
-                 <form>
+                 <form key={this.key}>
                     <p>
                     <label>
                         <input name="group1" type="radio" value={this.fistOption} onClick={this.handleChange} />
@@ -183,18 +189,31 @@ class CheckBox extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
+        this.id = this.props.id;
+        this.key = this.props.key;
         this.handleChange = this.handleChange.bind(this);
+        this.value = this.props.value;
         this.state = ({
-            value: false,
+            value: this.value,
             span: "normal"
         })
     }
     componentDidMount() {
     }
     handleChange(e) {
+        let status = e.target.value;
+        let val;
+        switch (status) {
+            case "yes":
+                val = "no";
+                break;
+            default:
+                val = "yes"
+        }
+        this.props.onChange(this.id, val);
         this.setState({
-            value: !this.state.value,
-            span:  (this.state.value ? "normal" : "bolder")
+            value: val,
+            span:  (val == "no" ? "normal" : "bolder")
         });
     }
     render() {
@@ -202,7 +221,7 @@ class CheckBox extends React.Component {
             <div class="row">
                 <p>
                     <label>
-                        <input type="checkbox"  class="filled-in" checked={this.state.value ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
+                        <input id={this.id} key={this.key} type="checkbox"  class="filled-in" checked={this.state.value == "yes" ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
                         <span style={{"font-weight": this.state.span}} >{this.label}</span>
                     </label>
                 </p>
@@ -339,6 +358,70 @@ class LiterAndFlatHandler extends React.Component {
             </div>
         )
     }
+};
 
-}
+class DocFieldsHandler extends React.Component {
+    constructor (props) {
+        super(props);
+        this.handleChildChange = this.handleChildChange.bind(this);
+        this.state = {
+            CurrentStatusDate: '',
+            NextStatusEstimatedDate: '',
+            ClientName: '',
+            RemainsOnSale: 'no',
+            DealType: '',
+
+        };
+    };
+    handleChildChange(field, value) {
+        this.setState({
+            [field]: value,
+        });
+        console.log(value)
+    };
+    render () {
+        let flatsInCurrentLiter = getFlatsInStock(this.state.liter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet");
+        return (
+            <div>
+                <DatePicker
+                    id = "CurrentStatusDate"
+                    key = "CurrentStatusDate"
+                    label = "Дата текущего статуса:"
+                    value = {this.state.CurrentStatusDate}
+                    onChange={this.handleChildChange}
+                />
+                <DatePicker
+                    id = "NextStatusEstimatedDate"
+                    label = "Предполагаемая дата следующего статуса:"
+                    value = {this.state.NextStatusEstimatedDate}
+                    onChange={this.handleChildChange}
+                />
+                <TextField
+                    id = "ClientName"
+                    key = "ClientName"
+                    label = "ФИО клиента:"
+                    purpose = ""
+                    value = {this.state.ClientName}
+                    onChange={this.handleChildChange}
+                />
+                <CheckBox
+                    id = "RemainsOnSale"
+                    key = "RemainsOnSale"
+                    label = "остается в продаже от физ. лица"
+                    value = {this.state.RemainsOnSale}
+                    onChange={this.handleChildChange}
+                />
+                <Radio
+                    id = "DealType"
+                    key = "DealType"
+                    label = "Тип сделки:"
+                    first='Л'
+                    second='АН'
+                    value = {this.state.DealType}
+                    onChange={this.handleChildChange}
+                />
+            </div>
+        )
+    }
+};
 </script>

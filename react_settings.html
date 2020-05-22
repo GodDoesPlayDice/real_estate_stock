@@ -11,24 +11,8 @@ var newDocFields = {
                 ["список возможных статусов"]
             }
         />,
-        <DatePicker
-            id = "CurrentStatusDate"
-            label = "Дата текущего статуса:"
-            value = ""
-        />,
-        <DatePicker
-            id = "NextStatusEstimatedDate"
-            label = "Предполагаемая дата следующего статуса:"
-            value = ""
-        />,
-        <LiterAndFlatHandler />
-        ,
-        <SimpleText
-            id = "ClientName"
-            label = "ФИО клиента:"
-            value = ""
-            inputTesting = "noStrangeSymbols();"
-        />,
+        <DocFieldsHandler />,
+        <LiterAndFlatHandler />,
         <Select
             id = "SelectManager"
             label = "Менеджер:"
@@ -37,16 +21,6 @@ var newDocFields = {
             others = {
                 ["все менеджеры работающие сейчас"]
             }
-        />,
-        <CheckBox
-            id = "RemainsOnSale"
-            label = "остается в продаже от физ. лица"
-        />,
-        <Radio
-            id = "DealType"
-            label = "Тип сделки:"
-            first='Л'
-            second='АН'
         />,
         <Select
             id = "PayMethod"
@@ -57,19 +31,19 @@ var newDocFields = {
                 ["все доступные способы оплаты"]
             }
         />,
-        <SimpleText
+        <TextField
             id = "ActualCost"
             label = "Стоимость для расчета комиссии:"
             value = ""
             inputTesting = "onlyFloat();"
         />,        
-        <SimpleText
+        <TextField
             id = "LegalCost"
             label = "Стоимость по ДДУ:"
             value = ""
             inputTesting = "onlyFloat();"
         />,
-        <SimpleText
+        <TextField
             id = "LegalServiceCost"
             label = "Оплата юр. услуг:"
             value = ""
@@ -84,19 +58,19 @@ var newDocFields = {
                 ["бесплатно, не оплачиваются"]
             }
         />,
-        <SimpleText
+        <TextField
             id = "RealEstateAgency"
             label = "Агентство недвижимости:"
             value = ""
             inputTesting = "noStrangeSymbols();"
         />,
-        <SimpleText
+        <TextField
             id = "EstateAgent"
             label = "Сотрудник агентства:"
             value = ""
             inputTesting = "noStrangeSymbols();"
         />,
-        <TextArea
+        <TextField
             id = "Comment"
             label = "Комментарий к документу:"
             value = ""
