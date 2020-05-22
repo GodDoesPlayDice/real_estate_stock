@@ -267,16 +267,19 @@ class Select extends React.Component {
         let changeHandler;
         let options;
         let specialClass;
+        let label;
 
         switch (this.purpose) {
             case "flat":
                 changeHandler = this.handleDynamicSelectChange;
                 options = generateOptions(this.props.value);
                 specialClass = "browser-default";
+                label = this.label;
                 break;
             default:
                 changeHandler = this.handleStaticSelectChange;
                 options = generateOptions (getSingleCol(this.options, "utilitySheet"));
+                label = this.label;
         };
         return (
             <div class="row">
@@ -285,7 +288,7 @@ class Select extends React.Component {
                         <option></option>
                         {options}
                     </select>}
-                    <label>{this.label}</label>
+                    <label>{label}</label>
                 </div>
             </div>
         );
