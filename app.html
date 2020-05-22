@@ -35,6 +35,7 @@ function getSingleCol(col, sheetName) {
 }
 
 function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
+    if (forLiter == '') {return null};
     let result = {};
     let twoCols = {
         flats: getSingleCol(flatsCol, sheetName),
@@ -53,6 +54,15 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
     });
     return result[forLiter];
 }
+
+function materialUpdateSelect (id) {
+    var elem = document.getElementById(id);
+    var instance = M.FormSelect.getInstance(elem);
+    instance.destroy();
+    var elemNew = document.getElementById(id);
+    M.FormSelect.init([elemNew], {});
+}
+
 
 function renderApp() {
     ReactDOM.render(

@@ -215,28 +215,37 @@ class Select extends React.Component {
     constructor (props) {
         super(props);
         this.label = this.props.label;
+        this.id = this.props.id
         this.options = this.props.staticOptions;
         // пропсы для тех эксемпляров, которые поднимают свое состояние до предка
         this.purpose = this.props.purpose;
-        this.value = this.props.value
-        this.triggered = this.props.triggered;
+        //this.triggered = this.props.triggered;
         //
-        this.handleChange = this.handleChange.bind(this);
+        this.handleDynamicSelectChange = this.handleDynamicSelectChange.bind(this);
+        this.handleStaticSelectChange = this.handleStaticSelectChange.bind(this);
         // value хранится в state только если это обычный селект
-        this.state = !this.triggered ? {value: ''} : {triggered: true}
+        this.state =  {value: ''} //!this.triggered ?: {triggered: true}
     };
     componentDidMount(){
         var elems = document.querySelectorAll('select');
         var instances = M.FormSelect.init(elems, {});
     };
-    handleChange(event) {
+    componentWillUnmount() {
+       console.log("unmount select") 
+    }
+    handleDynamicSelectChange(event) {
+        if (this.purpose == "flat") {
+            this.props.onFlatChange(event.target.value);
+            this.setState({
+                value: event.target.value
+            })
+            return;
+        }
+    }
+    handleStaticSelectChange(event) {
         // первые два для тех эксемпляров, которые поднимают свое состояние до предка
         if (this.purpose == "liter") {
             this.props.onLiterChange(event.target.value);
-            return;
-        }
-        if (this.purpose == "flat") {
-            this.props.onFlatChange(event.target.value);
             return;
         } else {
             this.setState({
@@ -246,43 +255,41 @@ class Select extends React.Component {
     }
 
     render () {
-        if (this.triggered) {
-            console.log("тут все ок")
-            // динамический select 
-            let options = this.value === null ? <option>""</option> : this.value.map((el) => {
-                return <option key={el} >{el}</option>
-            });
-            return (
-                <div class="row">
-                    <div class="input-field col s6">
-                        <select onChange={this.handleChange} value='' >
-                             <option>""</option>
-                             {options}
-                        </select>
-                        <label>{this.label}</label>
-                    </div>
-                </div>
-            )
+        function generateOptions (arr) {
+            if (arr != null) {
+                return arr.map((el) =>
+                    <option key={el} value={el}>{el}</option>
+                );
+            } else {
+                return <option></option>
+            } 
         };
+        let changeHandler;
+        let options;
+        let specialClass;
 
-        // статический  select
-        let arr = getSingleCol(this.options, "utilitySheet");     
-        let options = arr.map((el) => {
-            return <option key={el} >{el}</option>
-            });
+        switch (this.purpose) {
+            case "flat":
+                changeHandler = this.handleDynamicSelectChange;
+                options = generateOptions(this.props.value);
+                specialClass = "browser-default";
+                break;
+            default:
+                changeHandler = this.handleStaticSelectChange;
+                options = generateOptions (getSingleCol(this.options, "utilitySheet"));
+        };
         return (
             <div class="row">
                 <div class="input-field col s6">
-                    <select onChange={this.handleChange} value={this.state.value} >
-                        <option>""</option>
+                    {<select class={specialClass} id={this.id} onChange={changeHandler} value={this.state.value} >
+                        <option></option>
                         {options}
-                    </select>
+                    </select>}
                     <label>{this.label}</label>
                 </div>
             </div>
-        )
-
-    }
+        );
+    };
 };
 
 class LiterAndFlatHandler extends React.Component {
@@ -292,32 +299,29 @@ class LiterAndFlatHandler extends React.Component {
         this.handleFlatChange = this.handleFlatChange.bind(this);
         this.state = {
             liter: '',
-            flat: '',
-            triggered: false
+            flat: '',  
         }
     };
     handleLiterChange(liter) {
         this.setState({
             liter: liter,
         });
-        this.setState({
-            triggered: true
-        })
     };
-    handleFlatChange(flat ) {
+    handleFlatChange(flat) {
         this.setState({
             flat: flat,
         })
     };
     render () {
-        let flatsInCurrentLiter = getFlatsInStock(this.state.liter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet");
+        let liter = this.state.liter;
+        let flatsInCurrentLiter = getFlatsInStock(liter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet");
         return (
             <div>
                 <Select
                     id = "SelectLiter"
                     label = "Литер:"
                     staticOptions={"liters"}
-                    triggered={false}
+
                     purpose = "liter"
                     onLiterChange={this.handleLiterChange}
                 />
@@ -327,7 +331,6 @@ class LiterAndFlatHandler extends React.Component {
                     
                     value = {flatsInCurrentLiter}
                     purpose = "flat"
-                    triggered = {this.state.triggered}
                     onFlatChange={this.handleFlatChange}
                 />
             </div>
