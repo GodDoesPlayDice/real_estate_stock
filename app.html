@@ -56,10 +56,50 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
     return result[forLiter];
 }
 
+let frontEndData = {
+    timestamp: '',
+    document: {},
+    operation: '',
+}
+
+function storeData () {
+    google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(frontEndData.document));
+
+    function onSuccess (obj) {
+        console.log("отправлено")
+        //console.log(getFlatsInStock(7, 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet"));
+    };
+}
+
 class App extends React.Component {
     constructor (props) {
         super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSaveBtn = this.handleSaveBtn.bind(this);
+        this.state = {
+            timestamp: '',
+            current_view: 'view_main',
+            document: {},
+            preloader: '',
+        }
     };
+    handleChange(field, changes) {
+
+        this.setState({
+            [field]: changes
+        });
+
+        //  отправка данных на сервер 
+
+        if (field === 'document') {
+            frontEndData[field] = changes;
+        }
+        
+    };
+    handleSaveBtn(e) {
+        console.log(this.state.document)
+        storeData();
+    }
     render () {
         // создание объекта для поиска сделок в автокомплите
         let docNamesObj = {};
@@ -72,9 +112,18 @@ class App extends React.Component {
                 <Header 
                     logo="Виноград 2" 
                     docsList={docNamesObj}
+                    current_view={this.state.current_view}
+                    onChange={this.handleChange}
                 />
                 <div class="container row">
-                    <DocFieldsHandler />
+                    {this.state.current_view === 'create_new_doc' &&
+                    <React.Fragment>
+                        <DocFieldsHandler 
+                        onChange={this.handleChange}
+                        />
+                        <a class="waves-effect waves-light btn-large" onClick={this.handleSaveBtn}><i class="material-icons left">save</i>Сохранить</a>
+                    </React.Fragment>
+                    }     
                 </div>
             </div>
         );

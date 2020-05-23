@@ -2,16 +2,23 @@
 class Header extends React.Component {
     constructor (props) {
         super(props);
-        this.logo = this.props.logo
-        this.autocompleteData = this.props.docsList
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            current_view: this.props.current_view
+        }
+    };
+    handleChange(pressed) {
+        this.props.onChange("current_view", pressed);
+        this.setState({
+            current_view: pressed
+        });
     };
     componentDidMount () {
         // инициализация автокомплита
         let elems = document.querySelectorAll('.autocomplete');
         let instances = M.Autocomplete.init(elems, {
-                data: this.autocompleteData
+                data: this.props.docsList
         });
-
         // инициализация пушпин
         let elems2 = document.querySelectorAll('.pushpin');
         let instances2 = M.Pushpin.init(elems2, {});
@@ -23,7 +30,7 @@ class Header extends React.Component {
                 <nav class="indigo pushpin" style={styles}>
                     <div class="nav-wrapper container row">
                         <div class="col s2">
-                            <a href="#" class="brand-logo">{this.logo}</a>
+                            <a href="#" class="brand-logo">{this.props.logo}</a>
                         </div>
                         <form class="col s6">
                             <div class="input-field">
@@ -34,8 +41,20 @@ class Header extends React.Component {
                         </form>
                         <div class="col s4">
                             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                                <TopMenuButton purpose="Новый документ" />
-                                <TopMenuButton purpose="Статистика" />
+                                {this.state.current_view === 'view_main' &&
+                                    <TopMenuButton 
+                                    action="create_new_doc" 
+                                    label="Новый документ"
+                                    onChange={this.handleChange}
+                                    />
+                                }
+                                {this.state.current_view === 'create_new_doc' &&
+                                    <TopMenuButton 
+                                    action="view_main"
+                                    label="Назад"
+                                    onChange={this.handleChange}
+                                    />
+                                }
                             </ul>
                         </div>
                     </div>
@@ -47,15 +66,14 @@ class Header extends React.Component {
 class TopMenuButton extends React.Component {
     constructor (props) {
         super(props);
-        this.purpose = this.props.purpose
         this.handleClick = this.handleClick.bind(this);
     };
     handleClick() {
-        alert('пока не работает')
+        this.props.onChange(this.props.action)
     }
     render () {
         return (
-            <li><a href="#" onClick={this.handleClick}>{this.purpose}</a></li>
+            <li><a href="#" onClick={this.handleClick}>{this.props.label}</a></li>
         )
     }
 }

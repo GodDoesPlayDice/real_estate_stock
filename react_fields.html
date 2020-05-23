@@ -188,32 +188,17 @@ class Radio extends React.Component {
 class CheckBox extends React.Component {
     constructor (props) {
         super(props);
-        this.label = this.props.label;
-        this.id = this.props.id;
-        this.key = this.props.key;
         this.handleChange = this.handleChange.bind(this);
-        this.value = this.props.value;
         this.state = ({
-            value: this.value,
             span: "normal"
         })
     }
     componentDidMount() {
     }
     handleChange(e) {
-        let status = e.target.value;
-        let val;
-        switch (status) {
-            case "yes":
-                val = "no";
-                break;
-            default:
-                val = "yes"
-        }
-        this.props.onChange(this.id, val);
+        this.props.onChange(this.props.id, !this.props.value);
         this.setState({
-            value: val,
-            span:  (val == "no" ? "normal" : "bolder")
+            span:  (!this.props.value ? "bolder" : "normal")
         });
     }
     render() {
@@ -221,8 +206,8 @@ class CheckBox extends React.Component {
             <div class="row">
                 <p>
                     <label>
-                        <input id={this.id} key={this.key} type="checkbox"  class="filled-in" checked={this.state.value == "yes" ? "checked" : ""} value={this.state.value} onChange={this.handleChange} />
-                        <span style={{"font-weight": this.state.span}} >{this.label}</span>
+                        <input id={this.props.id} key={this.props.key} type="checkbox"  class="filled-in" checked={this.props.value ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
+                        <span style={{"font-weight": this.state.span}} >{this.props.label}</span>
                     </label>
                 </p>
             </div>
@@ -286,7 +271,7 @@ class DocFieldsHandler extends React.Component {
             CurrentStatusDate: '',
             NextStatusEstimatedDate: '',
             ClientName: '',
-            RemainsOnSale: 'no',
+            RemainsOnSale: false,
             DealType: '',
             SelectLiter: '',
             SelectFlat: '',
@@ -310,18 +295,19 @@ class DocFieldsHandler extends React.Component {
         this.setState({
             [field]: value,
         });
+        console.log(value)
         //console.log(`поле: ${field} значение: ${value} `)
+        this.props.onChange("document" ,this.state)
     };
     // отакое дерьмо нужно, чтобы материалайзовый селект рендерился корректно 
     handleLiterChange(field, value) {
         this.setState({
             [field]: '',
         });
-        setTimeout(() => {
-            this.setState({
-                [field]: value,
-            });
-        }, 10);
+        this.setState({
+            [field]: value,
+        });
+        this.props.onChange("document" ,this.state)
     }
 
     render () {
@@ -415,6 +401,7 @@ class DocFieldsHandler extends React.Component {
                     value = {this.state.LegalCost}
                     onChange={this.handleChildChange}
                 />
+                {this.state.LegalServiceNoPayment === ''&&
                 <TextField
                     id = "LegalServiceCost"
                     label = "Оплата юр. услуг:"
@@ -422,6 +409,8 @@ class DocFieldsHandler extends React.Component {
                     value = {this.state.LegalServiceCost}
                     onChange={this.handleChildChange}
                 />
+                }
+                {this.state.LegalServiceCost === '' &&
                 <Select
                     id = "LegalServiceNoPayment"
                     label = "Юр. услуги без оплаты:"
@@ -429,6 +418,9 @@ class DocFieldsHandler extends React.Component {
                     value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
                     onChange={this.handleChildChange}
                 />
+                }
+                {this.state.DealType === 'АН' &&
+                <React.Fragment>
                 <TextField
                     id = "RealEstateAgency"
                     label = "Агентство недвижимости:"
@@ -443,6 +435,8 @@ class DocFieldsHandler extends React.Component {
                     value = {this.state.EstateAgent}
                     onChange={this.handleChildChange}
                 />
+                </React.Fragment>
+                }
                 <TextField
                     id = "Comment"
                     label = "Комментарий к документу:"

@@ -66,3 +66,17 @@ function setDataForSession () {
     return false;
   }
 };
+
+function storeData (json) {
+  let data = JSON.parse(json);
+  console.log(data);
+  let arr = [];
+  
+  for (let key in data) {
+    arr.push(data[key])
+  }
+  let final = [arr];
+  let target = SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
+  .getSheetByName("target").getRange(1,1, final.length, final[0].length);
+  target.setValues(final);
+}
