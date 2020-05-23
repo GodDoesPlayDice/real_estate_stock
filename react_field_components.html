@@ -240,6 +240,8 @@ class Select extends React.Component {
         let elem = document.getElementById(this.props.id);
         let instance = M.FormSelect.init(elem, {});
     };
+    componentWillUnmount(){
+    }
     handleChange(e) {
         this.props.onChange(this.props.id, e.target.value);
         this.setState({
@@ -259,8 +261,8 @@ class Select extends React.Component {
         let options = generateOptions(this.props.value); 
         let specialClass;
         if (this.props.purpose === "flat") {
-            specialClass = "browser-default";
-        }
+            //specialClass = "browser-default";
+        } 
         return (
             <div class="row">
                 <div class="input-field col s6">
@@ -279,6 +281,7 @@ class DocFieldsHandler extends React.Component {
     constructor (props) {
         super(props);
         this.handleChildChange = this.handleChildChange.bind(this);
+        this.handleLiterChange = this.handleLiterChange.bind(this);
         this.state = {
             CurrentStatusDate: '',
             NextStatusEstimatedDate: '',
@@ -299,16 +302,27 @@ class DocFieldsHandler extends React.Component {
             Comment: ''
         };
     };
+    // принимает изменения от всех полей 
     handleChildChange(field, value) {
         if (this.state[field] === value) {
-            console.log("не менялось")
             return;
         };
         this.setState({
             [field]: value,
         });
-        console.log(`поле: ${field} значение: ${this.state[field]} `)
+        //console.log(`поле: ${field} значение: ${value} `)
     };
+    // отакое дерьмо нужно, чтобы материалайзовый селект рендерился корректно 
+    handleLiterChange(field, value) {
+        this.setState({
+            [field]: '',
+        });
+        setTimeout(() => {
+            this.setState({
+                [field]: value,
+            });
+        }, 10);
+    }
 
     render () {
         return (
@@ -339,7 +353,7 @@ class DocFieldsHandler extends React.Component {
                     key = "SelectLiter"
                     label = "Литер:"
                     value = {getSingleCol("liters", "utilitySheet")}
-                    onChange={this.handleChildChange}
+                    onChange={this.handleLiterChange}
                 />{this.state.SelectLiter != '' &&
                 <Select
                     id = "SelectFlat"
