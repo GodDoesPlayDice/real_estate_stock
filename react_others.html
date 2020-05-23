@@ -1,31 +1,4 @@
-<script  type="text/babel">
-class App extends React.Component {
-    constructor (props) {
-        super(props);
-    };
-    render () {
-        // создание объекта для поиска сделок в автокомплите
-        let docNamesObj = {};
-        getSingleCol("ID", "docsSheet").forEach((elem) => {
-            docNamesObj[elem] = null
-        });
-        //
-        return (
-            <div>
-                <Header 
-                    logo="Виноград 2" 
-                    docsList={docNamesObj}
-                />
-                <div class="container row">
-                    <DocFieldsHandler />
-                </div>
-            </div>
-        );
-    };
-};
-
-
-
+<script type="text/babel">
 class Header extends React.Component {
     constructor (props) {
         super(props);
@@ -70,6 +43,20 @@ class Header extends React.Component {
         );
     }
 }
+
+class TopMenuButton extends React.Component {
+    constructor (props) {
+        super(props);
+        this.purpose = this.props.purpose
+        this.handleClick = this.handleClick.bind(this);
+    };
+    handleClick() {
+        alert('пока не работает')
+    }
+    render () {
+        return (
+            <li><a href="#" onClick={this.handleClick}>{this.purpose}</a></li>
+        )
+    }
+}
 </script>
-
-

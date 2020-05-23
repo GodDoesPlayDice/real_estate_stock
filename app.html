@@ -56,6 +56,31 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
     return result[forLiter];
 }
 
+class App extends React.Component {
+    constructor (props) {
+        super(props);
+    };
+    render () {
+        // создание объекта для поиска сделок в автокомплите
+        let docNamesObj = {};
+        getSingleCol("ID", "docsSheet").forEach((elem) => {
+            docNamesObj[elem] = null
+        });
+        //
+        return (
+            <div>
+                <Header 
+                    logo="Виноград 2" 
+                    docsList={docNamesObj}
+                />
+                <div class="container row">
+                    <DocFieldsHandler />
+                </div>
+            </div>
+        );
+    };
+};
+
 function renderApp() {
     ReactDOM.render(
     <App />,
