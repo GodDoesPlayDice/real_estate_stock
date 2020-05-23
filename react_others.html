@@ -3,15 +3,9 @@ class Header extends React.Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            current_view: this.props.current_view
-        }
     };
     handleChange(pressed) {
         this.props.onChange("current_view", pressed);
-        this.setState({
-            current_view: pressed
-        });
     };
     componentDidMount () {
         // инициализация автокомплита
@@ -36,14 +30,14 @@ class Header extends React.Component {
                         </form>
                         <div class="col s4">
                             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                                {this.state.current_view === 'view_main' &&
+                                {this.props.current_view === 'view_main' &&
                                     <TopMenuButton 
                                     action="create_new_doc" 
                                     label="Новый документ"
                                     onChange={this.handleChange}
                                     />
                                 }
-                                {this.state.current_view === 'create_new_doc' &&
+                                {this.props.current_view === 'create_new_doc' &&
                                     <TopMenuButton 
                                     action="view_main"
                                     label="Назад"

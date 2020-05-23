@@ -1,22 +1,36 @@
 <script type="text/babel">
-// запуск приложения при загрузке страницы
-main();
-
-function main() {
-    google.script.run.withSuccessHandler(onSuccess).getServerData();
-
-    function onSuccess (obj) {
-        serverSideData = JSON.parse(obj);
-        renderApp();
-        //console.log(getFlatsInStock(7, 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet"));
-    };
-};
 
 // данныe с сервера
 var serverSideData = {};
+// данные на фронте
+var frontEndData = {
+    timestamp: '',
+    document: {},
+    operation: '',
+}
+main();
 
-// выдает массив с айдишниками документов
 
+function main() {
+    google.script.run.withSuccessHandler(onSuccess).getServerData();
+    function onSuccess (obj) {
+        serverSideData = JSON.parse(obj);
+        renderApp();
+    };
+};
+
+// отправка одной строки функции на сервере, преобразующей ее в массив для записи
+function storeData (data) {
+    frontEndData.document;
+    google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(data));
+
+    function onSuccess (obj) {
+        alert("Данные записаны.")
+    };
+}
+
+
+// один столбец данных исходя из его имени и имели листа
 function getSingleCol(col, sheetName) {
     // col is text
     let result = [];
@@ -34,6 +48,8 @@ function getSingleCol(col, sheetName) {
     return result;
 }
 
+
+// один столбец данных (квартиры) исходя из номера литера и имени листа 
 function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
     if (forLiter === '') {return null};
     let result = {};
@@ -43,7 +59,7 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
     }
     let flats = twoCols.flats;
     let liters = twoCols.liters;
-    
+
     flats.forEach((elem, index) => {
         let flat = elem;
         let liter = liters[index];
@@ -52,53 +68,43 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
         } 
         result[liter].push(flat);
     });
-    //console.log(result[forLiter], "массив рассчитан, проблема где-то дальше")
     return result[forLiter];
 }
 
-let frontEndData = {
-    timestamp: '',
-    document: {},
-    operation: '',
-}
 
-function storeData (data) {
-    frontEndData.document;
-    google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(data));
-
-    function onSuccess (obj) {
-        alert("Спасибо за информацию. Иди работать!")
-        //console.log(getFlatsInStock(7, 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet"));
-    };
+function renderApp() {
+    ReactDOM.render(
+    <App />,
+        document.getElementById('root')
+    );
 }
 
 class App extends React.Component {
     constructor (props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleHeaderClick = this.handleHeaderClick.bind(this);
         this.handleSaveBtn = this.handleSaveBtn.bind(this);
         this.handleDecision = this.handleDecision.bind(this);
-        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleDocChange = this.handleDocChange.bind(this);
         this.state = {
             timestamp: '',
             current_view: 'view_main',
             document: {},
             modal: false,
             transaction_in_process: false
-
         }
     };
-    handleChange(field, changes) {
+
+    handleHeaderClick(field, changes) {
         this.setState({
             [field]: changes
         });
     };
-    handleFieldChange(field, value) {
+    handleDocChange(field, value) {
         this.setState({
             [field]: value
         });
     };
-    //  отправка данных на сервер 
     handleSaveBtn(e) {
         frontEndData.document = this.state.document;
         this.setState({
@@ -110,15 +116,18 @@ class App extends React.Component {
             this.setState({
                 transaction_in_process: true
             })
-            let promise = storeData(this.state.document);
+            let promise = () => {
+                storeData(this.state.document);
+            }
             await promise;
             this.setState({
                 transaction_in_process: false,
-                modal: false
+                modal: false,
+                current_view: 'view_main'
             })
         }
         if( decision === 'confirmed') {
-            console.log(this.state.document)
+            // сохранение данных в таблицу
             saveData.call(this);
         } else {
             this.setState({
@@ -129,19 +138,18 @@ class App extends React.Component {
     
     render () {
         // создание объекта для поиска сделок в автокомплите
-        let docNamesObj = {};
+        let autocompList = {};
         getSingleCol("ID", "docsSheet").forEach((elem) => {
-            docNamesObj[elem] = null
+            autocompList[elem] = null
         });
-        //
         return (
             <React.Fragment>
                 <header>
                     <Header 
                         logo="Виноград 2" 
-                        docsList={docNamesObj}
+                        docsList={autocompList}
                         current_view={this.state.current_view}
-                        onChange={this.handleChange}
+                        onChange={this.handleHeaderClick}
                     />
                 </header>
                 <main>
@@ -159,12 +167,11 @@ class App extends React.Component {
                         {this.state.current_view === 'create_new_doc' &&
                         <React.Fragment>
                             <DocFieldsHandler 
-                            onFieldChange={this.handleFieldChange}
+                            onFieldChange={this.handleDocChange}
                             onSaveButton={this.handleSaveBtn}
                             />
                         </React.Fragment>
                         }
-                        {/* кнопка "сохранить" */} 
                         {/* модальное окно */}
                         {this.state.modal &&
                             <Modal 
@@ -178,11 +185,4 @@ class App extends React.Component {
         );
     };
 };
-
-function renderApp() {
-    ReactDOM.render(
-    <App />,
-        document.getElementById('root')
-    );
-}
 </script>

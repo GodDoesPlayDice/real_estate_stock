@@ -201,7 +201,6 @@ class Select extends React.Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        //this.state =  {value: ''};
     };
     componentDidMount(){
         let elem = document.getElementById(this.props.id);
@@ -210,7 +209,12 @@ class Select extends React.Component {
     componentWillUnmount(){
     }
     handleChange(e) {
-        this.props.onChange(this.props.id, e.target.value);
+        let val = e.target.value;
+        {this.props.id === "SelectLiter" &&  this.props.onChange(this.props.id, '');}
+        setTimeout(() => {
+        this.props.onChange(this.props.id, val);
+        }, 10)
+        
     }
     render () {
         function generateOptions (arr) {
@@ -230,7 +234,7 @@ class Select extends React.Component {
         return (
             <div class="row">
                 <div class="input-field col s10 offset-s1">
-                    {<select class={specialClass} key={this.props.key} id={this.props.id} onChange={this.handleChange} value={this.props.value} >
+                    {<select class={specialClass} key={this.props.key} id={this.props.id} onChange={this.handleChange} >
                         <option value=""></option>
                         {options}
                     </select>}
@@ -268,17 +272,16 @@ class DocFieldsHandler extends React.Component {
     };
     // принимает изменения от всех полей 
     handleChildChange(field, value) {
-        {field === 'SelectLiter' &&
-            this.setState({
-                [field]: '',
-            });
-        }   
+/*         {field === 'SelectLiter' &&
+        this.setState({
+            'SelectLiter': '',
+        });
+        } */
         this.setState({
             [field]: value,
         });
     };
     handleSaveBtn () {
-        //console.log(`поле: ${field} значение: ${value} `)
         this.props.onFieldChange("document", this.state);
         this.props.onSaveButton();
     }
