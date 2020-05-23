@@ -289,15 +289,11 @@ class DocFieldsHandler extends React.Component {
     };
     // принимает изменения от всех полей 
     handleChildChange(field, value) {
-        if (this.state[field] === value) {
-            return;
-        };
         this.setState({
             [field]: value,
         });
-        console.log(value)
         //console.log(`поле: ${field} значение: ${value} `)
-        this.props.onChange("document" ,this.state)
+        this.props.onChange("document" , this.state)
     };
     // отакое дерьмо нужно, чтобы материалайзовый селект рендерился корректно 
     handleLiterChange(field, value) {

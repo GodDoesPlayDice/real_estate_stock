@@ -77,4 +77,42 @@ class TopMenuButton extends React.Component {
         )
     }
 }
+
+
+class Modal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+    handleChange(e) {
+        this.props.onDecision(e.target.id);
+
+        let elem = document.getElementById(this.props.id);
+        var instance = M.Modal.getInstance(elem);
+        instance.close();
+    }
+    componentDidMount () {
+        let elem = document.getElementById(this.props.id);
+        let instance = M.Modal.init(elem, {});
+        instance.open();
+    };
+    componentWillUnmount(){
+    }
+    render(){
+        return (
+            <div>
+                <div id={this.props.id} class="modal">
+                    <div class="modal-content">
+                        <h4>Подтверждени сохранения данных</h4>
+                        <p>Вы хотите сохранить:</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#"  onClick={this.handleChange} id="cancel"class="modal-close waves-effect waves-green btn-flat">Отмена</a>
+                        <a href="#"  onClick={this.handleChange} id="confirmed" class="modal-close waves-effect waves-green btn-flat">Сохранить</a>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
 </script>

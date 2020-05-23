@@ -66,7 +66,7 @@ function storeData () {
     google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(frontEndData.document));
 
     function onSuccess (obj) {
-        console.log("отправлено")
+        alert("Спасибо за информацию. Иди работать!")
         //console.log(getFlatsInStock(7, 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet"));
     };
 }
@@ -76,30 +76,52 @@ class App extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSaveBtn = this.handleSaveBtn.bind(this);
+        this.handleDecision = this.handleDecision.bind(this);
         this.state = {
             timestamp: '',
             current_view: 'view_main',
             document: {},
-            preloader: '',
+            modal: false,
+            transaction_in_process: false
+
         }
     };
     handleChange(field, changes) {
-
         this.setState({
             [field]: changes
         });
-
-        //  отправка данных на сервер 
-
-        if (field === 'document') {
-            frontEndData[field] = changes;
+    };
+    //  отправка данных на сервер 
+    handleSaveBtn(e) {
+        frontEndData.document = this.state.document;
+        console.log(this.state.document)
+        this.setState({
+            modal: true,
+        })
+    }
+    handleDecision(decision) {
+        
+        async function saveData () {
+            this.setState({
+                transaction_in_process: true
+            })
+            let promise = storeData();
+            await promise;
+            this.setState({
+                transaction_in_process: false,
+                modal: false
+            })
+        }
+        if( decision === 'confirmed') {
+            saveData.call(this);
+        } else {
+            this.setState({
+                modal: false
+            });
         }
         
-    };
-    handleSaveBtn(e) {
-        console.log(this.state.document)
-        storeData();
     }
+    
     render () {
         // создание объекта для поиска сделок в автокомплите
         let docNamesObj = {};
@@ -116,6 +138,7 @@ class App extends React.Component {
                     onChange={this.handleChange}
                 />
                 <div class="container row">
+                    {/* поля сделки и кнопка сохранения */}
                     {this.state.current_view === 'create_new_doc' &&
                     <React.Fragment>
                         <DocFieldsHandler 
@@ -123,7 +146,14 @@ class App extends React.Component {
                         />
                         <a class="waves-effect waves-light btn-large" onClick={this.handleSaveBtn}><i class="material-icons left">save</i>Сохранить</a>
                     </React.Fragment>
-                    }     
+                    } 
+                    {/* модальное окно */}
+                    {this.state.modal &&
+                        <Modal 
+                            id="comfirmation"
+                            onDecision={this.handleDecision}
+                        />
+                    }    
                 </div>
             </div>
         );
