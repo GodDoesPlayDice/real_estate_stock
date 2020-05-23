@@ -19,23 +19,18 @@ class Header extends React.Component {
         let instances = M.Autocomplete.init(elems, {
                 data: this.props.docsList
         });
-        // инициализация пушпин
-        let elems2 = document.querySelectorAll('.pushpin');
-        let instances2 = M.Pushpin.init(elems2, {});
     }
     render () {
-        // для того, чтобы верхнее меню было поверх всего остального
-        let styles = {"z-index": "2147483637"};
         return (
-                <nav class="indigo pushpin" style={styles}>
+            <div class="navbar-fixed">
+                <nav class="indigo" >
                     <div class="nav-wrapper container row">
-                        <div class="col s2">
+                        <div class="col s3">
                             <a href="#" class="brand-logo">{this.props.logo}</a>
                         </div>
-                        <form class="col s6">
+                        <form class="col s5">
                             <div class="input-field">
                                 <input id="search" type="search" class="autocomplete" placeholder="Поиск сделки" required />
-                                
                                 <i class="material-icons">close</i>
                             </div>
                         </form>
@@ -59,6 +54,7 @@ class Header extends React.Component {
                         </div>
                     </div>
                 </nav>
+            </div>    
         );
     }
 }

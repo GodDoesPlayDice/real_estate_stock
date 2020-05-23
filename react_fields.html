@@ -2,42 +2,37 @@
 class TextField extends React.Component {
     constructor (props) {
         super(props);
-        this.label = this.props.label;
-        this.id = this.props.id;
-        this.key = this.props.key;
         this.handleChange = this.handleChange.bind(this);
-        this.value = this.props.value;
-        this.purpose = this.props.purpose;
-        this.state = {value: this.value}
+        this.state = {value: ''}
     }
     componentDidMount(){
-        let elem = document.getElementById(this.id);
+        let elem = document.getElementById(this.props.id);
         elem.addEventListener('focusout', (e) => {
-            this.props.onChange(this.id, e.target.value);
+            this.props.onChange(this.props.id, this.state.value);
         });
         M.updateTextFields();
     }
     handleChange(e) {
-        this.setState({value: e.target.value});
+        this.setState({
+            value: e.target.value
+        })
     }
     render() {
         let element;
-        switch (this.purpose) {
+        switch (this.props.purpose) {
             case "area":
-                element = <textarea id={this.id} key={this.key} value={this.state.value} class="materialize-textarea" onChange={this.handleChange}></textarea>;
+                element = <textarea id={this.props.id} key={this.props.key} value={this.state.value} class="materialize-textarea" onChange={this.handleChange}></textarea>;
                 break;
             default:
-                element = <input id={this.id} key={this.key} value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
+                element = <input id={this.props.id} key={this.props.key} value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
         }
         return (
-            <form class="col s12">
-                <div class="row">
-                    <div class="input-field col s6">
+            <div class="row">
+                    <div class="input-field col s10 offset-s1">
                         {element}
-                        <label for="" >{this.label}</label>
+                        <label for={this.props.id} >{this.props.label}</label>
                     </div>
-                </div>
-            </form>
+            </div>
         )
     }
 }
@@ -45,11 +40,7 @@ class TextField extends React.Component {
 class DatePicker extends React.Component {
     constructor(props) {
         super(props);
-        this.label = this.props.label;
-        this.id = this.props.id;
-        this.key = this.props.key
         this.handleChange = this.handleChange.bind(this);
-        this.value = this.props.value;
     }
     componentDidMount() {
         let options = {
@@ -107,32 +98,27 @@ class DatePicker extends React.Component {
                             weekdaysAbbrev: ['В', 'П', 'В', 'С', 'Ч', 'П', 'С']
                     }
                 }
-        let elem = document.getElementById(this.id);
+        let elem = document.getElementById(this.props.id);
         let instance = M.Datepicker.init(elem, options);
         elem.addEventListener('change', (e) => {
-            this.props.onChange(this.id, e.target.value)
+            this.props.onChange(this.props.id, e.target.value)
         });
     }
     componentWillUnmount() {
-        let elem = document.getElementById(this.id);
+        let elem = document.getElementById(this.props.id);
         let instance = M.Datepicker.init(elem, {});
         instance.destroy();
     }
-
     handleChange(e) {
-
     };
-
     render() {
         return (
             <div class="row">
-                <form>
-                    <div  class="input-field col s6">
-                        <input id={this.id} key={this.key} type="text" class="datepicker"  />
-                        <label>{this.label}
-                        </label>
-                    </div>
-                </form>
+                <div class="input-field col s10 offset-s1">
+                    <input id={this.props.id} key={this.props.key} type="text" class="datepicker"  />
+                    <label for={this.props.id}>{this.props.label}
+                    </label>
+                </div>
             </div>
         )
     }
@@ -141,45 +127,39 @@ class DatePicker extends React.Component {
 class Radio extends React.Component {
     constructor (props) {
         super(props);
-        this.label = this.props.label;
-        this.key = this.props.key;
-        this.id = this.props.id;
-        this.fistOption = this.props.first;
-        this.secondOption = this.props.second;
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
             span1: 'normal',
             span2: 'normal'
         })
     }
-    componentDidMount() {
-
-    }
     handleChange(e) {
-        this.props.onChange(this.id, e.target.value);
+        this.props.onChange(this.props.id, e.target.value);
         this.setState({
-            span1: e.target.value === this.fistOption ? "bolder" : "normal",
-            span2: e.target.value === this.secondOption ? "bolder" : "normal",
+            span1: e.target.value === this.props.first ? "bolder" : "normal",
+            span2: e.target.value === this.props.second ? "bolder" : "normal",
         });
     }
     render() {
         return (
             <div class="row">
-                <label>{this.label}</label>
-                 <form key={this.key}>
-                    <p>
-                    <label>
-                        <input name="group1" type="radio" value={this.fistOption} onClick={this.handleChange} />
-                        <span style={{"font-weight": this.state.span1}} >{this.fistOption}</span>
-                    </label>
-                    </p>
-                    <p>
-                    <label>
-                        <input name="group1" type="radio" value={this.secondOption} onClick={this.handleChange} />
-                        <span style={{"font-weight": this.state.span2}} >{this.secondOption}</span>
-                    </label>
-                    </p>
-                </form>
+                <div class="col s10 offset-s1">
+                <label>{this.props.label}</label>
+                    <form key={this.props.key}>
+                        <p>
+                        <label>
+                            <input name="group1" type="radio" value={this.props.first} onClick={this.handleChange} />
+                            <span style={{"font-weight": this.state.span1}} >{this.props.first}</span>
+                        </label>
+                        </p>
+                        <p>
+                        <label>
+                            <input name="group1" type="radio" value={this.props.second} onClick={this.handleChange} />
+                            <span style={{"font-weight": this.state.span2}} >{this.props.second}</span>
+                        </label>
+                        </p>
+                    </form>
+                </div>
             </div>
         )
     }
@@ -204,12 +184,14 @@ class CheckBox extends React.Component {
     render() {
         return (
             <div class="row">
-                <p>
-                    <label>
-                        <input id={this.props.id} key={this.props.key} type="checkbox"  class="filled-in" checked={this.props.value ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
-                        <span style={{"font-weight": this.state.span}} >{this.props.label}</span>
-                    </label>
-                </p>
+                <div class="col s10 offset-s1">
+                    <p>
+                        <label>
+                            <input id={this.props.id} key={this.props.key} type="checkbox"  class="filled-in" checked={this.props.value ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
+                            <span style={{"font-weight": this.state.span}} >{this.props.label}</span>
+                        </label>
+                    </p>
+                </div>
             </div>
         )
     }
@@ -219,7 +201,7 @@ class Select extends React.Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state =  {value: ''};
+        //this.state =  {value: ''};
     };
     componentDidMount(){
         let elem = document.getElementById(this.props.id);
@@ -229,9 +211,6 @@ class Select extends React.Component {
     }
     handleChange(e) {
         this.props.onChange(this.props.id, e.target.value);
-        this.setState({
-            value: e.target.value
-        });
     }
     render () {
         function generateOptions (arr) {
@@ -240,7 +219,7 @@ class Select extends React.Component {
                     <option key={el} value={el}>{el}</option>
                 );
             } else {
-                return <option></option>
+                return <option value=""></option>
             } 
         };
         let options = generateOptions(this.props.value); 
@@ -250,12 +229,12 @@ class Select extends React.Component {
         } 
         return (
             <div class="row">
-                <div class="input-field col s6">
-                    {<select class={specialClass} key={this.props.key} id={this.props.id} onChange={this.handleChange} value={this.state.value} >
-                        <option></option>
+                <div class="input-field col s10 offset-s1">
+                    {<select class={specialClass} key={this.props.key} id={this.props.id} onChange={this.handleChange} value={this.props.value} >
+                        <option value=""></option>
                         {options}
                     </select>}
-                    <label>{this.props.label}</label>
+                    <label for={this.props.id}>{this.props.label}</label>
                 </div>
             </div>
         );
@@ -266,7 +245,6 @@ class DocFieldsHandler extends React.Component {
     constructor (props) {
         super(props);
         this.handleChildChange = this.handleChildChange.bind(this);
-        this.handleLiterChange = this.handleLiterChange.bind(this);
         this.state = {
             CurrentStatusDate: '',
             NextStatusEstimatedDate: '',
@@ -290,157 +268,187 @@ class DocFieldsHandler extends React.Component {
     // принимает изменения от всех полей 
     handleChildChange(field, value) {
         this.setState({
-            [field]: value,
-        });
-        //console.log(`поле: ${field} значение: ${value} `)
-        this.props.onChange("document" , this.state)
-    };
-    // отакое дерьмо нужно, чтобы материалайзовый селект рендерился корректно 
-    handleLiterChange(field, value) {
-        this.setState({
             [field]: '',
         });
         this.setState({
             [field]: value,
         });
-        this.props.onChange("document" ,this.state)
-    }
+        //console.log(`поле: ${field} значение: ${value} `)
+        this.props.onChange(field , value)
+    };
 
     render () {
         return (
             <React.Fragment>
-                <Select
-                    id = "DocStatus"
-                    key = "DocStatus"
-                    label = "Текущий статус документа:"
-                    value = {getSingleCol("doc_statuses", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />
-                <DatePicker
-                    id = "CurrentStatusDate"
-                    key = "CurrentStatusDate"
-                    label = "Дата текущего статуса:"
-                    value = {this.state.CurrentStatusDate}
-                    onChange={this.handleChildChange}
-                />
-                <DatePicker
-                    id = "NextStatusEstimatedDate"
-                    key = "NextStatusEstimatedDate"
-                    label = "Предполагаемая дата следующего статуса:"
-                    value = {this.state.NextStatusEstimatedDate}
-                    onChange={this.handleChildChange}
-                />
-                <Select
-                    id = "SelectLiter"
-                    key = "SelectLiter"
-                    label = "Литер:"
-                    value = {getSingleCol("liters", "utilitySheet")}
-                    onChange={this.handleLiterChange}
-                />{this.state.SelectLiter != '' &&
-                <Select
-                    id = "SelectFlat"
-                    key = "SelectFlat"
-                    label = "Номер квартиры:"
-                    value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
-                    purpose = "flat"
-                    onChange={this.handleChildChange}
-                />
-                }
-                <TextField
-                    id = "ClientName"
-                    key = "ClientName"
-                    label = "ФИО клиента:"
-                    value = {this.state.ClientName}
-                    onChange={this.handleChildChange}
-                />
-                <Select
-                    id = "SelectManager"
-                    label = "Менеджер:"
-                    key = "SelectManager"
-                    value = {getSingleCol("managers", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />
-                <CheckBox
-                    id = "RemainsOnSale"
-                    key = "RemainsOnSale"
-                    label = "остается в продаже от физ. лица"
-                    value = {this.state.RemainsOnSale}
-                    onChange={this.handleChildChange}
-                />
-                <Radio
-                    id = "DealType"
-                    key = "DealType"
-                    label = "Тип сделки:"
-                    first='Л'
-                    second='АН'
-                    value = {this.state.DealType}
-                    onChange={this.handleChildChange}
-                />
-                <Select
-                    id = "PayMethod"
-                    label = "Способ оплаты:"
-                    key = "PayMethod"
-                    value = {getSingleCol("pay_method", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />
-                <TextField
-                    id = "ActualCost"
-                    label = "Стоимость для расчета комиссии:"
-                    key = "ActualCost"
-                    value = {this.state.ActualCost}
-                    onChange={this.handleChildChange}
-                />
-                <TextField
-                    id = "LegalCost"
-                    label = "Стоимость по ДДУ:"
-                    key = "LegalCost"
-                    value = {this.state.LegalCost}
-                    onChange={this.handleChildChange}
-                />
-                {this.state.LegalServiceNoPayment === ''&&
-                <TextField
-                    id = "LegalServiceCost"
-                    label = "Оплата юр. услуг:"
-                    key = "LegalServiceCost"
-                    value = {this.state.LegalServiceCost}
-                    onChange={this.handleChildChange}
-                />
-                }
-                {this.state.LegalServiceCost === '' &&
-                <Select
-                    id = "LegalServiceNoPayment"
-                    label = "Юр. услуги без оплаты:"
-                    key = "LegalServiceNoPayment"
-                    value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
-                    onChange={this.handleChildChange}
-                />
-                }
+                <div class="row dp_sec">
+                    <div class="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div class="section"></div>
+                            <Select
+                                id = "DocStatus"
+                                key = "DocStatus"
+                                label = "Текущий статус документа:"
+                                value = {getSingleCol("doc_statuses", "utilitySheet")}
+                                onChange={this.handleChildChange}
+                            />
+                            <DatePicker
+                                id = "CurrentStatusDate"
+                                key = "CurrentStatusDate"
+                                label = "Дата текущего статуса:"
+                                value = {this.state.CurrentStatusDate}
+                                onChange={this.handleChildChange}
+                            />
+                            <DatePicker
+                                id = "NextStatusEstimatedDate"
+                                key = "NextStatusEstimatedDate"
+                                label = "Предполагаемая дата следующего статуса:"
+                                value = {this.state.NextStatusEstimatedDate}
+                                onChange={this.handleChildChange}
+                            />
+                        <div class="section"></div>
+                    </div>
+                </div>
+                <div class="row i_sec">
+                    <div class="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div class="section"></div>
+                            <Select
+                                id = "SelectLiter"
+                                key = "SelectLiter"
+                                label = "Литер:"
+                                value = {getSingleCol("liters", "utilitySheet")}
+                                onChange={this.handleChildChange}
+                            />{this.state.SelectLiter != '' &&
+                            <Select
+                                id = "SelectFlat"
+                                key = "SelectFlat"
+                                label = "Номер квартиры:"
+                                value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
+                                purpose = "flat"
+                                onChange={this.handleChildChange}
+                            />
+                            }
+                            <TextField
+                                id = "ClientName"
+                                key = "ClientName"
+                                label = "ФИО клиента:"
+                                value = {this.state.ClientName}
+                                onChange={this.handleChildChange}
+                            />
+                        <div class="section"></div>
+                    </div>
+                </div>
+                <div class="row dp_sec">
+                    <div class="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div class="section"></div>
+                            <Select
+                                id = "SelectManager"
+                                label = "Менеджер:"
+                                key = "SelectManager"
+                                value = {getSingleCol("managers", "utilitySheet")}
+                                onChange={this.handleChildChange}
+                            />
+                            <CheckBox
+                                id = "RemainsOnSale"
+                                key = "RemainsOnSale"
+                                label = "остается в продаже от физ. лица"
+                                value = {this.state.RemainsOnSale}
+                                onChange={this.handleChildChange}
+                            />
+                            <Radio
+                                id = "DealType"
+                                key = "DealType"
+                                label = "Тип сделки:"
+                                first='Л'
+                                second='АН'
+                                value = {this.state.DealType}
+                                onChange={this.handleChildChange}
+                            />
+                        <div class="section"></div>
+                    </div>
+                </div>                                                              
+                <div class="row i_sec">
+                    <div class="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div class="section"></div>
+                            <Select
+                                id = "PayMethod"
+                                label = "Способ оплаты:"
+                                key = "PayMethod"
+                                value = {getSingleCol("pay_method", "utilitySheet")}
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "ActualCost"
+                                label = "Стоимость для расчета комиссии:"
+                                key = "ActualCost"
+                                value = {this.state.ActualCost}
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "LegalCost"
+                                label = "Стоимость по ДДУ:"
+                                key = "LegalCost"
+                                value = {this.state.LegalCost}
+                                onChange={this.handleChildChange}
+                            />
+                            {this.state.LegalServiceNoPayment === '' &&
+                            <TextField
+                                id = "LegalServiceCost"
+                                label = "Оплата юр. услуг:"
+                                key = "LegalServiceCost"
+                                value = {this.state.LegalServiceCost}
+                                onChange={this.handleChildChange}
+                            />
+                            }
+                            {this.state.LegalServiceCost === '' &&
+                            <Select
+                                id = "LegalServiceNoPayment"
+                                label = "Юр. услуги без оплаты:"
+                                key = "LegalServiceNoPayment"
+                                value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
+                                onChange={this.handleChildChange}
+                            />
+                            }
+                        <div class="section"></div>
+                    </div>
+                </div>
                 {this.state.DealType === 'АН' &&
-                <React.Fragment>
-                <TextField
-                    id = "RealEstateAgency"
-                    label = "Агентство недвижимости:"
-                    key = "RealEstateAgency"
-                    value = {this.state.RealEstateAgency}
-                    onChange={this.handleChildChange}
-                />
-                <TextField
-                    id = "EstateAgent"
-                    label = "Сотрудник агентства:"
-                    key = "EstateAgent"
-                    value = {this.state.EstateAgent}
-                    onChange={this.handleChildChange}
-                />
-                </React.Fragment>
+                <div class="row dp_sec">
+                    <div class="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div class="section"></div>
+                            <React.Fragment>
+                            <TextField
+                                id = "RealEstateAgency"
+                                label = "Агентство недвижимости:"
+                                key = "RealEstateAgency"
+                                value = {this.state.RealEstateAgency}
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "EstateAgent"
+                                label = "Сотрудник агентства:"
+                                key = "EstateAgent"
+                                value = {this.state.EstateAgent}
+                                onChange={this.handleChildChange}
+                            />
+                            </React.Fragment>
+                            
+                        <div class="section"></div>
+                    </div>
+                </div>
                 }
-                <TextField
-                    id = "Comment"
-                    label = "Комментарий к документу:"
-                    key = "Comment"
-                    purpose = "area"
-                    value = {this.state.Comment}
-                    onChange={this.handleChildChange}
-                />
+                <div class="row i_sec">
+                    <div class="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div class="section"></div>
+                            <TextField
+                                id = "Comment"
+                                label = "Комментарий к документу:"
+                                key = "Comment"
+                                purpose = "area"
+                                value = {this.state.Comment}
+                                onChange={this.handleChildChange}
+                            />
+                        <div class="section"></div>
+                    </div>
+                </div>
             </React.Fragment>
         )
     }

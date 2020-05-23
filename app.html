@@ -77,6 +77,7 @@ class App extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSaveBtn = this.handleSaveBtn.bind(this);
         this.handleDecision = this.handleDecision.bind(this);
+        this.handleFieldChange = this.handleFieldChange.bind(this);
         this.state = {
             timestamp: '',
             current_view: 'view_main',
@@ -91,16 +92,28 @@ class App extends React.Component {
             [field]: changes
         });
     };
+    handleFieldChange(field, value) {
+        var documentState = {...this.state.document};
+        documentState.flag = true;
+        this.setState({
+            [field] : value
+        })
+        console.log(this.state);
+        /*console.log(field, value)
+        this.setState({
+            document: {
+                [field]: value
+            } 
+        })*/
+    };
     //  отправка данных на сервер 
     handleSaveBtn(e) {
         frontEndData.document = this.state.document;
-        console.log(this.state.document)
         this.setState({
             modal: true,
         })
     }
     handleDecision(decision) {
-        
         async function saveData () {
             this.setState({
                 transaction_in_process: true
@@ -119,7 +132,6 @@ class App extends React.Component {
                 modal: false
             });
         }
-        
     }
     
     render () {
@@ -130,32 +142,51 @@ class App extends React.Component {
         });
         //
         return (
-            <div>
-                <Header 
-                    logo="Виноград 2" 
-                    docsList={docNamesObj}
-                    current_view={this.state.current_view}
-                    onChange={this.handleChange}
-                />
-                <div class="container row">
-                    {/* поля сделки и кнопка сохранения */}
-                    {this.state.current_view === 'create_new_doc' &&
-                    <React.Fragment>
-                        <DocFieldsHandler 
+            <React.Fragment>
+                <header>
+                    <Header 
+                        logo="Виноград 2" 
+                        docsList={docNamesObj}
+                        current_view={this.state.current_view}
                         onChange={this.handleChange}
-                        />
-                        <a class="waves-effect waves-light btn-large" onClick={this.handleSaveBtn}><i class="material-icons left">save</i>Сохранить</a>
-                    </React.Fragment>
-                    } 
-                    {/* модальное окно */}
-                    {this.state.modal &&
-                        <Modal 
-                            id="comfirmation"
-                            onDecision={this.handleDecision}
-                        />
-                    }    
-                </div>
-            </div>
+                    />
+                </header>
+                <main>
+                    <div class="container section">
+                        {this.state.current_view === 'create_new_doc' &&
+                        <div class="section row valign-wrapper">
+                            <div class="col s10 offset-s1">
+                                <h4 class="indigo-text text-darken-4">
+                                    Новый документ
+                                </h4>
+                            </div> 
+                        </div>
+                        }
+                        {/* поля сделки и кнопка сохранения */}
+                        {this.state.current_view === 'create_new_doc' &&
+                        <React.Fragment>
+                            <DocFieldsHandler 
+                            onChange={this.handleFieldChange}
+                            />
+                            <div class="section">
+                                <div class="section row">
+                                    <a class="waves-effect waves-light btn-large col s6 offset-s3 deep-purple lighten-3" 
+                                    onClick={this.handleSaveBtn}>Сохранить</a>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                        }
+                        {/* кнопка "сохранить" */} 
+                        {/* модальное окно */}
+                        {this.state.modal &&
+                            <Modal 
+                                id="comfirmation"
+                                onDecision={this.handleDecision}
+                            />
+                        }    
+                    </div>
+                </main>
+            </React.Fragment>
         );
     };
 };
