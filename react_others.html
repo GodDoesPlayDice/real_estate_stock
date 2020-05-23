@@ -78,9 +78,9 @@ class TopMenuButton extends React.Component {
 class Modal extends React.Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
-    handleChange(e) {
+    handleClick(e) {
         this.props.onDecision(e.target.id);
 
         let elem = document.getElementById(this.props.id);
@@ -103,8 +103,8 @@ class Modal extends React.Component {
                         <p>Вы хотите сохранить:</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#"  onClick={this.handleChange} id="cancel"class="modal-close waves-effect waves-green btn-flat">Отмена</a>
-                        <a href="#"  onClick={this.handleChange} id="confirmed" class="modal-close waves-effect waves-green btn-flat">Сохранить</a>
+                        <a href="#"  onClick={this.handleClick} id="cancel"class="modal-close waves-effect waves-green btn-flat">Отмена</a>
+                        <a href="#"  onClick={this.handleClick} id="confirmed" class="modal-close waves-effect waves-green btn-flat">Сохранить</a>
                     </div>
                 </div>
             </div>
