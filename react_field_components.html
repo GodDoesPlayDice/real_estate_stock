@@ -233,26 +233,18 @@ class CheckBox extends React.Component {
 class Select extends React.Component {
     constructor (props) {
         super(props);
-        this.label = this.props.label;
-        this.id = this.props.id;
-        this.key = this.props.key;
-        this.purpose = this.props.purpose;
-
         this.handleChange = this.handleChange.bind(this);
-        // массив элементов для рендера опций
-        this.value = this.props.value;
         this.state =  {value: ''};
     };
     componentDidMount(){
-        let elem = document.getElementById(this.id);
+        let elem = document.getElementById(this.props.id);
         let instance = M.FormSelect.init(elem, {});
     };
     handleChange(e) {
+        this.props.onChange(this.props.id, e.target.value);
         this.setState({
             value: e.target.value
         });
-        this.props.onChange(this.id, e.target.value);
-
     }
     render () {
         function generateOptions (arr) {
@@ -264,79 +256,23 @@ class Select extends React.Component {
                 return <option></option>
             } 
         };
-        let options = generateOptions(this.value);
-        let label = this.label;
+        let options = generateOptions(this.props.value); 
         let specialClass;
-        if (this.purpose != "flat") {} else {
-            console.log(this.value, "ушло на отрисовку")
+        if (this.props.purpose === "flat") {
             specialClass = "browser-default";
         }
-
-        /*switch (this.purpose) {
-            case "flat":
-                console.log(this.liter, "ушло на отрисовку")
-                specialClass = "browser-default";
-                break;
-            default:
-        };*/
         return (
             <div class="row">
                 <div class="input-field col s6">
-                    {<select class={specialClass} key={this.key} id={this.id} onChange={this.handleChange} value={this.state.value} >
+                    {<select class={specialClass} key={this.props.key} id={this.props.id} onChange={this.handleChange} value={this.state.value} >
                         <option></option>
                         {options}
                     </select>}
-                    <label>{label}</label>
+                    <label>{this.props.label}</label>
                 </div>
             </div>
         );
     };
-};
-
-class LiterAndFlatHandler extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleLiterChange = this.handleLiterChange.bind(this);
-        this.handleFlatChange = this.handleFlatChange.bind(this);
-        this.state = {
-            liter: '',
-            flat: '',  
-        }
-    };
-    handleLiterChange(liter) {
-        this.setState({
-            liter: liter,
-        });
-    };
-    handleFlatChange(flat) {
-        this.setState({
-            flat: flat,
-        })
-    };
-    render () {
-        let liter = this.state.liter;
-        let flatsInCurrentLiter = getFlatsInStock(liter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet");
-        return (
-            <div>
-                <Select
-                    id = "SelectLiter"
-                    label = "Литер:"
-                    staticOptions={"liters"}
-
-                    purpose = "liter"
-                    onLiterChange={this.handleLiterChange}
-                />
-                <Select
-                    id = "SelectFlat"
-                    label = "Номер квартиры:"
-                    
-                    value = {flatsInCurrentLiter}
-                    purpose = "flat"
-                    onFlatChange={this.handleFlatChange}
-                />
-            </div>
-        )
-    }
 };
 
 class DocFieldsHandler extends React.Component {
@@ -364,15 +300,19 @@ class DocFieldsHandler extends React.Component {
         };
     };
     handleChildChange(field, value) {
+        if (this.state[field] === value) {
+            console.log("не менялось")
+            return;
+        };
         this.setState({
             [field]: value,
         });
-        //console.log(`поле: ${field} значение: ${value} `)
+        console.log(`поле: ${field} значение: ${this.state[field]} `)
     };
+
     render () {
-        console.log(this.state);
         return (
-            <div>
+            <React.Fragment>
                 <Select
                     id = "DocStatus"
                     key = "DocStatus"
@@ -400,7 +340,7 @@ class DocFieldsHandler extends React.Component {
                     label = "Литер:"
                     value = {getSingleCol("liters", "utilitySheet")}
                     onChange={this.handleChildChange}
-                />
+                />{this.state.SelectLiter != '' &&
                 <Select
                     id = "SelectFlat"
                     key = "SelectFlat"
@@ -409,6 +349,7 @@ class DocFieldsHandler extends React.Component {
                     purpose = "flat"
                     onChange={this.handleChildChange}
                 />
+                }
                 <TextField
                     id = "ClientName"
                     key = "ClientName"
@@ -466,28 +407,28 @@ class DocFieldsHandler extends React.Component {
                     key = "LegalServiceCost"
                     value = {this.state.LegalServiceCost}
                     onChange={this.handleChildChange}
-                />,
+                />
                 <Select
                     id = "LegalServiceNoPayment"
                     label = "Юр. услуги без оплаты:"
                     key = "LegalServiceNoPayment"
                     value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
                     onChange={this.handleChildChange}
-                />,
+                />
                 <TextField
                     id = "RealEstateAgency"
                     label = "Агентство недвижимости:"
                     key = "RealEstateAgency"
                     value = {this.state.RealEstateAgency}
                     onChange={this.handleChildChange}
-                />,
+                />
                 <TextField
                     id = "EstateAgent"
                     label = "Сотрудник агентства:"
                     key = "EstateAgent"
                     value = {this.state.EstateAgent}
                     onChange={this.handleChildChange}
-                />,
+                />
                 <TextField
                     id = "Comment"
                     label = "Комментарий к документу:"
@@ -496,7 +437,7 @@ class DocFieldsHandler extends React.Component {
                     value = {this.state.Comment}
                     onChange={this.handleChildChange}
                 />
-            </div>
+            </React.Fragment>
         )
     }
 };
