@@ -16,20 +16,20 @@ class Header extends React.Component {
     }
     render () {
         return (
-            <div class="navbar-fixed">
-                <nav class="indigo" >
-                    <div class="nav-wrapper container row">
-                        <div class="col s3">
-                            <a href="#" class="brand-logo">{this.props.logo}</a>
+            <div className="navbar-fixed">
+                <nav className="indigo" >
+                    <div className="nav-wrapper container row">
+                        <div className="col s3">
+                            <a href="#" className="brand-logo">{this.props.logo}</a>
                         </div>
-                        <form class="col s5">
-                            <div class="input-field">
-                                <input id="search" type="search" class="autocomplete" placeholder="Поиск сделки" required />
-                                <i class="material-icons">close</i>
+                        <form className="col s5">
+                            <div className="input-field">
+                                <input id="search" type="search" className="autocomplete" placeholder="Поиск сделки" required />
+                                <i className="material-icons">close</i>
                             </div>
                         </form>
-                        <div class="col s4">
-                            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <div className="col s4">
+                            <ul id="nav-mobile" className="right hide-on-med-and-down">
                                 {this.props.current_view === 'view_main' &&
                                     <TopMenuButton 
                                     action="create_new_doc" 
@@ -91,14 +91,14 @@ class Modal extends React.Component {
     render(){
         return (
             <div>
-                <div id={this.props.id} class="modal">
-                    <div class="modal-content">
+                <div id={this.props.id} className="modal">
+                    <div className="modal-content">
                         <h4>Подтверждени сохранения данных</h4>
                         <p>Вы хотите сохранить:</p>
                     </div>
-                    <div class="modal-footer">
-                        <a href="#"  onClick={this.handleClick} id="cancel"class="modal-close waves-effect waves-green btn-flat">Отмена</a>
-                        <a href="#"  onClick={this.handleClick} id="confirmed" class="modal-close waves-effect waves-green btn-flat">Сохранить</a>
+                    <div className="modal-footer">
+                        <a href="#"  onClick={this.handleClick} id="cancel"className="modal-close waves-effect waves-green btn-flat">Отмена</a>
+                        <a href="#"  onClick={this.handleClick} id="confirmed" className="modal-close waves-effect waves-green btn-flat">Сохранить</a>
                     </div>
                 </div>
             </div>

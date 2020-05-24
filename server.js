@@ -84,4 +84,5 @@ function storeData (json) {
     let column = columns[key];
     targetSheet.getRange(lastRow+1, column).setValue(data[key]);
   }
+  targetSheet.getRange(lastRow+1, 1).setValue(new Date());
 }

@@ -21,16 +21,16 @@ class TextField extends React.Component {
         let element;
         switch (this.props.purpose) {
             case "area":
-                element = <textarea id={this.props.id} key={this.props.key} value={this.state.value} class="materialize-textarea" onChange={this.handleChange}></textarea>;
+                element = <textarea id={this.props.id} key={this.props.id} value={this.state.value} className="materialize-textarea" onChange={this.handleChange}></textarea>;
                 break;
             default:
-                element = <input id={this.props.id} key={this.props.key} value={this.state.value} type="text" class="validate" onChange={this.handleChange} />
+                element = <input id={this.props.id} key={this.props.id} value={this.state.value} type="text" className="validate" onChange={this.handleChange} />
         }
         return (
-            <div class="row">
-                    <div class="input-field col s10 offset-s1">
+            <div className="row">
+                    <div className="input-field col s10 offset-s1">
                         {element}
-                        <label for={this.props.id} >{this.props.label}</label>
+                        <label htmlFor={this.props.id} >{this.props.label}</label>
                     </div>
             </div>
         )
@@ -113,10 +113,10 @@ class DatePicker extends React.Component {
     };
     render() {
         return (
-            <div class="row">
-                <div class="input-field col s10 offset-s1">
-                    <input id={this.props.id} key={this.props.key} type="text" class="datepicker"  />
-                    <label for={this.props.id}>{this.props.label}
+            <div className="row">
+                <div className="input-field col s10 offset-s1">
+                    <input id={this.props.id} key={this.props.id} type="text" className="datepicker"  />
+                    <label htmlFor={this.props.id}>{this.props.label}
                     </label>
                 </div>
             </div>
@@ -142,20 +142,20 @@ class Radio extends React.Component {
     }
     render() {
         return (
-            <div class="row">
-                <div class="col s10 offset-s1">
+            <div className="row">
+                <div className="col s10 offset-s1">
                 <label>{this.props.label}</label>
-                    <form key={this.props.key}>
+                    <form key={this.props.id}>
                         <p>
                         <label>
                             <input name="group1" type="radio" value={this.props.first} onClick={this.handleChange} />
-                            <span style={{"font-weight": this.state.span1}} >{this.props.first}</span>
+                            <span style={{"fontWeight": this.state.span1}} >{this.props.first}</span>
                         </label>
                         </p>
                         <p>
                         <label>
                             <input name="group1" type="radio" value={this.props.second} onClick={this.handleChange} />
-                            <span style={{"font-weight": this.state.span2}} >{this.props.second}</span>
+                            <span style={{"fontWeight": this.state.span2}} >{this.props.second}</span>
                         </label>
                         </p>
                     </form>
@@ -183,12 +183,12 @@ class CheckBox extends React.Component {
     }
     render() {
         return (
-            <div class="row">
-                <div class="col s10 offset-s1">
+            <div className="row">
+                <div className="col s10 offset-s1">
                     <p>
                         <label>
-                            <input id={this.props.id} key={this.props.key} type="checkbox"  class="filled-in" checked={this.props.value ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
-                            <span style={{"font-weight": this.state.span}} >{this.props.label}</span>
+                            <input id={this.props.id} key={this.props.id} type="checkbox"  className="filled-in" checked={this.props.value ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
+                            <span style={{"fontWeight": this.state.span}} >{this.props.label}</span>
                         </label>
                     </p>
                 </div>
@@ -232,13 +232,13 @@ class Select extends React.Component {
             //specialClass = "browser-default";
         } 
         return (
-            <div class="row">
-                <div class="input-field col s10 offset-s1">
-                    {<select class={specialClass} key={this.props.key} id={this.props.id} onChange={this.handleChange} >
+            <div className="row">
+                <div className="input-field col s10 offset-s1">
+                    {<select className={specialClass} key={this.props.id} id={this.props.id} onChange={this.handleChange} >
                         <option value=""></option>
                         {options}
                     </select>}
-                    <label for={this.props.id}>{this.props.label}</label>
+                    <label htmlFor={this.props.id}>{this.props.label}</label>
                 </div>
             </div>
         );
@@ -289,46 +289,41 @@ class DocFieldsHandler extends React.Component {
     render () {
         return (
             <React.Fragment>
-                <div class="row dp_sec">
-                    <div class="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div class="section"></div>
+                <div className="row dp_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
                             <Select
                                 id = "DocStatus"
-                                key = "DocStatus"
                                 label = "Текущий статус документа:"
                                 value = {getSingleCol("doc_statuses", "utilitySheet")}
                                 onChange={this.handleChildChange}
                             />
                             <DatePicker
                                 id = "CurrentStatusDate"
-                                key = "CurrentStatusDate"
                                 label = "Дата текущего статуса:"
                                 value = {this.state.CurrentStatusDate}
                                 onChange={this.handleChildChange}
                             />
                             <DatePicker
                                 id = "NextStatusEstimatedDate"
-                                key = "NextStatusEstimatedDate"
                                 label = "Предполагаемая дата следующего статуса:"
                                 value = {this.state.NextStatusEstimatedDate}
                                 onChange={this.handleChildChange}
                             />
-                        <div class="section"></div>
+                        <div className="section"></div>
                     </div>
                 </div>
-                <div class="row i_sec">
-                    <div class="col s10 offset-s1 card-panel indigo lighten-5">
-                        <div class="section"></div>
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div className="section"></div>
                             <Select
                                 id = "SelectLiter"
-                                key = "SelectLiter"
                                 label = "Литер:"
                                 value = {getSingleCol("liters", "utilitySheet")}
                                 onChange={this.handleChildChange}
                             />{this.state.SelectLiter != '' &&
                             <Select
                                 id = "SelectFlat"
-                                key = "SelectFlat"
                                 label = "Номер квартиры:"
                                 value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
                                 purpose = "flat"
@@ -337,64 +332,57 @@ class DocFieldsHandler extends React.Component {
                             }
                             <TextField
                                 id = "ClientName"
-                                key = "ClientName"
                                 label = "ФИО клиента:"
                                 value = {this.state.ClientName}
                                 onChange={this.handleChildChange}
                             />
-                        <div class="section"></div>
+                        <div className="section"></div>
                     </div>
                 </div>
-                <div class="row dp_sec">
-                    <div class="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div class="section"></div>
+                <div className="row dp_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
                             <Select
                                 id = "SelectManager"
                                 label = "Менеджер:"
-                                key = "SelectManager"
                                 value = {getSingleCol("managers", "utilitySheet")}
                                 onChange={this.handleChildChange}
                             />
                             <CheckBox
                                 id = "RemainsOnSale"
-                                key = "RemainsOnSale"
                                 label = "остается в продаже от физ. лица"
                                 value = {this.state.RemainsOnSale}
                                 onChange={this.handleChildChange}
                             />
                             <Radio
                                 id = "DealType"
-                                key = "DealType"
                                 label = "Тип сделки:"
                                 first='Л'
                                 second='АН'
                                 value = {this.state.DealType}
                                 onChange={this.handleChildChange}
                             />
-                        <div class="section"></div>
+                        <div className="section"></div>
                     </div>
                 </div>                                                              
-                <div class="row i_sec">
-                    <div class="col s10 offset-s1 card-panel indigo lighten-5">
-                        <div class="section"></div>
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div className="section"></div>
                             <Select
                                 id = "PayMethod"
                                 label = "Способ оплаты:"
-                                key = "PayMethod"
                                 value = {getSingleCol("pay_method", "utilitySheet")}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
                                 id = "ActualCost"
                                 label = "Стоимость для расчета комиссии:"
-                                key = "ActualCost"
                                 value = {this.state.ActualCost}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
                                 id = "LegalCost"
                                 label = "Стоимость по ДДУ:"
-                                key = "LegalCost"
                                 value = {this.state.LegalCost}
                                 onChange={this.handleChildChange}
                             />
@@ -402,7 +390,6 @@ class DocFieldsHandler extends React.Component {
                             <TextField
                                 id = "LegalServiceCost"
                                 label = "Оплата юр. услуг:"
-                                key = "LegalServiceCost"
                                 value = {this.state.LegalServiceCost}
                                 onChange={this.handleChildChange}
                             />
@@ -411,56 +398,52 @@ class DocFieldsHandler extends React.Component {
                             <Select
                                 id = "LegalServiceNoPayment"
                                 label = "Юр. услуги без оплаты:"
-                                key = "LegalServiceNoPayment"
                                 value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
                                 onChange={this.handleChildChange}
                             />
                             }
-                        <div class="section"></div>
+                        <div className="section"></div>
                     </div>
                 </div>
                 {this.state.DealType === 'АН' &&
-                <div class="row dp_sec">
-                    <div class="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div class="section"></div>
+                <div className="row dp_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
                             <React.Fragment>
                             <TextField
                                 id = "RealEstateAgency"
                                 label = "Агентство недвижимости:"
-                                key = "RealEstateAgency"
                                 value = {this.state.RealEstateAgency}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
                                 id = "EstateAgent"
                                 label = "Сотрудник агентства:"
-                                key = "EstateAgent"
                                 value = {this.state.EstateAgent}
                                 onChange={this.handleChildChange}
                             />
                             </React.Fragment>
                             
-                        <div class="section"></div>
+                        <div className="section"></div>
                     </div>
                 </div>
                 }
-                <div class="row i_sec">
-                    <div class="col s10 offset-s1 card-panel indigo lighten-5">
-                        <div class="section"></div>
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div className="section"></div>
                             <TextField
                                 id = "Comment"
                                 label = "Комментарий к документу:"
-                                key = "Comment"
                                 purpose = "area"
                                 value = {this.state.Comment}
                                 onChange={this.handleChildChange}
                             />
-                        <div class="section"></div>
+                        <div className="section"></div>
                     </div>
                 </div>
-                <div class="section">
-                <div class="section row">
-                        <a class="waves-effect waves-light btn-large col s6 offset-s3 deep-purple lighten-3" 
+                <div className="section">
+                <div className="section row">
+                        <a className="waves-effect waves-light btn-large col s6 offset-s3 deep-purple lighten-3" 
                         onClick={this.handleSaveBtn}>Сохранить</a>
                     </div>
                 </div>
