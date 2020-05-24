@@ -3,16 +3,30 @@ class Header extends React.Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.updateAutocomplete = this.updateAutocomplete.bind(this);
+        this.state ={
+            currentDoc: ''
+        }
     };
     handleChange(pressed) {
         this.props.onChange("current_view", pressed);
+
     };
+    updateAutocomplete (e) {
+        this.setState({currentDoc: e.target.value})
+    }
     componentDidMount () {
         // инициализация автокомплита
         let elems = document.querySelectorAll('.autocomplete');
-        let instances = M.Autocomplete.init(elems, {
-                data: this.props.docsList
-        });
+        function onAutocomp (id) {
+            this.props.onDocClicked(id)
+        }  
+        let finalFunc = onAutocomp.bind(this);
+        let options = {
+            data: this.props.docsList,
+            onAutocomplete: (id) => {finalFunc(id)}
+        } 
+        let instances = M.Autocomplete.init(elems, options);
     }
     render () {
         return (
@@ -24,20 +38,20 @@ class Header extends React.Component {
                         </div>
                         <form className="col s5">
                             <div className="input-field">
-                                <input id="search" type="search" className="autocomplete" placeholder="Поиск сделки" required />
+                                <input id="search" type="search" className="autocomplete" placeholder="Поиск сделки" onChange={this.updateAutocomplete} value={this.state.currentDoc} required />
                                 <i className="material-icons">close</i>
                             </div>
                         </form>
                         <div className="col s4">
                             <ul id="nav-mobile" className="right hide-on-med-and-down">
-                                {this.props.current_view === 'view_main' &&
+                                {(this.props.current_view === 'view_main' || this.props.current_view === 'edit_doc') &&
                                     <TopMenuButton 
                                     action="create_new_doc" 
                                     label="Новый документ"
                                     onChange={this.handleChange}
                                     />
                                 }
-                                {this.props.current_view === 'create_new_doc' &&
+                                {this.props.current_view != 'view_main' &&
                                     <TopMenuButton 
                                     action="view_main"
                                     label="Назад"
@@ -93,7 +107,7 @@ class Modal extends React.Component {
             <div>
                 <div id={this.props.id} className="modal">
                     <div className="modal-content">
-                        <h4>Подтверждени сохранения данных</h4>
+                        <h4>Подтверждениe сохранения данных</h4>
                         <p>Вы хотите сохранить:</p>
                     </div>
                     <div className="modal-footer">

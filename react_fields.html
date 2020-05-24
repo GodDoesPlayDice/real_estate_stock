@@ -3,7 +3,9 @@ class TextField extends React.Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {value: ''}
+        this.state = {
+            value: this.props.value
+        }
     }
     componentDidMount(){
         let elem = document.getElementById(this.props.id);
@@ -44,6 +46,8 @@ class DatePicker extends React.Component {
     }
     componentDidMount() {
         let options = {
+                defaultDate: new Date(this.props.value) ? new Date(this.props.value) : new Date(),
+                setDefaultDate: true,
                 format: "dd/mm/yyyy",
                 firstDay: 1,
                 i18n: {
@@ -115,7 +119,7 @@ class DatePicker extends React.Component {
         return (
             <div className="row">
                 <div className="input-field col s10 offset-s1">
-                    <input id={this.props.id} key={this.props.id} type="text" className="datepicker"  />
+                    <input id={this.props.id} key={this.props.id} onChange={this.handleChange} type="text" className="datepicker"  />
                     <label htmlFor={this.props.id}>{this.props.label}
                     </label>
                 </div>
@@ -250,33 +254,10 @@ class DocFieldsHandler extends React.Component {
         super(props);
         this.handleChildChange = this.handleChildChange.bind(this);
         this.handleSaveBtn = this.handleSaveBtn.bind(this);
-        this.state = {
-            CurrentStatusDate: '',
-            NextStatusEstimatedDate: '',
-            ClientName: '',
-            RemainsOnSale: false,
-            DealType: '',
-            SelectLiter: '',
-            SelectFlat: '',
-            DocStatus: '',
-            SelectManager: '',
-            PayMethod: '',
-            ActualCost: '',
-            LegalCost: '',
-            LegalServiceCost: '',
-            LegalServiceNoPayment: '',
-            RealEstateAgency: '',
-            EstateAgent: '',
-            Comment: ''
-        };
-    };
+        this.state = this.props.currentDocument;
+    }
     // принимает изменения от всех полей 
     handleChildChange(field, value) {
-/*         {field === 'SelectLiter' &&
-        this.setState({
-            'SelectLiter': '',
-        });
-        } */
         this.setState({
             [field]: value,
         });
@@ -296,18 +277,22 @@ class DocFieldsHandler extends React.Component {
                                 id = "DocStatus"
                                 label = "Текущий статус документа:"
                                 value = {getSingleCol("doc_statuses", "utilitySheet")}
+
+                                oldValue={this.props.DocStatus}
                                 onChange={this.handleChildChange}
                             />
                             <DatePicker
                                 id = "CurrentStatusDate"
                                 label = "Дата текущего статуса:"
                                 value = {this.state.CurrentStatusDate}
+
                                 onChange={this.handleChildChange}
                             />
                             <DatePicker
                                 id = "NextStatusEstimatedDate"
                                 label = "Предполагаемая дата следующего статуса:"
                                 value = {this.state.NextStatusEstimatedDate}
+
                                 onChange={this.handleChildChange}
                             />
                         <div className="section"></div>
@@ -316,12 +301,15 @@ class DocFieldsHandler extends React.Component {
                 <div className="row i_sec">
                     <div className="col s10 offset-s1 card-panel indigo lighten-5">
                         <div className="section"></div>
+                            {this.props.current_view === 'create_new_doc' &&
                             <Select
                                 id = "SelectLiter"
                                 label = "Литер:"
                                 value = {getSingleCol("liters", "utilitySheet")}
                                 onChange={this.handleChildChange}
-                            />{this.state.SelectLiter != '' &&
+                            />
+                            }
+                            {this.state.SelectLiter != '' && this.props.current_view === 'create_new_doc' &&
                             <Select
                                 id = "SelectFlat"
                                 label = "Номер квартиры:"
@@ -333,7 +321,8 @@ class DocFieldsHandler extends React.Component {
                             <TextField
                                 id = "ClientName"
                                 label = "ФИО клиента:"
-                                value = {this.state.ClientName}
+                                value={this.state.ClientName}
+
                                 onChange={this.handleChildChange}
                             />
                         <div className="section"></div>
@@ -346,12 +335,15 @@ class DocFieldsHandler extends React.Component {
                                 id = "SelectManager"
                                 label = "Менеджер:"
                                 value = {getSingleCol("managers", "utilitySheet")}
+
+                                oldValue={this.props.SelectManager}
                                 onChange={this.handleChildChange}
                             />
                             <CheckBox
                                 id = "RemainsOnSale"
                                 label = "остается в продаже от физ. лица"
                                 value = {this.state.RemainsOnSale}
+
                                 onChange={this.handleChildChange}
                             />
                             <Radio
@@ -359,7 +351,8 @@ class DocFieldsHandler extends React.Component {
                                 label = "Тип сделки:"
                                 first='Л'
                                 second='АН'
-                                value = {this.state.DealType}
+
+                                oldValue={this.props.DealType}
                                 onChange={this.handleChildChange}
                             />
                         <div className="section"></div>
@@ -372,25 +365,30 @@ class DocFieldsHandler extends React.Component {
                                 id = "PayMethod"
                                 label = "Способ оплаты:"
                                 value = {getSingleCol("pay_method", "utilitySheet")}
+
+                                oldValue={this.props.PayMethod}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
                                 id = "ActualCost"
                                 label = "Стоимость для расчета комиссии:"
-                                value = {this.state.ActualCost}
+                                value={this.state.ActualCost}
+
                                 onChange={this.handleChildChange}
                             />
                             <TextField
                                 id = "LegalCost"
                                 label = "Стоимость по ДДУ:"
-                                value = {this.state.LegalCost}
+                                value={this.state.LegalCost}
+
                                 onChange={this.handleChildChange}
                             />
                             {this.state.LegalServiceNoPayment === '' &&
                             <TextField
                                 id = "LegalServiceCost"
                                 label = "Оплата юр. услуг:"
-                                value = {this.state.LegalServiceCost}
+                                value={this.state.LegalServiceCost}
+
                                 onChange={this.handleChildChange}
                             />
                             }
@@ -399,6 +397,8 @@ class DocFieldsHandler extends React.Component {
                                 id = "LegalServiceNoPayment"
                                 label = "Юр. услуги без оплаты:"
                                 value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
+
+                                oldValue={this.props.LegalServiceNoPayment}
                                 onChange={this.handleChildChange}
                             />
                             }
@@ -413,17 +413,18 @@ class DocFieldsHandler extends React.Component {
                             <TextField
                                 id = "RealEstateAgency"
                                 label = "Агентство недвижимости:"
-                                value = {this.state.RealEstateAgency}
+                                value={this.state.RealEstateAgency}
+
                                 onChange={this.handleChildChange}
                             />
                             <TextField
                                 id = "EstateAgent"
                                 label = "Сотрудник агентства:"
-                                value = {this.state.EstateAgent}
+                                value={this.state.EstateAgent}
+
                                 onChange={this.handleChildChange}
                             />
-                            </React.Fragment>
-                            
+                            </React.Fragment>  
                         <div className="section"></div>
                     </div>
                 </div>
@@ -435,7 +436,8 @@ class DocFieldsHandler extends React.Component {
                                 id = "Comment"
                                 label = "Комментарий к документу:"
                                 purpose = "area"
-                                value = {this.state.Comment}
+                                value={this.state.Comment}
+
                                 onChange={this.handleChildChange}
                             />
                         <div className="section"></div>
