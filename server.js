@@ -69,14 +69,24 @@ function setDataForSession () {
 
 function storeData (json) {
   let data = JSON.parse(json);
-  console.log(data);
-  let arr = [];
-  
+  setSessionParameters ();
+  console.log("параметры:", sessionParameters)
+  let department = sessionParameters.department;
+  // лист с учетом отдела продаж
+  let targetSheet = dataSources[department].targetSheet;
+  let headers = targetSheet.getRange(1, 2, 1, targetSheet.getLastColumn()).getValues()[0];
+  let columns = {};
+
+  headers.forEach((el,i) => {
+    columns[el] = i+2;
+  })
+  console.log("адреса столбцов", columns)
+  let lastRow = targetSheet.getLastRow();
+  console.log("текущая строка записи", lastRow)
   for (let key in data) {
-    arr.push(data[key])
+    let column = columns[key];
+    console.log("текущий столбец записи", column)
+    targetSheet.getRange(lastRow+1, column).setValue(data[key]);
+    console.log("текущее значени", data[key])
   }
-  let final = [arr];
-  let target = SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
-  .getSheetByName("target").getRange(1,1, final.length, final[0].length);
-  target.setValues(final);
 }

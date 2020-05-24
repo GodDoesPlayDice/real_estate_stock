@@ -21,10 +21,8 @@ function main() {
 
 // отправка одной строки функции на сервере, преобразующей ее в массив для записи
 function storeData (data) {
-    frontEndData.document;
     google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(data));
-
-    function onSuccess (obj) {
+    function onSuccess () {
         alert("Данные записаны.")
     };
 }
@@ -112,14 +110,11 @@ class App extends React.Component {
         })
     }
     handleDecision(decision) {
-        async function saveData () {
+        function saveData () {
             this.setState({
                 transaction_in_process: true
             })
-            let promise = () => {
-                storeData(this.state.document);
-            }
-            await promise;
+            storeData(this.state.document);
             this.setState({
                 transaction_in_process: false,
                 modal: false,
