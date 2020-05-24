@@ -70,7 +70,6 @@ function setDataForSession () {
 function storeData (json) {
   let data = JSON.parse(json);
   setSessionParameters ();
-  console.log("параметры:", sessionParameters)
   let department = sessionParameters.department;
   // лист с учетом отдела продаж
   let targetSheet = dataSources[department].targetSheet;
@@ -80,13 +79,9 @@ function storeData (json) {
   headers.forEach((el,i) => {
     columns[el] = i+2;
   })
-  console.log("адреса столбцов", columns)
   let lastRow = targetSheet.getLastRow();
-  console.log("текущая строка записи", lastRow)
   for (let key in data) {
     let column = columns[key];
-    console.log("текущий столбец записи", column)
     targetSheet.getRange(lastRow+1, column).setValue(data[key]);
-    console.log("текущее значени", data[key])
   }
 }
