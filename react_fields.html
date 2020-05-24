@@ -10,7 +10,7 @@ class TextField extends React.Component {
     componentDidMount(){
         let elem = document.getElementById(this.props.id);
         elem.addEventListener('focusout', (e) => {
-            this.props.onChange(this.props.id, this.state.value);
+            this.props.onChange(this.props.id, e.target.value/*this.state.value*/);
         });
         M.updateTextFields();
     }
@@ -181,9 +181,9 @@ class CheckBox extends React.Component {
     componentDidMount() {
     }
     handleChange(e) {
-        this.props.onChange(this.props.id, !this.props.value);
+        this.props.onChange(this.props.id, this.props.value === 'да' ? 'нет' : 'да');
         this.setState({
-            span:  (!this.props.value ? "bolder" : "normal")
+            span:  (this.props.value === 'да' ? "normal" : "bolder")
         });
     }
     render() {
@@ -192,7 +192,7 @@ class CheckBox extends React.Component {
                 <div className="col s10 offset-s1">
                     <p>
                         <label>
-                            <input id={this.props.id} key={this.props.id} type="checkbox"  className="filled-in" checked={this.props.value ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
+                            <input id={this.props.id} key={this.props.id} type="checkbox"  className="filled-in" checked={this.props.value === 'да' ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
                             <span style={{"fontWeight": this.state.span}} >{this.props.label}</span>
                         </label>
                     </p>
@@ -218,8 +218,7 @@ class Select extends React.Component {
         {this.props.id === "SelectLiter" &&  this.props.onChange(this.props.id, '');}
         setTimeout(() => {
         this.props.onChange(this.props.id, val);
-        }, 10)
-        
+        }, 20)    
     }
     render () {
         function generateOptions (arr) {
@@ -228,18 +227,18 @@ class Select extends React.Component {
                     <option key={el} value={el}>{el}</option>
                 );
             } else {
-                return <option value=""></option>
+                return; /**/
             } 
         };
         let options = generateOptions(this.props.value); 
-        let specialClass;
-        if (this.props.purpose === "flat") {
-            //specialClass = "browser-default";
-        } 
+        let defaultOption = this.props.oldValue; 
         return (
             <div className="row">
                 <div className="input-field col s10 offset-s1">
-                    {<select className={specialClass} key={this.props.id} id={this.props.id} onChange={this.handleChange} >
+                    {<select key={this.props.id} id={this.props.id} defaultValue="DEFAULT"  onChange={this.handleChange} >
+                        {defaultOption &&
+                            <option value="DEFAULT" key={defaultOption} >{defaultOption}</option>
+                        }
                         <option value=""></option>
                         {options}
                     </select>}
@@ -279,7 +278,7 @@ class DocFieldsHandler extends React.Component {
                                 label = "Текущий статус документа:"
                                 value = {getSingleCol("doc_statuses", "utilitySheet")}
 
-                                oldValue={this.props.DocStatus}
+                                oldValue={this.state.DocStatus}
                                 onChange={this.handleChildChange}
                             />
                             <DatePicker
@@ -337,7 +336,7 @@ class DocFieldsHandler extends React.Component {
                                 label = "Менеджер:"
                                 value = {getSingleCol("managers", "utilitySheet")}
 
-                                oldValue={this.props.SelectManager}
+                                oldValue={this.state.SelectManager}
                                 onChange={this.handleChildChange}
                             />
                             <CheckBox
@@ -367,7 +366,7 @@ class DocFieldsHandler extends React.Component {
                                 label = "Способ оплаты:"
                                 value = {getSingleCol("pay_method", "utilitySheet")}
 
-                                oldValue={this.props.PayMethod}
+                                oldValue={this.state.PayMethod}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
@@ -384,22 +383,22 @@ class DocFieldsHandler extends React.Component {
 
                                 onChange={this.handleChildChange}
                             />
-                            {this.state.LegalServiceNoPayment === '' &&
+                            {!this.state.LegalServiceNoPayment &&
                             <TextField
                                 id = "LegalServiceCost"
                                 label = "Оплата юр. услуг:"
-                                value={this.state.LegalServiceCost}
+                                value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
 
                                 onChange={this.handleChildChange}
                             />
                             }
-                            {this.state.LegalServiceCost === '' &&
+                            {!this.state.LegalServiceCost &&
                             <Select
                                 id = "LegalServiceNoPayment"
                                 label = "Юр. услуги без оплаты:"
                                 value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
 
-                                oldValue={this.props.LegalServiceNoPayment}
+                                oldValue={this.state.LegalServiceNoPayment ? this.state.LegalServiceNoPayment : ''}
                                 onChange={this.handleChildChange}
                             />
                             }
