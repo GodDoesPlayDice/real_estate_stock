@@ -73,16 +73,28 @@ function storeData (json) {
   let department = sessionParameters.department;
   // лист с учетом отдела продаж
   let targetSheet = dataSources[department].targetSheet;
+  // массив с заголовками столбцов
   let headers = targetSheet.getRange(1, 2, 1, targetSheet.getLastColumn()).getValues()[0];
   let columns = {};
 
+  // заголовки столбцов с их номерами в таблице начиная с ID
   headers.forEach((el,i) => {
     columns[el] = i+2;
   })
   let lastRow = targetSheet.getLastRow();
+  // удаляем поля объекта, которых не предусмотрены в таблице
+  delete data.Timestamp;
+  delete data.ID;
+  // проходимся по объекту с фронта и вставляем данные с форматированием и без
   for (let key in data) {
     let column = columns[key];
-    targetSheet.getRange(lastRow+1, column).setValue(data[key]);
+    let value;
+    if (key === 'CurrentStatusDate' || key === 'NextStatusEstimatedDate') {
+      value = new Date(data[key])
+    } else {
+      value = data[key];
+    }
+    targetSheet.getRange(lastRow+1, column).setValue(value);
   }
   targetSheet.getRange(lastRow+1, 1).setValue(new Date());
 }

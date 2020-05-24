@@ -45,8 +45,9 @@ class DatePicker extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
     componentDidMount() {
+        let dateVal = new Date(this.props.value);
         let options = {
-                defaultDate: new Date(this.props.value) ? new Date(this.props.value) : new Date(),
+                defaultDate: dateVal ? dateVal : new Date(),
                 setDefaultDate: true,
                 format: "dd/mm/yyyy",
                 firstDay: 1,

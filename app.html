@@ -167,7 +167,8 @@ class App extends React.Component {
             this.setState({
                 transaction_in_process: false,
                 modal: false,
-                current_view: 'view_main'
+                current_view: 'view_main',
+                document: {}
             })
         }
         if( decision === 'confirmed') {
