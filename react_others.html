@@ -100,7 +100,9 @@ class Modal extends React.Component {
     }
     componentDidMount () {
         let elem = document.getElementById(this.props.id);
-        let instance = M.Modal.init(elem, {});
+        let instance = M.Modal.init(elem, {
+            dismissible: false
+        });
         instance.open();
     };
     componentWillUnmount(){
@@ -111,7 +113,7 @@ class Modal extends React.Component {
                 <div id={this.props.id} className="modal">
                     <div className="modal-content">
                         <h4>Подтверждениe сохранения данных</h4>
-                        <p>Вы хотите сохранить:</p>
+                        
                     </div>
                     <div className="modal-footer">
                         <a href="#"  onClick={this.handleClick} id="cancel"className="modal-close waves-effect waves-green btn-flat">Отмена</a>
