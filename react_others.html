@@ -70,6 +70,41 @@ class Header extends React.Component {
     }
 }
 
+class CurrentDocs extends React.Component {
+    constructor(props){
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    };
+    componentDidMount(){
+        var elem = document.getElementById(this.props.id);
+        var instances = M.Collapsible.init(elem, {});
+    }
+    componentWillUnmount(){
+
+    }
+    handleChange(e){
+
+    }
+    render(){
+        return(
+            <ul id={this.props.id} className="collapsible">
+                <li>
+                <div className="collapsible-header"><i className="material-icons">filter_drama</i>First</div>
+                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                </li>
+                <li>
+                <div className="collapsible-header"><i className="material-icons">place</i>Second</div>
+                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                </li>
+                <li>
+                <div className="collapsible-header"><i className="material-icons">whatshot</i>Third</div>
+                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                </li>
+            </ul>
+        );
+    }
+}
+
 class TopMenuButton extends React.Component {
     constructor (props) {
         super(props);

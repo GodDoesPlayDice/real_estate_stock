@@ -232,6 +232,11 @@ class App extends React.Component {
                             />
                         </React.Fragment>
                         }
+                        {this.state.current_view === 'view_main' &&
+                            <CurrentDocs
+                            id="collapsible"
+                            />
+                        }
                         {/* модальное окно */}
                         {this.state.modal &&
                             <Modal 
