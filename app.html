@@ -199,7 +199,7 @@ class App extends React.Component {
             <React.Fragment>
                 <header id='header'>
                     <Header 
-                        logo="Виноград 2" 
+                        logo={serverSideData.departmentName}
                         docsList={serverSideData.docsPrettyIDs}
                         current_view={this.state.current_view}
                         onButtonsClicked={this.handleHeaderClick}
@@ -237,6 +237,9 @@ class App extends React.Component {
                             <Modal 
                                 id="comfirmation"
                                 onDecision={this.handleDecision}
+                                liter={this.state.document.SelectLiter}
+                                flat={this.state.document.SelectFlat}
+                                client={this.state.document.ClientName}
                             />
                         }    
                     </div>

@@ -112,8 +112,8 @@ class Modal extends React.Component {
             <div>
                 <div id={this.props.id} className="modal">
                     <div className="modal-content">
-                        <h4>Подтверждениe сохранения данных</h4>
-                        
+                        <h3>Подтверждениe сохранения данных</h3>
+                        <h4>{this.props.liter}/{this.props.flat} {this.props.client}</h4>
                     </div>
                     <div className="modal-footer">
                         <a href="#"  onClick={this.handleClick} id="cancel"className="modal-close waves-effect waves-green btn-flat">Отмена</a>

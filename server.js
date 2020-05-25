@@ -59,7 +59,8 @@ function setDataForSession () {
     docsSheet = dataSources[department].docsSheet;
     stockSheet = dataSources[department].stockSheet;
     utilitySheet = dataSources[department].utilitySheet;
-    return [docsSheet, stockSheet, utilitySheet];
+    departmentName = dataSources[department].departmentName;
+    return [docsSheet, stockSheet, utilitySheet, departmentName];
   } catch (e) {
     console.log(`Произошла ошибка при сборе табличных данных для сессии пользователя.`);
     console.log(e);
@@ -90,7 +91,11 @@ function storeData (json) {
     let column = columns[key];
     let value;
     if (key === 'CurrentStatusDate' || key === 'NextStatusEstimatedDate') {
-      value = new Date(data[key])
+      if (data[key] !=  '') {
+        value = new Date(data[key])
+      } else {
+        continue;
+      }
     } else {
       value = data[key];
     }

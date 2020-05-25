@@ -8,6 +8,7 @@ function getServerData () {
     result.docsSheet = getObjFromTable(singleArr[0]);
     result.stockSheet = getObjFromTable(singleArr[1]);
     result.utilitySheet = getObjFromTable(singleArr[2]);
+    result.departmentName = singleArr[3];
     return JSON.stringify(result);
 }
 

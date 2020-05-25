@@ -298,26 +298,13 @@ class DocFieldsHandler extends React.Component {
                                 oldValue={this.state.DocStatus}
                                 onChange={this.handleChildChange}
                             />
-                            <DatePicker
-                                id = "CurrentStatusDate"
-                                label = "Дата текущего статуса:"
-                                value = {this.state.CurrentStatusDate}
+                            <TextField
+                                id = "ClientName"
+                                label = "ФИО клиента:"
+                                value={this.state.ClientName}
 
                                 onChange={this.handleChildChange}
                             />
-                            <DatePicker
-                                id = "NextStatusEstimatedDate"
-                                label = "Предполагаемая дата следующего статуса:"
-                                value = {this.state.NextStatusEstimatedDate}
-
-                                onChange={this.handleChildChange}
-                            />
-                        <div className="section"></div>
-                    </div>
-                </div>
-                <div className="row i_sec">
-                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
-                        <div className="section"></div>
                             {this.props.current_view === 'create_new_doc' &&
                             <Select
                                 id = "SelectLiter"
@@ -335,10 +322,23 @@ class DocFieldsHandler extends React.Component {
                                 onChange={this.handleChildChange}
                             />
                             }
-                            <TextField
-                                id = "ClientName"
-                                label = "ФИО клиента:"
-                                value={this.state.ClientName}
+                        <div className="section"></div>
+                    </div>
+                </div>
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div className="section"></div>
+                            <DatePicker
+                                id = "CurrentStatusDate"
+                                label = "Дата текущего статуса:"
+                                value = {this.state.CurrentStatusDate}
+
+                                onChange={this.handleChildChange}
+                            />
+                            <DatePicker
+                                id = "NextStatusEstimatedDate"
+                                label = "Предполагаемая дата следующего статуса:"
+                                value = {this.state.NextStatusEstimatedDate}
 
                                 onChange={this.handleChildChange}
                             />
@@ -356,13 +356,6 @@ class DocFieldsHandler extends React.Component {
                                 oldValue={this.state.SelectManager}
                                 onChange={this.handleChildChange}
                             />
-                            <CheckBox
-                                id = "RemainsOnSale"
-                                label = "остается в продаже от физ. лица"
-                                value = {this.state.RemainsOnSale}
-
-                                onChange={this.handleChildChange}
-                            />
                             <Select
                                 id = "DealType"
                                 label = "Тип сделки:"
@@ -371,9 +364,40 @@ class DocFieldsHandler extends React.Component {
                                 oldValue={this.state.DealType}
                                 onChange={this.handleChildChange}
                             />
+                            <CheckBox
+                                id = "RemainsOnSale"
+                                label = "остается в продаже от физ. лица"
+                                value = {this.state.RemainsOnSale}
+
+                                onChange={this.handleChildChange}
+                            />
                         <div className="section"></div>
                     </div>
-                </div>                                                              
+                </div>
+                {this.state.DealType === 'АН' &&
+                <div className="row dp_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
+                            <React.Fragment>
+                            <TextField
+                                id = "RealEstateAgency"
+                                label = "Агентство недвижимости:"
+                                value={this.state.RealEstateAgency}
+
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "EstateAgent"
+                                label = "Сотрудник агентства:"
+                                value={this.state.EstateAgent}
+
+                                onChange={this.handleChildChange}
+                            />
+                            </React.Fragment>  
+                        <div className="section"></div>
+                    </div>
+                </div>
+                }                                                              
                 <div className="row i_sec">
                     <div className="col s10 offset-s1 card-panel indigo lighten-5">
                         <div className="section"></div>
@@ -421,32 +445,8 @@ class DocFieldsHandler extends React.Component {
                         <div className="section"></div>
                     </div>
                 </div>
-                {this.state.DealType === 'АН' &&
-                <div className="row dp_sec">
-                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div className="section"></div>
-                            <React.Fragment>
-                            <TextField
-                                id = "RealEstateAgency"
-                                label = "Агентство недвижимости:"
-                                value={this.state.RealEstateAgency}
-
-                                onChange={this.handleChildChange}
-                            />
-                            <TextField
-                                id = "EstateAgent"
-                                label = "Сотрудник агентства:"
-                                value={this.state.EstateAgent}
-
-                                onChange={this.handleChildChange}
-                            />
-                            </React.Fragment>  
-                        <div className="section"></div>
-                    </div>
-                </div>
-                }
                 <div className="row i_sec">
-                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
                         <div className="section"></div>
                             <TextField
                                 id = "Comment"
@@ -461,7 +461,7 @@ class DocFieldsHandler extends React.Component {
                 </div>
                 <div className="section">
                 <div className="section row">
-                        <a className="waves-effect waves-light btn-large col s6 offset-s3 deep-purple lighten-3" 
+                        <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3" 
                         onClick={this.handleSaveBtn}>Сохранить</a>
                     </div>
                 </div>
