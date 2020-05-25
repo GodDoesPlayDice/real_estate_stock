@@ -31,7 +31,7 @@ var dataSources = {
             .getSheetByName("utility_data").getDataRange().getValues(),
         targetSheet: SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY")
         .getSheetByName("storage_raw"),
-        departmentName: "Баланс (всм ЖК)"
+        departmentName: "Баланс"
     }
 }
 
