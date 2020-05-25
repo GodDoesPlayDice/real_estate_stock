@@ -9,7 +9,7 @@ class Header extends React.Component {
         }
     };
     handleChange(pressed) {
-        this.props.onChange("current_view", pressed);
+        this.props.onButtonsClicked("current_view", pressed);
 
     };
     updateAutocomplete (e) {
@@ -19,7 +19,10 @@ class Header extends React.Component {
         // инициализация автокомплита
         let elems = document.querySelectorAll('.autocomplete');
         function onAutocomp (id) {
-            this.props.onDocClicked(id)
+            this.props.onDocClicked(id);
+            this.setState({
+                currentDoc: ''
+            })
         }  
         let finalFunc = onAutocomp.bind(this);
         let options = {
@@ -38,7 +41,7 @@ class Header extends React.Component {
                         </div>
                         <form className="col s5">
                             <div className="input-field">
-                                <input id="search" type="search" className="autocomplete" placeholder="Поиск сделки" onChange={this.updateAutocomplete} value={this.state.currentDoc} required />
+                                <input id="search" value={this.state.currentDoc} type="search" className="autocomplete" placeholder="Поиск сделки" onChange={this.updateAutocomplete} value={this.state.currentDoc} required />
                                 <i className="material-icons">close</i>
                             </div>
                         </form>
@@ -119,4 +122,5 @@ class Modal extends React.Component {
         );
     }
 }
+
 </script>

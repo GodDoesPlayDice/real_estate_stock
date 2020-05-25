@@ -114,10 +114,6 @@ class DatePicker extends React.Component {
     }
     componentWillUnmount() {
         this.props.onChange(this.props.id, '');
-
-        let elem = document.getElementById(this.props.id);
-        let instance = M.Datepicker.init(elem, {});
-        instance.destroy();
     }
     handleChange(e) {
     };
@@ -140,7 +136,9 @@ class Radio extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.state = ({
             span1: 'normal',
-            span2: 'normal'
+            span2: 'normal',
+            checked1: this.props.oldValue === this.props.first ? true : false,
+            checked2: this.props.oldValue === this.props.second ? true : false,
         })
     }
     handleChange(e) {
@@ -148,7 +146,11 @@ class Radio extends React.Component {
         this.setState({
             span1: e.target.value === this.props.first ? "bolder" : "normal",
             span2: e.target.value === this.props.second ? "bolder" : "normal",
+            checked1: e.target.value === this.props.first ? true : false,
+            checked2: e.target.value === this.props.second ? true : false,
         });
+    }
+    componentDidMount(){
     }
     componentWillUnmount(){
         this.props.onChange(this.props.id, '');
@@ -161,13 +163,13 @@ class Radio extends React.Component {
                     <form key={this.props.id}>
                         <p>
                         <label>
-                            <input name="group1" type="radio" value={this.props.first} onClick={this.handleChange} />
+                            <input id={this.props.first}  type="radio" value={this.props.first} checked={this.state.checked1} onClick={this.handleChange} />
                             <span style={{"fontWeight": this.state.span1}} >{this.props.first}</span>
                         </label>
                         </p>
                         <p>
                         <label>
-                            <input name="group1" type="radio" value={this.props.second} onClick={this.handleChange} />
+                            <input id={this.props.second} type="radio" value={this.props.second} checked={this.state.checked2} onClick={this.handleChange} />
                             <span style={{"fontWeight": this.state.span2}} >{this.props.second}</span>
                         </label>
                         </p>
@@ -247,9 +249,9 @@ class Select extends React.Component {
         return (
             <div className="row">
                 <div className="input-field col s10 offset-s1">
-                    {<select key={this.props.id} id={this.props.id} defaultValue="DEFAULT"  onChange={this.handleChange} >
+                    {<select key={this.props.id} id={this.props.id} defaultValue={defaultOption}  onChange={this.handleChange} >
                         {defaultOption &&
-                            <option value="DEFAULT" key={defaultOption} >{defaultOption}</option>
+                            <option value={defaultOption} key={defaultOption} >{defaultOption}</option>
                         }
                         <option value=""></option>
                         {options}
@@ -361,13 +363,12 @@ class DocFieldsHandler extends React.Component {
 
                                 onChange={this.handleChildChange}
                             />
-                            <Radio
+                            <Select
                                 id = "DealType"
                                 label = "Тип сделки:"
-                                first='Л'
-                                second='АН'
+                                value ={getSingleCol("deal_types", "utilitySheet")}
 
-                                oldValue={this.props.DealType}
+                                oldValue={this.state.DealType}
                                 onChange={this.handleChildChange}
                             />
                         <div className="section"></div>

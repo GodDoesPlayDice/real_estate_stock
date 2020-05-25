@@ -11,32 +11,38 @@ var frontEndData = {
 main();
 
 
-function main() {
+function main(source) {
     google.script.run.withSuccessHandler(onSuccess).getServerData();
     function onSuccess (obj) {
         serverSideData = JSON.parse(obj);
-
         // данные для автокомплита
         serverSideData.docsPrettyIDs = {}
         getDocsPrettyID("ID", "ClientName", "docsSheet").forEach((elem) => {
             serverSideData.docsPrettyIDs[elem] = null
         });
-
-
         renderApp();
+        {source === 'from app' &&
+         alert("Данные записаны. Страница обновлена");
+        }
     };
 };
 
+function renderApp() {
+    ReactDOM.render(
+    <App />,
+        document.getElementById('root')
+    );
+}
 
 
 // отправка одной строки функции на сервере, преобразующей ее в массив для записи
 function storeData (data) {
     google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(data));
     function onSuccess () {
-        alert("Данные записаны.")
+        main('from app');
     };
-}
 
+}
 
 // один столбец данных исходя из его имени и имели листа
 function getSingleCol(col, sheetName, withSpaces) {
@@ -61,7 +67,6 @@ function getSingleCol(col, sheetName, withSpaces) {
     return result;
 }
 
-
 function getSingleRowObj(row, sheetObj) {
     let result = {};
     let headers = sheetObj.headers;
@@ -84,7 +89,6 @@ function getRowNumber (ID, sheetObj) {
     return row;
 }
 
-
 function getDocsPrettyID (firstCol, secondCol, sheetName) {
     let arrOne = getSingleCol(firstCol, sheetName, 'with_spaces');
     let arrTwo = getSingleCol(secondCol, sheetName, 'with_spaces');
@@ -93,7 +97,6 @@ function getDocsPrettyID (firstCol, secondCol, sheetName) {
     })
     return result;
 }
-
 
 // один столбец данных (квартиры) исходя из номера литера и имени листа 
 function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
@@ -118,12 +121,6 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
 }
 
 
-function renderApp(prettyID) {
-    ReactDOM.render(
-    <App />,
-        document.getElementById('root')
-    );
-}
 
 class App extends React.Component {
     constructor (props) {
@@ -138,15 +135,39 @@ class App extends React.Component {
             current_view: 'view_main',
             document: {},
             modal: false,
-            transaction_in_process: false
         }
     };
 
     handleHeaderClick(field, changes) {
         this.setState({
-            [field]: changes
+            current_view: "view_main",
+            document: {}
         });
+        setTimeout(()=>{
+            this.setState({
+                [field]: changes
+            });
+        },30)
     };
+    handleCurrentDocClicked(docName) {
+        let ID = docName.split(" ")[0];
+        let position = getRowNumber(ID, serverSideData.docsSheet);
+        let docDataObj = getSingleRowObj(position, serverSideData.docsSheet);
+
+        this.setState({
+            current_view: "view_main",
+            document: {}
+        });
+        setTimeout(()=>{
+            this.setState({
+                current_view: "edit_doc",
+                document: docDataObj,
+            });
+        },30)
+
+    }
+
+
     handleDocChange(field, value) {
         this.setState({
             [field]: value
@@ -159,21 +180,13 @@ class App extends React.Component {
         })
     }
     handleDecision(decision) {
-        function saveData () {
-            this.setState({
-                transaction_in_process: true
-            })
+        if( decision === 'confirmed') {
             storeData(this.state.document);
             this.setState({
-                transaction_in_process: false,
                 modal: false,
                 current_view: 'view_main',
                 document: {}
-            })
-        }
-        if( decision === 'confirmed') {
-            // сохранение данных в таблицу
-            saveData.call(this);
+            });
         } else {
             this.setState({
                 modal: false
@@ -181,39 +194,33 @@ class App extends React.Component {
         }
     }
     
-    handleCurrentDocClicked(docName) {
-        let ID = docName.split(" ")[0];
-        let position = getRowNumber(ID, serverSideData.docsSheet);
-        let docDataObj = getSingleRowObj(position, serverSideData.docsSheet);
-
-        this.setState({
-            document: docDataObj,
-            current_view: "edit_doc"
-        })
-    }
     render () {
         return (
             <React.Fragment>
-                <header>
+                <header id='header'>
                     <Header 
                         logo="Виноград 2" 
                         docsList={serverSideData.docsPrettyIDs}
                         current_view={this.state.current_view}
-                        onChange={this.handleHeaderClick}
+                        onButtonsClicked={this.handleHeaderClick}
                         onDocClicked={this.handleCurrentDocClicked}
                     />
                 </header>
                 <main>
                     <div className="container section">
-                        {this.state.current_view === 'create_new_doc' &&
                         <div className="section row valign-wrapper">
                             <div className="col s10 offset-s1">
                                 <h4 className="indigo-text text-darken-4">
-                                    Новый документ
+                                    {this.state.current_view === 'create_new_doc' &&
+                                    "Новый документ"
+                                    }
+                                    {this.state.current_view === 'edit_doc' &&
+                                    `Редактирование документа. Квартира - ${this.state.document.ID}`}
+                                    {this.state.current_view === 'view_main' &&
+                                    `Основной раздел`}
                                 </h4>
                             </div> 
                         </div>
-                        }
                         {/* поля сделки и кнопка сохранения */}
                         {(this.state.current_view === 'create_new_doc' || this.state.current_view === 'edit_doc')&&
                         <React.Fragment>
