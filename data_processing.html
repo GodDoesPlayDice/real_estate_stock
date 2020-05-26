@@ -1,6 +1,7 @@
 <script type="text/babel">
 
-// один столбец данных исходя из его имени и имели листа
+/* принимает (НОМЕР СТОЛБЦА, ИМЯ ЛИСТА, "with_spaces" - с пустыми ячейками или без)
+возвращает одномерный массив - один столбец из таблиц */
 function getSingleCol(col, sheetName, withSpaces) {
     // col is text
     let result = [];
@@ -23,10 +24,12 @@ function getSingleCol(col, sheetName, withSpaces) {
     return result;
 }
 
-function getSingleRowObj(row, sheetObj) {
+/* принимает (номер строки, "имя таблицы"); 
+возвращает одномерный массив - строку из таблиц*/
+function getSingleRowObj(row, sheetName) {
     let result = {};
-    let headers = sheetObj.headers;
-    let docInArray = sheetObj[row];  
+    let headers = serverSideData[sheetName].headers;
+    let docInArray = serverSideData[sheetName][row];  
     headers.forEach(function (elem, index) {
         if (elem != '') {
             result[elem] = docInArray[index];
@@ -35,6 +38,9 @@ function getSingleRowObj(row, sheetObj) {
     return result;
 }
 
+
+/* принимает (ID документа, {объект с таблицей}) 
+возвращает номер строки, где найден данный ID*/
 function getRowNumber (ID, sheetObj) {
     let row;
     for (let key in sheetObj) {
@@ -45,6 +51,8 @@ function getRowNumber (ID, sheetObj) {
     return row;
 }
 
+/* объединяет два столбца (массивы значений) через один пробел
+([столбец 1], [столбец 2],"имя листа") => ["один столбец с объединенными знач."] */
 function getDocsPrettyID (firstCol, secondCol, sheetName) {
     let arrOne = getSingleCol(firstCol, sheetName, 'with_spaces');
     let arrTwo = getSingleCol(secondCol, sheetName, 'with_spaces');
@@ -54,7 +62,9 @@ function getDocsPrettyID (firstCol, secondCol, sheetName) {
     return result;
 }
 
-// один столбец данных (квартиры) исходя из номера литера и имени листа 
+/* создает одномерный массив, значения которого - все квартиры, ячейки которых
+имели сбоку от себя данный литер
+("для какого литера", "имя столбца с квартирами", "имя столбца с их литерами", "имя листа") -> (["массив с номерами квартир (значения ячеек)"]) */
 function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
     if (forLiter === '') {return null};
     let result = {};
@@ -74,7 +84,46 @@ function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
         result[liter].push(flat);
     });
     return result[forLiter];
+};
+
+/* проходит по объекту листа со сделками и создает новый объект с ключами:
+{
+    имя статуса: {
+        количество сделок: num,
+        общая сумма для рассчета комиссии: num,
+        сделки: {
+            название сделки: {
+                поле сделки: значение
+                поле сделки: значение
+                поле сделки: значение
+            },
+        }
+    }
 }
-
-
+ */
+function getStatusesForDocs (statusColName, IDcolName, clientNameColName, actualCostColName, sheetName) {
+    let result = {};
+    let docsObj = serverSideData[sheetName];
+    // находим номер столбца, где указан статус
+    let statusColPos = docsObj.headers.findIndex((el) => el === statusColName);
+    //delete docsObj.headers
+    let prettyIDsArr = getDocsPrettyID (IDcolName, clientNameColName, sheetName);
+    let actualCostArr = getSingleCol(actualCostColName, sheetName, 'with_spaces');
+    // сопоставляем сделки с их статусами
+    prettyIDsArr.forEach((elem, index) => {
+        let status = docsObj[index+1][statusColPos];
+        if (!result[status]) {
+            result[status] = {
+                amountOfDocs: 0,
+                sumOfPrices: 0,
+                deals: {}
+            }
+        };
+        
+        result[status].deals[elem] = getSingleRowObj((index+1), sheetName)//docsObj[index+1];
+        result[status].amountOfDocs++;
+        result[status].sumOfPrices += actualCostArr[index];
+    })
+    return result;
+}
 </script>

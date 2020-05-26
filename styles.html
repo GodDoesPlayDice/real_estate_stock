@@ -94,4 +94,64 @@
     .month-next:focus {
         background-color: #e8eaf6 !important;
     }
+
+    /* Цвет ячеек со статусами */
+    .new_status>.collapsible-header {
+        background-color: #e8eaf6 !important;
+        color: rgba(0, 0, 0, 0.4) !important;
+        font-weight: 400 !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Цвета выделенных ячеек со статусами */
+    .main_collaps>.active>.collapsible-header {
+        background-color: #9fa8da !important;
+        color: white !important;
+        font-weight: 500 !important;
+    }
+
+    /* Доводим линии collapsible до конца */
+    .row .col {
+        padding: 0 !important;
+    }
+
+    .new_status>.collapsible {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Начертание ФИО в Collapsible */
+    .collapsible-header {
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+    }
+
+    /* Цвета выделенной ячейки с ФИО */
+    .active>.collapsible-header {
+        background-color: #ede7f6;
+        color: rgb(140, 140, 140);
+        font-weight: 600;
+    }
+
+    /* Убираем межстрочные линии в таблицах */
+    tr {
+        border-bottom: none !important;
+    }
+
+    /* Характеристики содержимого таблиц */
+    table td {
+        padding: 3px 15px !important;
+        color: rgba(0, 0, 0, 0.75);
+    }
+
+    /* Толщина текста в первых столбцах таблиц */
+    table>tbody>tr>td:nth-child(odd) {
+        font-weight: 500;
+    }
+
+    /* Фон элементов таблиц при наведении */
+    table>tbody>tr:hover {
+        background-color: #e8eaf6 !important;
+    }
 </style>

@@ -1,7 +1,7 @@
 // настройка пользователей
 var users = {
     "alikjackass@gmail.com": {
-        department: "B",
+        department: "V2",
         role: "admin"
     },
     "roxxxanafray@gmail.com": {

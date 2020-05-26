@@ -4,14 +4,17 @@ class Header extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.updateAutocomplete = this.updateAutocomplete.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.state ={
             currentDoc: ''
         }
     };
     handleChange(pressed) {
         this.props.onButtonsClicked("current_view", pressed);
-
     };
+    handleClick() {
+    }
+
     updateAutocomplete (e) {
         this.setState({currentDoc: e.target.value})
     }
@@ -37,7 +40,7 @@ class Header extends React.Component {
                 <nav className="indigo" >
                     <div className="nav-wrapper container row">
                         <div className="col s3">
-                            <a href="#" className="brand-logo">{this.props.logo}</a>
+                            <a href="#" onClick={this.handleClick} className="brand-logo">{this.props.logo}</a>
                         </div>
                         <form className="col s5">
                             <div className="input-field">
@@ -130,8 +133,8 @@ class CurrentDocs extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     };
     componentDidMount(){
-        var el = document.getElementById(this.props.id);
-        var instance = M.Tabs.init(el, {});
+        let elems = document.querySelectorAll(".collapsible");
+        M.Collapsible.init(elems, {});
     }
     componentWillUnmount(){
 
@@ -142,19 +145,130 @@ class CurrentDocs extends React.Component {
     render(){
         return (
             <React.Fragment>
-            <div className="row dp_sec">
-                <ul id={this.props.id} className="tabs">
-                    <li className="tab col s3"><a href="#test-swipe-1">Бронирования</a></li>
-                    <li className="tab col s3"><a className="active" href="#test-swipe-2">Заявки</a></li>
-                    <li className="tab col s3"><a href="#test-swipe-3">Сданы на регистрацию</a></li>
-                </ul>
-                <div id="test-swipe-1" className="col s12 ">Test 1</div>
-                <div id="test-swipe-2" className="col s12 ">Test 2</div>
-                <div id="test-swipe-3" className="col s12 ">Test 3</div>
-            </div>
+                <div className="section">
+                    <div className="row">
+                        <ul className="collapsible col s10 offset-s1 main_collaps">
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Бронирование"
+                                dataForStatus={this.props.dataObj["Бронирование"]}
+                            />
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Сдача на регистрацию ДДУ"
+                                dataForStatus={this.props.dataObj["Сдача на регистрацию ДДУ"]}
+                            />
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Зарегистрирован ДДУ"
+                                dataForStatus={this.props.dataObj["Зарегистрирован ДДУ"]}
+                            />
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Расторжение ДДУ"
+                                dataForStatus={this.props.dataObj["Расторжение ДДУ"]}
+                            />
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Расторгнут ДДУ"
+                                dataForStatus={this.props.dataObj["Расторгнут ДДУ"]}
+                            />
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Без статуса"
+                                dataForStatus={this.props.dataObj[""]}
+                            />
+                        </ul>
+                    </div>
+                </div>
             </React.Fragment>
         )
     }
-}; 
+};
+
+class CollapsibleStatus extends React.Component {
+    constructor(props) {
+        super(props);
+    };
+    render() {
+        let data = this.props.dataForStatus.deals;
+        if (data === {}) {return;}
+        function generateDocs () {
+            let result = [];
+            for (let key in data) {
+                result.push(
+                    <CollapsibleDoc
+                        docName={key}
+                        docDataObj={data[key]}
+                    />
+                )
+            };
+            return result;
+        }
+        return (
+            <li className={this.props.liClassName}>
+                <div className="collapsible-header">
+                    <h5>
+                        {this.props.status}
+                    </h5>    
+                </div>
+                <ul className="collapsible-body collapsible">
+                    {generateDocs()}
+                </ul>   
+            </li>
+        );
+    }
+};
+
+class CollapsibleDoc extends React.Component {
+    constructor(props) {
+        super(props);
+    };
+    render() {
+        return(
+            <li>
+                <div className="collapsible-header">
+                    {this.props.docName}
+                </div>
+                <div className="collapsible-body">
+                    <DocTable 
+                        divClass="collapsible-body"
+                        currentDocDataObj={this.props.docDataObj}
+                    />
+                </div>
+            </li>
+        );
+    }
+};
+
+
+class DocTable extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    render () {
+        let data = this.props.currentDocDataObj;
+        let result = [];
+        function generateDocDataRows() {
+           for (let key in data) {
+               if (data[key] === '') {continue;}
+                result.push(
+                    <tr>
+                        <td width="40%">{key}</td>
+                        <td>{data[key]}</td>
+                    </tr>
+                );
+           }
+           return result;
+        }
+        return (
+            <table>
+                <tbody>
+                    {generateDocDataRows()}
+                </tbody>
+            </table>
+        )
+    }
+}
 
 </script>

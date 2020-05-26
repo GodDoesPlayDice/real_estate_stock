@@ -76,7 +76,7 @@ class App extends React.Component {
     handleCurrentDocClicked(docName) {
         let ID = docName.split(" ")[0];
         let position = getRowNumber(ID, serverSideData.docsSheet);
-        let docDataObj = getSingleRowObj(position, serverSideData.docsSheet);
+        let docDataObj = getSingleRowObj(position, "docsSheet");
 
         this.setState({
             current_view: "view_main",
@@ -159,6 +159,7 @@ class App extends React.Component {
                         {this.state.current_view === 'view_main' &&
                             <CurrentDocs
                             id="collapsible"
+                            dataObj={getStatusesForDocs("DocStatus", "ID", "ClientName", "ActualCost", "docsSheet")}
                             />
                         }
                         {/* модальное окно */}
