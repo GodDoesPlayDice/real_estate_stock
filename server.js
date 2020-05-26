@@ -3,6 +3,7 @@ var Route = {};
 Route.path = function (route, callback) {
   Route[route] = callback;
 };
+var sessionParameters = {};
 
 function doGet(e) {
   // проверка, указан ли пользователь в системе
@@ -35,7 +36,8 @@ function loadMainPage() {
   return render("index", {});
 };
 
-// установка параметров для пользователя
+/* проверка авторизации в сервисах Google (имя аккаунта) 
+и сверка его с пользователями, определенными в settings*/
 function setSessionParameters () {
   let userMail = Session.getActiveUser().getEmail();
   try {
@@ -51,8 +53,26 @@ function setSessionParameters () {
       console.log(e);
     return false;
   } 
+};
+
+/* При загрузке шаблона страницы первым делом запускается эта ф-ция, и фронтенд ожидает
+ее значение. Она возвращает данные таблиц, вспомогательные данные для полей, параметры 
+текущего пользователя, название департамента. */
+function getServerData () {
+  let result = {};
+  result.sessionParameters = setSessionParameters ();
+  console.log(result.sessionParameters)
+  let dataInArray = setDataForSession();
+  result.docsSheet = getObjFromTable(dataInArray[0]);
+  result.stockSheet = getObjFromTable(dataInArray[1]);
+  result.utilitySheet = getObjFromTable(dataInArray[2]);
+  result.departmentName = dataInArray[3];
+  return JSON.stringify(result);
 }
-// добавляем данные для сессии в глоб. переменную
+
+/* Легкая ф-ция которая проверяет департамент текущего пользователя
+, выбирает из объекта настроек данные для данного департамента и возвращает их
+в виде массива */
 function setDataForSession () {
   let department = sessionParameters.department;
   try {
@@ -68,6 +88,26 @@ function setDataForSession () {
   }
 };
 
+/* меняет формат данных на следующий:
+ - первый ключ объекта - массив с хэдерами столбцов 
+ - последующие ключи - строки: массив со строкой */
+function getObjFromTable (table) {
+  let result = {};
+  table.forEach((elem, index) => {
+      if (index == 0) {
+          result.headers = elem;
+      } else {
+          result[index] = elem;
+      }
+  });
+  return result;
+}
+
+
+/* Сохранение данных в таблицы
+находит последнюю строку в targetSheet вставляет туда значения
+пришедших ключей объекта, предварительно рассчитав номера столбцов в targetSheet. 
+ попутно удаляются лишние ключи и форматируются ключи с датами */
 function storeData (json) {
   let data = JSON.parse(json);
   setSessionParameters ();
@@ -92,6 +132,8 @@ function storeData (json) {
     let value;
     if (key === 'CurrentStatusDate' || key === 'NextStatusEstimatedDate') {
       if (data[key] !=  '') {
+        /* при попытке отформатировать пустую дату, в ячейку залетает 1970 год, как и должно быть
+        так что проверяем еще и тут */
         value = new Date(data[key])
       } else {
         continue;

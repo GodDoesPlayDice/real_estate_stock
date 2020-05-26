@@ -1,0 +1,80 @@
+<script type="text/babel">
+
+// один столбец данных исходя из его имени и имели листа
+function getSingleCol(col, sheetName, withSpaces) {
+    // col is text
+    let result = [];
+    let rawObj = serverSideData[sheetName];
+    let colPosition = rawObj.headers.findIndex((el) => el === col);
+    for (let key in serverSideData[sheetName]) {
+        let elem = rawObj[key][colPosition];
+        if (elem === '') {
+            if(withSpaces === 'with_spaces') {
+                result.push(elem)
+            } else{
+                continue;
+            }
+            
+        } else {
+         result.push(elem)
+        }
+    }    
+    result.pop();
+    return result;
+}
+
+function getSingleRowObj(row, sheetObj) {
+    let result = {};
+    let headers = sheetObj.headers;
+    let docInArray = sheetObj[row];  
+    headers.forEach(function (elem, index) {
+        if (elem != '') {
+            result[elem] = docInArray[index];
+        }
+    })
+    return result;
+}
+
+function getRowNumber (ID, sheetObj) {
+    let row;
+    for (let key in sheetObj) {
+        if (sheetObj[key][0] === ID) {
+            return row = key;
+        }
+    }
+    return row;
+}
+
+function getDocsPrettyID (firstCol, secondCol, sheetName) {
+    let arrOne = getSingleCol(firstCol, sheetName, 'with_spaces');
+    let arrTwo = getSingleCol(secondCol, sheetName, 'with_spaces');
+    let result = arrOne.map((elem, index) => {
+        return `${elem} ${arrTwo[index]}`;
+    })
+    return result;
+}
+
+// один столбец данных (квартиры) исходя из номера литера и имени листа 
+function getFlatsInStock (forLiter, flatsCol, lirersCol, sheetName) {
+    if (forLiter === '') {return null};
+    let result = {};
+    let twoCols = {
+        flats: getSingleCol(flatsCol, sheetName),
+        liters: getSingleCol(lirersCol, sheetName),
+    }
+    let flats = twoCols.flats;
+    let liters = twoCols.liters;
+
+    flats.forEach((elem, index) => {
+        let flat = elem;
+        let liter = liters[index];
+        if (!Array.isArray(result[liter])) {
+            result[liter] = [];
+        } 
+        result[liter].push(flat);
+    });
+    return result[forLiter];
+}
+
+
+</script>

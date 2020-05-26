@@ -70,41 +70,6 @@ class Header extends React.Component {
     }
 }
 
-class CurrentDocs extends React.Component {
-    constructor(props){
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    };
-    componentDidMount(){
-        var elem = document.getElementById(this.props.id);
-        var instances = M.Collapsible.init(elem, {});
-    }
-    componentWillUnmount(){
-
-    }
-    handleChange(e){
-
-    }
-    render(){
-        return(
-            <ul id={this.props.id} className="collapsible">
-                <li>
-                <div className="collapsible-header"><i className="material-icons">filter_drama</i>First</div>
-                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-                </li>
-                <li>
-                <div className="collapsible-header"><i className="material-icons">place</i>Second</div>
-                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-                </li>
-                <li>
-                <div className="collapsible-header"><i className="material-icons">whatshot</i>Third</div>
-                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-                </li>
-            </ul>
-        );
-    }
-}
-
 class TopMenuButton extends React.Component {
     constructor (props) {
         super(props);
@@ -118,8 +83,7 @@ class TopMenuButton extends React.Component {
             <li><a href="#" onClick={this.handleClick}>{this.props.label}</a></li>
         )
     }
-}
-
+};
 
 class Modal extends React.Component {
     constructor(props) {
@@ -158,6 +122,39 @@ class Modal extends React.Component {
             </div>
         );
     }
-}
+};
+
+class CurrentDocs extends React.Component {
+    constructor(props){
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    };
+    componentDidMount(){
+        var el = document.getElementById(this.props.id);
+        var instance = M.Tabs.init(el, {});
+    }
+    componentWillUnmount(){
+
+    }
+    handleChange(e){
+
+    }
+    render(){
+        return (
+            <React.Fragment>
+            <div className="row dp_sec">
+                <ul id={this.props.id} className="tabs">
+                    <li className="tab col s3"><a href="#test-swipe-1">Бронирования</a></li>
+                    <li className="tab col s3"><a className="active" href="#test-swipe-2">Заявки</a></li>
+                    <li className="tab col s3"><a href="#test-swipe-3">Сданы на регистрацию</a></li>
+                </ul>
+                <div id="test-swipe-1" className="col s12 ">Test 1</div>
+                <div id="test-swipe-2" className="col s12 ">Test 2</div>
+                <div id="test-swipe-3" className="col s12 ">Test 3</div>
+            </div>
+            </React.Fragment>
+        )
+    }
+}; 
 
 </script>
