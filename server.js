@@ -67,6 +67,7 @@ function getServerData () {
   result.stockSheet = getObjFromTable(dataInArray[1]);
   result.utilitySheet = getObjFromTable(dataInArray[2]);
   result.departmentName = dataInArray[3];
+  result.dictionary = dataInArray[4];
   return JSON.stringify(result);
 }
 
@@ -80,7 +81,8 @@ function setDataForSession () {
     stockSheet = dataSources[department].stockSheet;
     utilitySheet = dataSources[department].utilitySheet;
     departmentName = dataSources[department].departmentName;
-    return [docsSheet, stockSheet, utilitySheet, departmentName];
+    dictionary = dictionary;
+    return [docsSheet, stockSheet, utilitySheet, departmentName, dictionary];
   } catch (e) {
     console.log(`Произошла ошибка при сборе табличных данных для сессии пользователя.`);
     console.log(e);

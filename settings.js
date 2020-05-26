@@ -33,6 +33,28 @@ var dataSources = {
         .getSheetByName("storage_raw"),
         departmentName: "Баланс"
     }
+};
+
+var dictionary = {
+    ID: 'Идентификатор документа:',
+    Timestamp: 'Отметка времени:',
+    DocStatus: 'Статус документа:',
+    CurrentStatusDate: 'Дата текущего статуса:',
+    NextStatusEstimatedDate: 'Предполагаемая дата следующего статуса:',
+    SelectLiter: 'Литер:',
+    SelectFlat: 'Номер квартиры:',
+    ClientName: 'ФИО клиента:',
+    SelectManager: 'Менеджер ОП:',
+    RemainsOnSale: 'В продаже по переуступке:',
+    DealType: 'Тип сделки:',
+    PayMethod: 'Форма оплаты:',
+    ActualCost: 'Стоимость для расчета комиссии:',
+    LegalCost: 'Стоимость по ДДУ:',
+    LegalServiceCost: 'Оплата юр. услуг:',
+    LegalServiceNoPayment: 'Юр. услуги без оплаты:',
+    RealEstateAgency: 'Агентство недвижимости:',
+    EstateAgent: 'Сотрудник АН:',
+    Comment: 'Комментарий:'
 }
 
 

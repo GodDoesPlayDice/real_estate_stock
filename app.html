@@ -193,37 +193,4 @@ class App extends React.Component {
         );
     };
 };
-
-class PreloaderModal extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    componentDidMount () {
-        let elem = document.getElementById(this.props.id);
-        let instance = M.Modal.init(elem, {
-            dismissible: false
-        });
-        instance.open();
-    };
-    componentWillUnmount() {
-        let elem = document.getElementById(this.props.id);
-        let instance = M.Modal.getInstance(elem);
-        instance.close();
-    }
-    render () {
-        let message=this.props.message;
-        return (
-            <div id={this.props.id} class="modal">
-                <div class="modal-content">
-                    <h4>{message}</h4>
-                </div>
-                <div class="modal-footer">
-                    <div class="progress indigo lighten-4">
-                        <div class="indeterminate indigo"></div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-}
 </script>

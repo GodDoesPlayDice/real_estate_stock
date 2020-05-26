@@ -120,7 +120,7 @@ function getStatusesForDocs (statusColName, IDcolName, clientNameColName, actual
             }
         };
         
-        result[status].deals[elem] = getSingleRowObj((index+1), sheetName)//docsObj[index+1];
+        result[status].deals[elem] = getSingleRowObj((index+1), sheetName);
         result[status].amountOfDocs++;
         result[status].sumOfPrices += actualCostArr[index];
     })
