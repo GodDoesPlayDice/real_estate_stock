@@ -6,45 +6,53 @@ var serverSideData = {};
 var frontEndData = {
     timestamp: '',
     document: {},
-    operation: '',
+    preloader: '',
 }
 main();
 
 
-function main(source) {
+function main() {
     google.script.run.withSuccessHandler(onSuccess).getServerData();
     function onSuccess (obj) {
         serverSideData = JSON.parse(obj);
-        // данные для автокомплита
+        /* в основном объекте с данными создаем ключ для списка документов для автокомплита */
         serverSideData.docsPrettyIDs = {}
+        /* актуальный список сделок для автокомплита из массива превращается в объект */
         getDocsPrettyID("ID", "ClientName", "docsSheet").forEach((elem) => {
             serverSideData.docsPrettyIDs[elem] = null
         });
-        renderApp();
-        {source === 'from app' &&
+        /* актуальные данные по статусам документов для просмотра */
+        serverSideData.statusesForDocs = getStatusesForDocs("DocStatus", "ID", "ClientName", "ActualCost", "docsSheet");
+
+        /* рендерим приложение заново с новыми данными */
+        renderApp(false);
+/*         {source === 'from app' &&
          alert("Данные записаны.");
-        }
+        } */
     };
 };
 
-function renderApp() {
-    ReactDOM.render(
-    <App />,
-        document.getElementById('root')
-    );
-}
-
-
-
 // отправка одной строки функции на сервере, преобразующей ее в массив для записи
 function storeData (data) {
+    renderApp(true, "Сохранение данных...");
     google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(data));
     function onSuccess () {
-        main('from app');
+        renderApp(true, "Загрузка последних данных...");
+        main();
     };
 
 }
 
+
+function renderApp(preloaderStatus, preloaderMessage) {
+    ReactDOM.render(
+        <App 
+            preloaderStatus={preloaderStatus}
+            preloaderMessage={preloaderMessage}
+        />,
+        document.getElementById('root')
+    );
+}
 
 class App extends React.Component {
     constructor (props) {
@@ -90,8 +98,6 @@ class App extends React.Component {
         },30)
 
     }
-
-
     handleDocChange(field, value) {
         this.setState({
             [field]: value
@@ -105,6 +111,7 @@ class App extends React.Component {
     }
     handleDecision(decision) {
         if( decision === 'confirmed') {
+            frontEndData.preloader = true
             storeData(this.state.document);
             this.setState({
                 modal: false,
@@ -135,13 +142,14 @@ class App extends React.Component {
                         <div className="section row valign-wrapper">
                             <div className="col s10 offset-s1">
                                 <h4 className="indigo-text text-darken-4">
+                                    {/* влияние состояния на заголовок в рабочей области */}
                                     {this.state.current_view === 'create_new_doc' &&
                                     "Новый документ"
                                     }
                                     {this.state.current_view === 'edit_doc' &&
                                     `Редактирование документа. Квартира - ${this.state.document.ID}`}
                                     {this.state.current_view === 'view_main' &&
-                                    `Основной раздел`}
+                                    `Статусы документов`}
                                 </h4>
                             </div> 
                         </div>
@@ -156,10 +164,11 @@ class App extends React.Component {
                             />
                         </React.Fragment>
                         }
+                        {/* основной экран со статусами документов */}
                         {this.state.current_view === 'view_main' &&
                             <CurrentDocs
                             id="collapsible"
-                            dataObj={getStatusesForDocs("DocStatus", "ID", "ClientName", "ActualCost", "docsSheet")}
+                            dataObj={serverSideData.statusesForDocs}
                             />
                         }
                         {/* модальное окно */}
@@ -171,11 +180,50 @@ class App extends React.Component {
                                 flat={this.state.document.SelectFlat}
                                 client={this.state.document.ClientName}
                             />
-                        }    
+                        }  
+                        {this.props.preloaderStatus === true &&
+                            <PreloaderModal 
+                                id="preloader"
+                                message={this.props.preloaderMessage}
+                            />
+                        }   
                     </div>
                 </main>
             </React.Fragment>
         );
     };
 };
+
+class PreloaderModal extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    componentDidMount () {
+        let elem = document.getElementById(this.props.id);
+        let instance = M.Modal.init(elem, {
+            dismissible: false
+        });
+        instance.open();
+    };
+    componentWillUnmount() {
+        let elem = document.getElementById(this.props.id);
+        let instance = M.Modal.getInstance(elem);
+        instance.close();
+    }
+    render () {
+        let message=this.props.message;
+        return (
+            <div id={this.props.id} class="modal">
+                <div class="modal-content">
+                    <h4>{message}</h4>
+                </div>
+                <div class="modal-footer">
+                    <div class="progress indigo lighten-4">
+                        <div class="indeterminate indigo"></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
 </script>

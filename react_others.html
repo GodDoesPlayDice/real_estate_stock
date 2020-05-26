@@ -191,9 +191,10 @@ class CollapsibleStatus extends React.Component {
         super(props);
     };
     render() {
-        let data = this.props.dataForStatus.deals;
-        if (data === {}) {return;}
+        let data = this.props.dataForStatus?
+            this.props.dataForStatus.deals: {};
         function generateDocs () {
+            if (data === {}) return;
             let result = [];
             for (let key in data) {
                 result.push(
@@ -226,7 +227,7 @@ class CollapsibleDoc extends React.Component {
     };
     render() {
         return(
-            <li>
+            <li key={this.props.docName}>
                 <div className="collapsible-header">
                     {this.props.docName}
                 </div>
@@ -241,7 +242,6 @@ class CollapsibleDoc extends React.Component {
     }
 };
 
-
 class DocTable extends React.Component {
     constructor(props) {
         super(props)
@@ -253,7 +253,7 @@ class DocTable extends React.Component {
            for (let key in data) {
                if (data[key] === '') {continue;}
                 result.push(
-                    <tr>
+                    <tr key={key}>
                         <td width="40%">{key}</td>
                         <td>{data[key]}</td>
                     </tr>
