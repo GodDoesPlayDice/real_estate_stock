@@ -1,3 +1,7 @@
+<script>
+    
+</script>
+
 <script type="text/babel">
 
 // данныe с сервера
@@ -10,13 +14,12 @@ var frontEndData = {
 }
 main();
 
-
 function main() {
     google.script.run.withSuccessHandler(onSuccess).getServerData();
     function onSuccess (obj) {
         serverSideData = JSON.parse(obj);
         /* в основном объекте с данными создаем ключ для списка документов для автокомплита */
-        serverSideData.docsPrettyIDs = {}
+        serverSideData.docsPrettyIDs = {};
         /* актуальный список сделок для автокомплита из массива превращается в объект */
         getDocsPrettyID("ID", "ClientName", "docsSheet").forEach((elem) => {
             serverSideData.docsPrettyIDs[elem] = null
@@ -26,9 +29,6 @@ function main() {
 
         /* рендерим приложение заново с новыми данными */
         renderApp(false);
-/*         {source === 'from app' &&
-         alert("Данные записаны.");
-        } */
     };
 };
 
@@ -61,6 +61,7 @@ function renderApp(preloaderStatus, preloaderMessage) {
         document.getElementById('root')
     );
 }
+
 
 
 

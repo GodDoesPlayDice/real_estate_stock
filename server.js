@@ -58,7 +58,7 @@ function setSessionParameters () {
 /* При загрузке шаблона страницы первым делом запускается эта ф-ция, и фронтенд ожидает
 ее значение. Она возвращает данные таблиц, вспомогательные данные для полей, параметры 
 текущего пользователя, название департамента. */
-function getServerData () {
+function getServerData() {
   let result = {};
   result.sessionParameters = setSessionParameters ();
   let dataInArray = setDataForSession();
@@ -111,7 +111,6 @@ function getObjFromTable (table) {
  попутно удаляются лишние ключи и форматируются ключи с датами */
 function storeData (json) {
   let data = JSON.parse(json);
-  console.log(data)
   setSessionParameters ();
   let department = sessionParameters.department;
   // лист с учетом отдела продаж
@@ -154,20 +153,24 @@ function storeData (json) {
 */
 function archive(ID) {
   setSessionParameters();
-  console.log(ID)
-  return;
   let department = sessionParameters.department;
   let storageSheet = dataSources[department].targetSheet;
+  let storageData = storageSheet.getDataRange().getValues();
   let archiveSheet = dataSources[department].archiveSheet;
-  let currentRow = 1;
-  let currentID =   `${storageSheet.getRange(currentRow, 5).getValue()}/${storageSheet.getRange(currentRow, 6).getValue()}`;
-  do {
-    if (currentID === ID) {
-      let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow(), 1, 1, archiveSheet.getMaxColumns());
-      archiveRange.setValues(storageSheet.getRange(currentRow, 1, 1, storageSheet.getMaxColumns().getValues()));
+  let arrayOfRows = [];
 
-      storageSheet.deleteRow(currentRow);
-      currentRow++;
+  // находим все строки, с искомым ID, помещаем их номера в отдельный массив
+  storageData.forEach((elem, index) => {
+    if (elem[3]+"/"+elem[4] === ID) {
+      arrayOfRows.push(index+1);
     }
-  } while (currentRow <= storageSheet.getLastRow()+1);
-}
+  })
+  // проходим по массиву строк копируем данные и удаляем строку
+  arrayOfRows.forEach((elem) => {
+    let sourceRange = storageSheet.getRange(elem, 1, 1, storageSheet.getMaxColumns());
+    let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow()+1, 1, 1, storageSheet.getMaxColumns());
+
+    archiveRange.setValues(sourceRange.getValues());
+    storageSheet.deleteRow(elem)
+  })
+};
