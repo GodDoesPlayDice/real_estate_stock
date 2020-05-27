@@ -146,7 +146,7 @@ class PreloaderModal extends React.Component {
     render () {
         let message=this.props.message;
         return (
-            <div id={this.props.id} className="modal">
+            <div id={this.props.id} className="modal preloader_modal">
                 <div className="modal-content">
                     <h4>{message}</h4>
                 </div>
@@ -323,7 +323,7 @@ class DocTable extends React.Component {
                if (data[key] === '') {continue;}
                 result.push(
                     /* для названия поля ищем человеческий перевод в словаре */
-                    <tr key={key }>
+                    <tr key={key } >
                         <td width="40%">{serverSideData.dictionary[key]}</td>
                         <td>{data[key]}</td>
                     </tr>
@@ -335,7 +335,7 @@ class DocTable extends React.Component {
             <React.Fragment>
                 <a onClick={this.handleButtons.bind(this, 'archive')} className="btn waves-effect waves-light deep-purple lighten-3 right table_button"><i className="material-icons">delete</i></a>
                 <a onClick={this.handleButtons.bind(this, 'edit')} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">edit</i></a>
-                <table>
+                <table className="client_info">
                     <tbody>
                         {generateDocDataRows()}
                     </tbody>

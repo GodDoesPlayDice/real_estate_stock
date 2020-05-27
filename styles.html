@@ -141,24 +141,23 @@
         display: none !important;
     }
 
-    /* Убираем межстрочные линии в таблицах */
-    tr {
+    .client_info tr {
         border-bottom: none !important;
     }
 
     /* Характеристики содержимого таблиц */
-    table td {
+    .client_info td {
         padding: 3px 15px !important;
         color: rgba(0, 0, 0, 0.75);
     }
 
     /* Толщина текста в первых столбцах таблиц */
-    table>tbody>tr>td:nth-child(odd) {
+    .client_info>tbody>tr>td:nth-child(odd) {
         font-weight: 500;
     }
 
     /* Фон элементов таблиц при наведении */
-    table>tbody>tr:hover {
+    .client_info>tbody>tr:hover {
         background-color: #e8eaf6 !important;
     }
 
@@ -174,7 +173,7 @@
         padding-top: 0 !important;
     }
 
-    .modal {
+    .preloader_modal {
         padding: 20px !important;
         margin-top: 10% !important;
     }
@@ -184,7 +183,7 @@
         margin-left: 2% !important;
     }
 
-    .modal-content {
+    .preloader_modal .modal-content {
         color: rgba(0, 0, 0, 0.8);
     }
 </style>

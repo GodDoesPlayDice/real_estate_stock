@@ -40,7 +40,15 @@ function storeData (data) {
         renderApp(true, "Загрузка последних данных...");
         main();
     };
+}
 
+function archive(ID) {
+    renderApp(true, "Удаление документа: " + ID);
+    google.script.run.withSuccessHandler(onSuccess).archive(ID);
+    function onSuccess () {
+        renderApp(true, "Загрузка последних данных...");
+        main();
+    };
 }
 
 
@@ -53,6 +61,8 @@ function renderApp(preloaderStatus, preloaderMessage) {
         document.getElementById('root')
     );
 }
+
+
 
 class App extends React.Component {
     constructor (props) {
@@ -125,8 +135,9 @@ class App extends React.Component {
     handleArchiveBtn (ID) {
         this.setState({
             modalConfirmButtonPurpose: 'archive',
-            modalHeader: "Архивировать документ и овободить квартиру",
+            modalHeader: "Удалить документ и овободить квартиру",
             modalBody: `${ID}`,
+            docIDforArchive: ID
         })
         setTimeout(()=>{
             this.setState({
@@ -146,7 +157,6 @@ class App extends React.Component {
                 break;
             case 'archive':
                 archive(this.state.docIDforArchive);
-                alert("Функция появится позже")
                 this.setState({
                     modal: false,
                     current_view: 'view_main',

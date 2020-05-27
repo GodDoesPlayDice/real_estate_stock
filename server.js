@@ -153,6 +153,19 @@ function storeData (json) {
 ("ID") -> (void)
 */
 function archive(ID) {
+  setSessionParameters();
+  let department = sessionParameters.department;
   let storageSheet = dataSources[department].targetSheet;
-  let archeveSheet = dataSources[department].archiveSheet;
+  let archiveSheet = dataSources[department].archiveSheet;
+  let currentRow = 1;
+  let currentID =   `${storageSheet.getRange(currentRow, 5).getValue()}/${storageSheet.getRange(currentRow, 6).getValue()}`;
+  do {
+    if (currentID === ID) {
+      let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow(), 1, 1, archiveSheet.getMaxColumns());
+      archiveRange.setValues(storageSheet.getRange(currentRow, 1, 1, storageSheet.getMaxColumns().getValues()));
+
+      storageSheet.deleteRow(currentRow);
+      currentRow++;
+    }
+  } while (currentRow <= storageSheet.getLastRow()+1);
 }
