@@ -98,7 +98,7 @@
     /* Цвет ячеек со статусами */
     .new_status>.collapsible-header {
         background-color: #e8eaf6 !important;
-        color: rgba(0, 0, 0, 0.4) !important;
+        color: #785f8a !important;
         font-weight: 400 !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
@@ -125,13 +125,20 @@
         font-size: 16px;
         font-weight: 500;
         color: rgba(0, 0, 0, 0.65);
+        justify-content: space-between !important;
     }
 
     /* Цвета выделенной ячейки с ФИО */
-    .active>.collapsible-header {
+    .collapsible-body>.active>.collapsible-header {
         background-color: #ede7f6;
         color: rgb(140, 140, 140);
         font-weight: 600;
+        justify-content: center !important;
+    }
+
+    /* Убираем стоимость возле ФИО при открытии таблицы */
+    .active>.collapsible-header>.price {
+        display: none !important;
     }
 
     /* Убираем межстрочные линии в таблицах */
@@ -153,6 +160,18 @@
     /* Фон элементов таблиц при наведении */
     table>tbody>tr:hover {
         background-color: #e8eaf6 !important;
+    }
+
+    .price {
+        text-align: right !important;
+    }
+
+    .table_button {
+        margin: 10px 0 5px 10px !important;
+    }
+
+    .table_content {
+        padding-top: 0 !important;
     }
 
     .modal {

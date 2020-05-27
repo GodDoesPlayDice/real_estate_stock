@@ -59,14 +59,19 @@ class App extends React.Component {
         super(props);
         this.handleHeaderClick = this.handleHeaderClick.bind(this);
         this.handleSaveBtn = this.handleSaveBtn.bind(this);
-        this.handleDecision = this.handleDecision.bind(this);
+        this.handleModalDecision = this.handleModalDecision.bind(this);
         this.handleDocChange = this.handleDocChange.bind(this);
         this.handleCurrentDocClicked = this.handleCurrentDocClicked.bind(this)
+        this.handleArchiveBtn = this.handleArchiveBtn.bind(this);
         this.state = {
             timestamp: '',
             current_view: 'view_main',
             document: {},
             modal: false,
+            modalConfirmButtonPurpose: '',
+            modalHeader: '',
+            modalBody: '',
+            docIDforArchive: ''
         }
     };
 
@@ -81,8 +86,8 @@ class App extends React.Component {
             });
         },30)
     };
-    handleCurrentDocClicked(docName) {
-        let ID = docName.split(" ")[0];
+    handleCurrentDocClicked(prettyID) {
+        let ID = prettyID.split(" ")[0];
         let position = getRowNumber(ID, serverSideData.docsSheet);
         let docDataObj = getSingleRowObj(position, "docsSheet");
 
@@ -106,22 +111,52 @@ class App extends React.Component {
     handleSaveBtn(e) {
         frontEndData.document = this.state.document;
         this.setState({
-            modal: true,
+            modalConfirmButtonPurpose: 'save',
+            modalHeader: "Сохранить документ",
         })
+        setTimeout(() => {
+            this.setState({
+                modalBody: `${this.state.document.SelectLiter}/${this.state.document.SelectFlat} ${this.state.document.ClientName}`,
+                modal: true,
+            })
+        }, 30)
     }
-    handleDecision(decision) {
-        if( decision === 'confirmed') {
-            frontEndData.preloader = true
-            storeData(this.state.document);
+    
+    handleArchiveBtn (ID) {
+        this.setState({
+            modalConfirmButtonPurpose: 'archive',
+            modalHeader: "Архивировать документ и овободить квартиру",
+            modalBody: `${ID}`,
+        })
+        setTimeout(()=>{
             this.setState({
-                modal: false,
-                current_view: 'view_main',
-                document: {}
+                modal: true,
             });
-        } else {
-            this.setState({
-                modal: false
-            });
+        },30)
+    } 
+    handleModalDecision(decision) {
+        switch (decision) {
+            case 'save':
+                storeData(this.state.document);
+                this.setState({
+                    modal: false,
+                    current_view: 'view_main',
+                    document: {},
+                });
+                break;
+            case 'archive':
+                archive(this.state.docIDforArchive);
+                alert("Функция появится позже")
+                this.setState({
+                    modal: false,
+                    current_view: 'view_main',
+                    document: {},
+                });
+                break;
+            default:
+                this.setState({
+                    modal: false
+                });
         }
     }
     
@@ -169,16 +204,18 @@ class App extends React.Component {
                             <CurrentDocs
                             id="collapsible"
                             dataObj={serverSideData.statusesForDocs}
+                            handleArchiveBtn={this.handleArchiveBtn}
+                            handleEditBtn={this.handleCurrentDocClicked}
                             />
                         }
                         {/* модальное окно */}
                         {this.state.modal &&
                             <Modal 
-                                id="comfirmation"
-                                onDecision={this.handleDecision}
-                                liter={this.state.document.SelectLiter}
-                                flat={this.state.document.SelectFlat}
-                                client={this.state.document.ClientName}
+                                id="comfirmation_modal"
+                                header={this.state.modalHeader}
+                                body={this.state.modalBody}
+                                onDecision={this.handleModalDecision}
+                                confirmButtonPurpose={this.state.modalConfirmButtonPurpose}
                             />
                         }  
                         {this.props.preloaderStatus === true &&

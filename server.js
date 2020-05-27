@@ -146,4 +146,13 @@ function storeData (json) {
     targetSheet.getRange(lastRow+1, column).setValue(value);
   }
   targetSheet.getRange(lastRow+1, 1).setValue(new Date());
+};
+
+/* Функция осуществляет поиск в листе, собирающем данные от данного приложения
+вырезает каждую строку (сделку), соответствующую искомому ID и вставляет ее в архивный лист
+("ID") -> (void)
+*/
+function archive(ID) {
+  let storageSheet = dataSources[department].targetSheet;
+  let archeveSheet = dataSources[department].archiveSheet;
 }

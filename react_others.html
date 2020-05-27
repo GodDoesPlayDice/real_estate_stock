@@ -114,19 +114,18 @@ class Modal extends React.Component {
             <div>
                 <div id={this.props.id} className="modal">
                     <div className="modal-content">
-                        <h3>Подтверждениe сохранения данных</h3>
-                        <h4>{this.props.liter}/{this.props.flat} {this.props.client}</h4>
+                        <h3>{this.props.header}</h3>
+                        <h4>{this.props.body}</h4>
                     </div>
                     <div className="modal-footer">
                         <a href="#"  onClick={this.handleClick} id="cancel"className="modal-close waves-effect waves-green btn-flat">Отмена</a>
-                        <a href="#"  onClick={this.handleClick} id="confirmed" className="modal-close waves-effect waves-green btn-flat">Сохранить</a>
+                        <a href="#"  onClick={this.handleClick} id={this.props.confirmButtonPurpose} className="modal-close waves-effect waves-green btn-flat">Подтвердить</a>
                     </div>
                 </div>
             </div>
         );
     }
 };
-
 
 class PreloaderModal extends React.Component {
     constructor(props) {
@@ -164,7 +163,7 @@ class PreloaderModal extends React.Component {
 class CurrentDocs extends React.Component {
     constructor(props){
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleButtons = this.handleButtons.bind(this);
     };
     componentDidMount(){
         let elems = document.querySelectorAll(".collapsible");
@@ -173,8 +172,15 @@ class CurrentDocs extends React.Component {
     componentWillUnmount(){
 
     }
-    handleChange(e){
-
+    handleButtons(PrettyID, ID, button){
+        switch (button) {
+            case 'archive':
+                this.props.handleArchiveBtn(ID);
+                break;
+            case 'edit': 
+                this.props.handleEditBtn(PrettyID);
+                break;
+        };
     }
     render(){
         return (
@@ -186,31 +192,43 @@ class CurrentDocs extends React.Component {
                                 liClassName="new_status"
                                 status="Бронирование"
                                 dataForStatus={this.props.dataObj["Бронирование"]}
+                                handleButtons={this.handleButtons}
+                            />
+                            <CollapsibleStatus
+                                liClassName="new_status"
+                                status="Заявка на ДДУ"
+                                dataForStatus={this.props.dataObj["Заявка на ДДУ"]}
+                                handleButtons={this.handleButtons}
                             />
                             <CollapsibleStatus
                                 liClassName="new_status"
                                 status="Сдача на регистрацию ДДУ"
                                 dataForStatus={this.props.dataObj["Сдача на регистрацию ДДУ"]}
+                                handleButtons={this.handleButtons}
                             />
                             <CollapsibleStatus
                                 liClassName="new_status"
                                 status="Зарегистрирован ДДУ"
                                 dataForStatus={this.props.dataObj["Зарегистрирован ДДУ"]}
+                                handleButtons={this.handleButtons}
                             />
                             <CollapsibleStatus
                                 liClassName="new_status"
                                 status="Расторжение ДДУ"
                                 dataForStatus={this.props.dataObj["Расторжение ДДУ"]}
+                                handleButtons={this.handleButtons}
                             />
                             <CollapsibleStatus
                                 liClassName="new_status"
                                 status="Расторгнут ДДУ"
                                 dataForStatus={this.props.dataObj["Расторгнут ДДУ"]}
+                                handleButtons={this.handleButtons}
                             />
                             <CollapsibleStatus
                                 liClassName="new_status"
                                 status="Без статуса"
                                 dataForStatus={this.props.dataObj[""]}
+                                handleButtons={this.handleButtons}
                             />
                         </ul>
                     </div>
@@ -223,7 +241,11 @@ class CurrentDocs extends React.Component {
 class CollapsibleStatus extends React.Component {
     constructor(props) {
         super(props);
+        this.handleButtons = this.handleButtons.bind(this);
     };
+    handleButtons(PrettyID, ID, button) {
+        this.props.handleButtons(PrettyID, ID, button)
+    }
     render() {
         let data = this.props.dataForStatus?
             this.props.dataForStatus.deals: {};
@@ -235,6 +257,7 @@ class CollapsibleStatus extends React.Component {
                     <CollapsibleDoc
                         docName={key}
                         docDataObj={data[key]}
+                        handleButtons={this.handleButtons}
                     />
                 )
             };
@@ -248,7 +271,7 @@ class CollapsibleStatus extends React.Component {
                     </h5>    
                 </div>
                 <ul className="collapsible-body collapsible">
-                    {generateDocs()}
+                    {generateDocs.call(this)}
                 </ul>   
             </li>
         );
@@ -258,17 +281,22 @@ class CollapsibleStatus extends React.Component {
 class CollapsibleDoc extends React.Component {
     constructor(props) {
         super(props);
+        this.handleButtons = this.handleButtons.bind(this);
     };
+    handleButtons(PrettyID, ID, button) {
+        this.props.handleButtons(PrettyID, ID, button)
+    }
     render() {
         return(
             <li key={this.props.docName}>
                 <div className="collapsible-header">
                     {this.props.docName}
                 </div>
-                <div className="collapsible-body">
+                <div className="collapsible-body table_content">
                     <DocTable 
                         divclassName="collapsible-body"
                         currentDocDataObj={this.props.docDataObj}
+                        handleButtons={this.handleButtons}
                     />
                 </div>
             </li>
@@ -279,6 +307,13 @@ class CollapsibleDoc extends React.Component {
 class DocTable extends React.Component {
     constructor(props) {
         super(props)
+        this.handleButtons = this.handleButtons.bind(this);
+    };
+    handleButtons(button) {
+        let ID = this.props.currentDocDataObj.ID;
+        let prettyID = `${ID} ${this.props.currentDocDataObj.ClientName}`;
+
+        this.props.handleButtons(prettyID, ID, button)
     }
     render () {
         let data = this.props.currentDocDataObj;
@@ -297,11 +332,15 @@ class DocTable extends React.Component {
            return result;
         }
         return (
-            <table>
-                <tbody>
-                    {generateDocDataRows()}
-                </tbody>
-            </table>
+            <React.Fragment>
+                <a onClick={this.handleButtons.bind(this, 'archive')} className="btn waves-effect waves-light deep-purple lighten-3 right table_button"><i className="material-icons">delete</i></a>
+                <a onClick={this.handleButtons.bind(this, 'edit')} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">edit</i></a>
+                <table>
+                    <tbody>
+                        {generateDocDataRows()}
+                    </tbody>
+                </table>
+            </React.Fragment>
         )
     }
 }
