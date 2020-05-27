@@ -61,7 +61,6 @@ function setSessionParameters () {
 function getServerData () {
   let result = {};
   result.sessionParameters = setSessionParameters ();
-  console.log(result.sessionParameters)
   let dataInArray = setDataForSession();
   result.docsSheet = getObjFromTable(dataInArray[0]);
   result.stockSheet = getObjFromTable(dataInArray[1]);
@@ -112,6 +111,7 @@ function getObjFromTable (table) {
  попутно удаляются лишние ключи и форматируются ключи с датами */
 function storeData (json) {
   let data = JSON.parse(json);
+  console.log(data)
   setSessionParameters ();
   let department = sessionParameters.department;
   // лист с учетом отдела продаж
@@ -132,11 +132,11 @@ function storeData (json) {
   for (let key in data) {
     let column = columns[key];
     let value;
-    if (key === 'CurrentStatusDate' || key === 'NextStatusEstimatedDate') {
-      if (data[key] !=  '') {
+    if (key.includes("Date")) {
+      if (data[key]) {
         /* при попытке отформатировать пустую дату, в ячейку залетает 1970 год, как и должно быть
         так что проверяем еще и тут */
-        value = new Date(data[key])
+        value = data[key]
       } else {
         continue;
       }
@@ -154,6 +154,8 @@ function storeData (json) {
 */
 function archive(ID) {
   setSessionParameters();
+  console.log(ID)
+  return;
   let department = sessionParameters.department;
   let storageSheet = dataSources[department].targetSheet;
   let archiveSheet = dataSources[department].archiveSheet;
