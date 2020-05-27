@@ -1,7 +1,7 @@
 // настройка пользователей
 var users = {
     "alikjackass@gmail.com": {
-        department: "B",
+        department: "test",
         role: "admin"
     },
     "roxxxanafray@gmail.com": {
@@ -25,9 +25,12 @@ var dataSources = {
     B: {
         departmentName: "Баланс",
     },
+    "test": {
+        departmentName: "Тестовый полигон"
+    }
 };
 
-
+// ленивые свойства для винограда
 Object.defineProperty(dataSources.V2, "archiveSheet", {
     get: function() {
         return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("archive");
@@ -54,7 +57,7 @@ Object.defineProperty(dataSources.V2, "targetSheet", {
     }
 });
 
-
+// ленивые свойства для баланса
 Object.defineProperty(dataSources.B, "archiveSheet", {
     get: function() {
         return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("archive");
@@ -78,6 +81,33 @@ Object.defineProperty(dataSources.B, "utilitySheet", {
 Object.defineProperty(dataSources.B, "targetSheet", {
     get: function() {
         return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("storage_raw")
+    }
+});
+
+// ленивые свойства для тестового полигона
+Object.defineProperty(dataSources.test, "archiveSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("archive");
+    }
+});
+Object.defineProperty(dataSources.test, "stockSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("all_apartments").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.test, "docsSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("docs_current").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.test, "utilitySheet", {
+    get: function() {
+        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("utility_data").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.test, "targetSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("storage_raw")
     }
 });
 
