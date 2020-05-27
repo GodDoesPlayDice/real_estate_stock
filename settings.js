@@ -20,32 +20,68 @@ var users = {
 
 var dataSources = {
     V2: {
-        archiveSheet:SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
-        .getSheetByName("archive"),
-        stockSheet: SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
-            .getSheetByName("all_apartments").getDataRange().getValues(),
-        docsSheet: SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
-            .getSheetByName("docs_current").getDataRange().getValues(),
-        utilitySheet: SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
-            .getSheetByName("utility_data").getDataRange().getValues(),
-        targetSheet: SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M")
-        .getSheetByName("storage_raw"),
         departmentName: "Виноград 2",
     },
     B: {
-        archiveSheet:SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY")
-        .getSheetByName("archive"),
-        stockSheet: SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY")
-            .getSheetByName("all_apartments").getDataRange().getValues(),
-        docsSheet: SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY")
-            .getSheetByName("docs_current").getDataRange().getValues(),
-        utilitySheet: SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY")
-            .getSheetByName("utility_data").getDataRange().getValues(),
-        targetSheet: SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY")
-        .getSheetByName("storage_raw"),
-        departmentName: "Баланс"
-    }
+        departmentName: "Баланс",
+    },
 };
+
+
+Object.defineProperty(dataSources.V2, "archiveSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("archive");
+    }
+});
+Object.defineProperty(dataSources.V2, "stockSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("all_apartments").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.V2, "docsSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("docs_current").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.V2, "utilitySheet", {
+    get: function() {
+        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("utility_data").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.V2, "targetSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("15iA9-16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("storage_raw")
+    }
+});
+
+
+Object.defineProperty(dataSources.B, "archiveSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("archive");
+    }
+});
+Object.defineProperty(dataSources.B, "stockSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("all_apartments").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.B, "docsSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("docs_current").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.B, "utilitySheet", {
+    get: function() {
+        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("utility_data").getDataRange().getValues()
+    }
+});
+Object.defineProperty(dataSources.B, "targetSheet", {
+    get: function() {
+        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("storage_raw")
+    }
+});
+
+
 
 var dictionary = {
     ID: 'Идентификатор документа:',
