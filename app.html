@@ -149,7 +149,6 @@ class App extends React.Component {
     handleModalDecision(decision) {
         switch (decision) {
             case 'save':
-                console.log(this.state.document)
                 storeData(this.state.document);
 
                 this.setState({

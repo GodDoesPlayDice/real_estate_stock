@@ -1,7 +1,7 @@
 // настройка пользователей
 var users = {
     "alikjackass@gmail.com": {
-        department: "test",
+        department: "B",
         role: "admin"
     },
     "roxxxanafray@gmail.com": {
@@ -18,99 +18,61 @@ var users = {
     },
 };
 
+let roles = ['admin', 'manager'];
+let departments = ['V2', 'B', 'test'];
+let ssID = {
+    V2: '15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M',
+    B: '16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY',
+    test: '1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I'
+}
+
 var dataSources = {
     V2: {
-        departmentName: "Виноград 2",
+        admin: {departmentName: "Виноград 2",},
+        manager: {departmentName: "Виноград 2",}
     },
     B: {
-        departmentName: "Баланс",
+        admin: {departmentName: "Баланс",},
+        manager: {departmentName: "Баланс",}
     },
     "test": {
-        departmentName: "Тестовый полигон"
+        admin: {departmentName: "Тестовый полигон",},
+        manager: {departmentName: "Тестовый полигон",}
     }
 };
 
-// ленивые свойства для винограда
-Object.defineProperty(dataSources.V2, "archiveSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("archive");
-    }
-});
-Object.defineProperty(dataSources.V2, "stockSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("all_apartments").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.V2, "docsSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("docs_current").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.V2, "utilitySheet", {
-    get: function() {
-        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("utility_data").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.V2, "targetSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M").getSheetByName("storage_raw")
-    }
-});
 
-// ленивые свойства для баланса
-Object.defineProperty(dataSources.B, "archiveSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("archive");
-    }
+/* Общие параметры */
+roles.forEach((role) => {
+    departments.forEach((dep) => {
+        // ленивые свойства для винограда
+        Object.defineProperty(dataSources[dep][role], "archiveSheet", {
+            get: function() {
+                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("archive");
+            }
+        });
+        Object.defineProperty(dataSources[dep][role], "stockSheet", {
+            get: function() {
+                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("all_apartments").getDataRange().getValues()
+            }
+        });
+        Object.defineProperty(dataSources[dep][role], "docsSheet", {
+            get: function() {
+                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("docs_current").getDataRange().getValues()
+            }
+        });
+        Object.defineProperty(dataSources[dep][role], "utilitySheet", {
+            get: function() {
+                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("utility_data").getDataRange().getValues()
+            }
+        });
+        Object.defineProperty(dataSources[dep][role], "targetSheet", {
+            get: function() {
+                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("storage_raw")
+            }
+        });
+    })
 });
-Object.defineProperty(dataSources.B, "stockSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("all_apartments").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.B, "docsSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("docs_current").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.B, "utilitySheet", {
-    get: function() {
-        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("utility_data").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.B, "targetSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY").getSheetByName("storage_raw")
-    }
-});
-
-// ленивые свойства для тестового полигона
-Object.defineProperty(dataSources.test, "archiveSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("archive");
-    }
-});
-Object.defineProperty(dataSources.test, "stockSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("all_apartments").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.test, "docsSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("docs_current").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.test, "utilitySheet", {
-    get: function() {
-        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("utility_data").getDataRange().getValues()
-    }
-});
-Object.defineProperty(dataSources.test, "targetSheet", {
-    get: function() {
-        return SpreadsheetApp.openById("1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I").getSheetByName("storage_raw")
-    }
-});
-
 
 
 var dictionary = {

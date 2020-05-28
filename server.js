@@ -75,11 +75,12 @@ function getServerData() {
 в виде массива */
 function setDataForSession () {
   let department = sessionParameters.department;
+  let role = sessionParameters.role;
   try {
-    docsSheet = dataSources[department].docsSheet;
-    stockSheet = dataSources[department].stockSheet;
-    utilitySheet = dataSources[department].utilitySheet;
-    departmentName = dataSources[department].departmentName;
+    docsSheet = dataSources[department][role].docsSheet;
+    stockSheet = dataSources[department][role].stockSheet;
+    utilitySheet = dataSources[department][role].utilitySheet;
+    departmentName = dataSources[department][role].departmentName;
     dictionary = dictionary;
     return [docsSheet, stockSheet, utilitySheet, departmentName, dictionary];
   } catch (e) {
@@ -113,8 +114,9 @@ function storeData (json) {
   let data = JSON.parse(json);
   setSessionParameters ();
   let department = sessionParameters.department;
+  let role = sessionParameters.role;
   // лист с учетом отдела продаж
-  let targetSheet = dataSources[department].targetSheet;
+  let targetSheet = dataSources[department][role].targetSheet;
   // массив с заголовками столбцов
   let headers = targetSheet.getRange(1, 2, 1, targetSheet.getLastColumn()).getValues()[0];
   let columns = {};
@@ -154,9 +156,11 @@ function storeData (json) {
 function archive(ID) {
   setSessionParameters();
   let department = sessionParameters.department;
-  let storageSheet = dataSources[department].targetSheet;
+  let role = sessionParameters.role;
+
+  let storageSheet = dataSources[department][role].targetSheet;
   let storageData = storageSheet.getDataRange().getValues();
-  let archiveSheet = dataSources[department].archiveSheet;
+  let archiveSheet = dataSources[department][role].archiveSheet;
   let arrayOfRows = [];
 
   // находим все строки, с искомым ID, помещаем их номера в отдельный массив
