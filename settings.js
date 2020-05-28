@@ -18,12 +18,51 @@ var users = {
     },
 };
 
-let roles = ['admin', 'manager'];
-let departments = ['V2', 'B', 'test'];
-let ssID = {
+var roles = ['admin', 'manager'];
+var departments = ['V2', 'B', 'test'];
+var ssID = {
     V2: '15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M',
     B: '16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY',
     test: '1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I'
+};
+
+var accessLevel = {
+    V2: {
+        admin: {
+            statuses: true,
+            verification: true,
+            edit: true,
+        },
+        manager: {
+            statuses: true,
+            verification: true,
+            edit: true,
+        }
+    },
+    B: {
+        admin: {
+            statuses: true,
+            verification: true,
+            edit: true,
+        },
+        manager: {
+            statuses: true,
+            verification: true,
+            edit: true,
+        }
+    },
+    test: {
+        admin: {
+            statuses: true,
+            verification: true,
+            edit: true,
+        },
+        manager: {
+            statuses: true,
+            verification: true,
+            edit: true,
+        }
+    }
 }
 
 var dataSources = {
