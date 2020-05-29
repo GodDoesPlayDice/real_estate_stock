@@ -3,7 +3,6 @@ var Route = {};
 Route.path = function (route, callback) {
   Route[route] = callback;
 };
-var sessionParameters = {};
 
 function doGet(e) {
   // проверка, указан ли пользователь в системе
@@ -36,6 +35,11 @@ function loadMainPage() {
   return render("index", {});
 };
 
+var sessionParameters = {
+  department: '',
+  role: '',
+};
+
 /* проверка авторизации в сервисах Google (имя аккаунта) 
 и сверка его с пользователями, определенными в settings*/
 function setSessionParameters () {
@@ -61,12 +65,12 @@ function setSessionParameters () {
 function getServerData() {
   let result = {};
   result.sessionParameters = setSessionParameters ();
-  let dataInArray = setDataForSession();
-  result.docsSheet = getObjFromTable(dataInArray[0]);
-  result.stockSheet = getObjFromTable(dataInArray[1]);
-  result.utilitySheet = getObjFromTable(dataInArray[2]);
-  result.departmentName = dataInArray[3];
-  result.dictionary = dataInArray[4];
+  let sessionData = setDataForSession();
+  result.docsSheet = getObjFromTable(sessionData.docsSheet);
+  result.stockSheet = getObjFromTable(sessionData.stockSheet);
+  result.utilitySheet = getObjFromTable(sessionData.utilitySheet);
+  result.departmentName = sessionData.departmentName;
+  result.dictionary = sessionData.dictionary;
   return JSON.stringify(result);
 }
 
@@ -82,7 +86,14 @@ function setDataForSession () {
     utilitySheet = dataSources[department][role].utilitySheet;
     departmentName = dataSources[department][role].departmentName;
     dictionary = dictionary;
-    return [docsSheet, stockSheet, utilitySheet, departmentName, dictionary];
+    return {
+      docsSheet: docsSheet,
+      stockSheet: stockSheet,
+      utilitySheet: utilitySheet,
+      departmentName: departmentName,
+      dictionary: dictionary,
+    }
+    /* [docsSheet, stockSheet, utilitySheet, departmentName, dictionary]; */
   } catch (e) {
     console.log(`Произошла ошибка при сборе табличных данных для сессии пользователя.`);
     console.log(e);

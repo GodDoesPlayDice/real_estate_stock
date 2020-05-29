@@ -1,7 +1,7 @@
 // настройка пользователей
 var users = {
     "alikjackass@gmail.com": {
-        department: "B",
+        department: "test",
         role: "admin"
     },
     "roxxxanafray@gmail.com": {
@@ -18,6 +18,74 @@ var users = {
     },
 };
 
+var userSettings = {
+    O2: {
+        ssID:'1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I',
+        departmentName: "Оазис 2",
+        roles: {
+            admin: {
+                dataTables: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+
+                    docsSheet: 'docs_current',
+                    uncheckedSheet: 'unchecked_current',
+                },
+                tableLinks: {
+                    archiveSheet: 'archive',
+
+                    storageSheet: 'storage_raw',
+                    verificationSheet: 'verification_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    check: true,
+                },
+                access: {
+                    DB: true,
+                    verificationSheet: true
+                }
+    
+            },
+            manager: {
+                dataTables: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+
+                    docsSheet: 'docs_current',
+                    uncheckedSheet: 'unchecked_current',
+                },
+                tableLinks: {
+                    archiveSheet: 'archive',
+
+                    storageSheet: 'storage_raw',
+                    verificationSheet: 'verification_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    check: true,
+                },
+                access: {
+                    DB: true,
+                    verificationSheet: true
+                }
+    
+            }
+        }
+
+    },
+    B: {
+        admin: {departmentName: "Баланс",},
+        manager: {departmentName: "Баланс",}
+    },
+    "test": {
+        admin: {departmentName: "Тестовый полигон",},
+        manager: {departmentName: "Тестовый полигон",}
+    }
+}
+
 var roles = ['admin', 'manager'];
 var departments = ['V2', 'B', 'test'];
 var ssID = {
@@ -25,45 +93,6 @@ var ssID = {
     B: '16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY',
     test: '1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I'
 };
-
-var accessLevel = {
-    V2: {
-        admin: {
-            statuses: true,
-            verification: true,
-            edit: true,
-        },
-        manager: {
-            statuses: true,
-            verification: true,
-            edit: true,
-        }
-    },
-    B: {
-        admin: {
-            statuses: true,
-            verification: true,
-            edit: true,
-        },
-        manager: {
-            statuses: true,
-            verification: true,
-            edit: true,
-        }
-    },
-    test: {
-        admin: {
-            statuses: true,
-            verification: true,
-            edit: true,
-        },
-        manager: {
-            statuses: true,
-            verification: true,
-            edit: true,
-        }
-    }
-}
 
 var dataSources = {
     V2: {
@@ -137,7 +166,98 @@ var dictionary = {
     LegalServiceNoPayment: 'Юр. услуги без оплаты:',
     RealEstateAgency: 'Агентство недвижимости:',
     EstateAgent: 'Сотрудник АН:',
-    Comment: 'Комментарий:'
-}
-
+    Comment: 'Комментарий:',
+    /* дальше поля которые сейчас пока только в оазисе */
+    IndPercentMagangerComission: 'Индивидуальный % МОП за сделку:',
+    IndPercentHeadComission: 'Индивидуальный % РОП за сделку:',
+    IndPercentAgencyComission: 'Индивидуальный % АН за сделку:',
+    ShareInOwnership: 'Доля собственности или %:',
+    OwnershipType: 'Форма собственности:',
+    PhoneNumber: 'Телефон:',
+    Email: 'E-mail:',
+    Passport: 'Паспортные данные:',
+    HomeAddres: 'Адрес регистрации:',
+    PaymentForRemoteDeal: 'Эл. регистрация (от клиента):',
+    FirstSubsidyPayment: 'Субсидия платеж 1:',
+    DaysBeforeFirstSubsidy: 'Дней на зачисление (Субсидия платеж 1):',
+    SecondSubsidyPayment: 'Субсидия платеж 2:',
+    DaysBeforeSecondSubsidy: 'Дней на зачисление (Субсидия платеж 2):',
+    BankLoanPayment: 'Банковский кредит:',
+    DaysBeforeBankLoan: 'Дней на зачисление Кредита:',
+    PaymentFromDeveloper: 'ПВ от Застройщика:',
+    FoolTaxPaymentInBankLoan: 'ННЛ (в составе кредита):',
+    FoolTaxPaymentFromClient: 'ННЛ от дольщика:',
+    InitialPaymentFromClient: 'Первоначальный взнос (от клиента):',
+    InitialPaymentType: 'Вид первоначального взноса:',
+    DaysBeforeInitialPayment: 'Дней на внесение ПВ после регистрации:',
+    InstallmentMonthsNumber: 'Количество месяцев рассрочки:',
+    InstallmentPaymentsNumber: 'Количество выплат по рассрочке:',
+    InstallmentPayment1: 'Платеж 1:',
+    DateOfInstallmentPayment1: 'Дата платежа 1:',
+    InstallmentPayment2: 'Платеж 2:',
+    DateOfInstallmentPayment2: 'Дата платежа 2:',
+    InstallmentPayment3: 'Платеж 3:',
+    DateOfInstallmentPayment3: 'Дата платежа 3:',
+    InstallmentPayment4: 'Платеж 4:',
+    DateOfInstallmentPayment4: 'Дата платежа 4:',
+    InstallmentPayment5: 'Платеж 5:',
+    DateOfInstallmentPayment5: 'Дата платежа 5:',
+    InstallmentPayment6: 'Платеж 6:',
+    DateOfInstallmentPayment6: 'Дата платежа 6:',
+    InstallmentPayment7: 'Платеж 7:',
+    DateOfInstallmentPayment7: 'Дата платежа 7:',
+    InstallmentPayment8: 'Платеж 8:',
+    DateOfInstallmentPayment8: 'Дата платежа 8:',
+    InstallmentPayment9: 'Платеж 9:',
+    DateOfInstallmentPayment9: 'Дата платежа 9:',
+    InstallmentPayment10: 'Платеж 10:',
+    DateOfInstallmentPayment10: 'Дата платежа 10:',
+    InstallmentPayment11: 'Платеж 11:',
+    DateOfInstallmentPayment11: 'Дата платежа 11:',
+    InstallmentPayment12: 'Платеж 12:',
+    DateOfInstallmentPayment12: 'Дата платежа 12:',
+    InstallmentPayment13: 'Платеж 13:',
+    DateOfInstallmentPayment13: 'Дата платежа 13:',
+    InstallmentPayment14: 'Платеж 14:',
+    DateOfInstallmentPayment14: 'Дата платежа 14:',
+    InstallmentPayment15: 'Платеж 15:',
+    DateOfInstallmentPayment15: 'Дата платежа 15:',
+    InstallmentPayment16: 'Платеж 16:',
+    DateOfInstallmentPayment16: 'Дата платежа 16:',
+    InstallmentPayment17: 'Платеж 17:',
+    DateOfInstallmentPayment17: 'Дата платежа 17:',
+    InstallmentPayment18: 'Платеж 18:',
+    DateOfInstallmentPayment18: 'Дата платежа 18:',
+    InstallmentPayment19: 'Платеж 19',
+    DateOfInstallmentPayment19: 'Дата платежа 19',
+    InstallmentPayment20: 'Платеж 20',
+    DateOfInstallmentPayment20: 'Дата платежа 20',
+    InstallmentPayment21: 'Платеж 21',
+    DateOfInstallmentPayment21: 'Дата платежа 21',
+    InstallmentPayment22: 'Платеж 22:',
+    DateOfInstallmentPayment22: 'Дата платежа 22:',
+    InstallmentPayment23: 'Платеж 23:',
+    DateOfInstallmentPayment23: 'Дата платежа 23:',
+    InstallmentPayment24: 'Платеж 24:',
+    DateOfInstallmentPayment24: 'Дата платежа 24:',
+    InstallmentPayment25: 'Платеж 25:',
+    DateOfInstallmentPayment25: 'Дата платежа 25:',
+    InstallmentPayment26: 'Платеж 26:',
+    DateOfInstallmentPayment26: 'Дата платежа 26:',
+    InstallmentPayment27: 'Платеж 27:',
+    DateOfInstallmentPayment27: 'Дата платежа 27:',
+    DiscountPerOneSquareMeter: 'Скидка с 1 кв.м.:',
+    DiscountOnFlat: 'Скидка:',
+    ActualOneSquareMeterCost: 'Стоимость 1 кв.м для расчета комиссий:',
+    StockOneSquareMeterCost: 'Стоимость 1 кв.м. по шахматке:',
+    StockFlatCost: 'Стоимость квартиры по шахматке:',
+    FormalCostIncrease: 'Увеличение стоимости:',
+    LegalOneSquareMeterCost: 'Стоимость 1 кв. м. по ДДУ:',
+    MagangerComissionPercent: 'Стандартный % МОП за сделку:',
+    HeadComissionPercent: 'Стандартный % РОП за сделку:',
+    ManagerComission: 'Комиссия МОП за сделку (сумма):',
+    HeadComission: 'Комиссия РОП за сделку (сумма):',
+    AgencyComissionPercent: 'Стандартный % АН:',
+    AgencyComission: 'Комиссия АН (сумма):',
+    }
 
