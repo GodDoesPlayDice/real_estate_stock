@@ -37,6 +37,7 @@ var userSettings = {
                     storageSheet: 'storage_raw',
                     verificationSheet: 'verification_raw',
                 },
+                
                 features: {
                     statuses: true,
                     edit: true,
