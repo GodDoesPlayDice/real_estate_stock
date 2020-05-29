@@ -177,7 +177,7 @@ function archive(ID) {
   // находим все строки, с искомым ID, помещаем их номера в отдельный массив
   storageData.forEach((elem, index) => {
     if (elem[3]+"/"+elem[4] === ID) {
-      arrayOfRows.push(index+1);
+      arrayOfRows.push(index);
     }
   })
   // проходим по массиву строк копируем данные и удаляем строку
@@ -186,6 +186,7 @@ function archive(ID) {
     let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow()+1, 1, 1, storageSheet.getMaxColumns());
 
     archiveRange.setValues(sourceRange.getValues());
+    console.log('currentRow', elem)
     storageSheet.deleteRow(elem)
   })
 };
