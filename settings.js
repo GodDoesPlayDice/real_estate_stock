@@ -19,60 +19,48 @@ var users = {
 };
 
 var userSettings = {
-    O2: {
-        ssID:'1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I',
+    test: {
+        ssID:'1eOrUozWjzBSw3ioWUF3GuAMYNo8oLuXgDc5ZEw5Hn34',
         departmentName: "Оазис 2",
         roles: {
             admin: {
-                dataTables: {
+                data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
 
                     docsSheet: 'docs_current',
                     uncheckedSheet: 'unchecked_current',
                 },
-                tableLinks: {
+                links: {
                     archiveSheet: 'archive',
-
                     storageSheet: 'storage_raw',
-                    verificationSheet: 'verification_raw',
                 },
-                
+
                 features: {
                     statuses: true,
                     edit: true,
-                    check: true,
-                },
-                access: {
-                    DB: true,
-                    verificationSheet: true
+                    verify: true,
+                    delete: true,
                 }
-    
             },
             manager: {
-                dataTables: {
+                data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
 
                     docsSheet: 'docs_current',
                     uncheckedSheet: 'unchecked_current',
                 },
-                tableLinks: {
+                links: {
                     archiveSheet: 'archive',
-
-                    storageSheet: 'storage_raw',
-                    verificationSheet: 'verification_raw',
+                    storageSheet: 'verification_raw',
                 },
                 features: {
                     statuses: true,
                     edit: true,
-                    check: true,
+                    verify: false,
+                    delete: false,
                 },
-                access: {
-                    DB: true,
-                    verificationSheet: true
-                }
-    
             }
         }
 
@@ -80,13 +68,36 @@ var userSettings = {
     B: {
         admin: {departmentName: "Баланс",},
         manager: {departmentName: "Баланс",}
-    },
-    "test": {
-        admin: {departmentName: "Тестовый полигон",},
-        manager: {departmentName: "Тестовый полигон",}
     }
 }
 
+function initUserProperties(userName) {
+    let department = users[userName].department;
+    let role = users[userName].role;
+    let ssID = userSettings[department].ssID;
+    let dataPropsArr = Object.keys(userSettings[department].roles[role].data);
+    let linkPropsArr = Object.keys(userSettings[department].roles[role].links);
+    /* инициализация свойств, содержащих данные таблиц */
+    dataPropsArr.forEach((elem) => {
+        let sheet = userSettings[department].roles[role].data[elem];
+        Object.defineProperty(userSettings[department].roles[role].data, elem, {
+            get: function () {
+                return SpreadsheetApp.openById(ssID).getSheetByName(sheet).getDataRange().getValues()
+            }
+        })
+    })
+    /* инициализация свойств, содержащих сслылки на таблицы (для записи в них) */
+    linkPropsArr.forEach((elem) => {
+        let sheet = userSettings[department].roles[role].links[elem];
+        Object.defineProperty(userSettings[department].roles[role].links, elem, {
+            get: function () {
+                return SpreadsheetApp.openById(ssID).getSheetByName(sheet)
+            }
+        })
+    });
+};
+
+/* 
 var roles = ['admin', 'manager'];
 var departments = ['V2', 'B', 'test'];
 var ssID = {
@@ -109,9 +120,12 @@ var dataSources = {
         manager: {departmentName: "Тестовый полигон",}
     }
 };
+ */
+
 
 
 /* Общие параметры */
+/* 
 roles.forEach((role) => {
     departments.forEach((dep) => {
         // ленивые свойства для винограда
@@ -142,7 +156,7 @@ roles.forEach((role) => {
         });
     })
 });
-
+ */
 
 var dictionary = {
     ID: 'Идентификатор документа:',
@@ -168,6 +182,9 @@ var dictionary = {
     RealEstateAgency: 'Агентство недвижимости:',
     EstateAgent: 'Сотрудник АН:',
     Comment: 'Комментарий:',
+    TotalArea: 'Общая площадь:',
+    AreaWithoutBalconies: 'Площадь без учета летних помещений:',
+    Floor: 'Этаж:',
     /* дальше поля которые сейчас пока только в оазисе */
     IndPercentMagangerComission: 'Индивидуальный % МОП за сделку:',
     IndPercentHeadComission: 'Индивидуальный % РОП за сделку:',

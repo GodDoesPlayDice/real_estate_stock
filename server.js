@@ -48,6 +48,7 @@ function setSessionParameters () {
     // установка департамента текущего пользователя
     let currentDepartment =  users[userMail].department;
     sessionParameters.department = currentDepartment;
+    sessionParameters.userName = userMail;
     // установка роли текущего пользователя
     let currentRole = users[userMail].role;
     sessionParameters.role = currentRole;
@@ -65,12 +66,16 @@ function setSessionParameters () {
 function getServerData() {
   let result = {};
   result.sessionParameters = setSessionParameters ();
+  initUserProperties(setSessionParameters().userName)
   let sessionData = setDataForSession();
   result.docsSheet = getObjFromTable(sessionData.docsSheet);
   result.stockSheet = getObjFromTable(sessionData.stockSheet);
   result.utilitySheet = getObjFromTable(sessionData.utilitySheet);
   result.departmentName = sessionData.departmentName;
-  result.dictionary = sessionData.dictionary;
+
+  result.departmentName = sessionData.departmentName;
+  result.dictionary = dictionary;
+  result.features = sessionData.features;
   return JSON.stringify(result);
 }
 
@@ -81,18 +86,22 @@ function setDataForSession () {
   let department = sessionParameters.department;
   let role = sessionParameters.role;
   try {
-    docsSheet = dataSources[department][role].docsSheet;
-    stockSheet = dataSources[department][role].stockSheet;
-    utilitySheet = dataSources[department][role].utilitySheet;
-    departmentName = dataSources[department][role].departmentName;
-    dictionary = dictionary;
-    return {
-      docsSheet: docsSheet,
-      stockSheet: stockSheet,
-      utilitySheet: utilitySheet,
-      departmentName: departmentName,
-      dictionary: dictionary,
-    }
+    let result = {};
+
+    let dataPart = userSettings[department].roles[role].data;
+    let dataPartArr = Object.keys(dataPart);
+    dataPartArr.forEach((elem) => {
+      result[elem] = dataPart[elem];
+    })
+
+    let linksPart = userSettings[department].roles[role].links;
+    let linksPartArr = Object.keys(linksPart);
+    linksPartArr.forEach((elem) => {
+      result[elem] = linksPart[elem];
+    });
+    result.features = userSettings[department].roles[role].features;
+    result.departmentName = userSettings[department].departmentName;
+    return result;
     /* [docsSheet, stockSheet, utilitySheet, departmentName, dictionary]; */
   } catch (e) {
     console.log(`Произошла ошибка при сборе табличных данных для сессии пользователя.`);

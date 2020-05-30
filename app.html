@@ -5,7 +5,15 @@
 <script type="text/babel">
 
 // данныe с сервера
-var serverSideData = {};
+var serverSideData = {
+    docsPrettyIDs: {},
+    statusesForDocs: {},
+    features: {
+        statuses: false,
+        edit: false,
+        verify: false,
+    }
+};
 // данные на фронте
 var frontEndData = {
     timestamp: '',
