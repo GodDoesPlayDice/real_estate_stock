@@ -38,6 +38,7 @@ function loadMainPage() {
 var sessionParameters = {
   department: '',
   role: '',
+  userName: ''
 };
 
 /* проверка авторизации в сервисах Google (имя аккаунта) 
@@ -66,7 +67,6 @@ function setSessionParameters () {
 function getServerData() {
   let result = {};
   result.sessionParameters = setSessionParameters ();
-  initUserProperties(setSessionParameters().userName)
   let sessionData = setDataForSession();
   result.docsSheet = getObjFromTable(sessionData.docsSheet);
   result.stockSheet = getObjFromTable(sessionData.stockSheet);
@@ -85,6 +85,8 @@ function getServerData() {
 function setDataForSession () {
   let department = sessionParameters.department;
   let role = sessionParameters.role;
+  // делаем свойства из опций пользователей ленивыми функциями
+  initUserProperties(setSessionParameters().userName);
   try {
     let result = {};
 
@@ -133,10 +135,12 @@ function getObjFromTable (table) {
 function storeData (json) {
   let data = JSON.parse(json);
   setSessionParameters ();
+  let userSettings = setDataForSession ();
   let department = sessionParameters.department;
   let role = sessionParameters.role;
   // лист с учетом отдела продаж
-  let targetSheet = dataSources[department][role].targetSheet;
+  let targetSheet = userSettings.storageSheet;
+  //let targetSheet = dataSources[department][role].targetSheet;
   // массив с заголовками столбцов
   let headers = targetSheet.getRange(1, 2, 1, targetSheet.getLastColumn()).getValues()[0];
   let columns = {};
@@ -175,18 +179,17 @@ function storeData (json) {
 */
 function archive(ID) {
   setSessionParameters();
-  let department = sessionParameters.department;
-  let role = sessionParameters.role;
+  let userSettings = setDataForSession ();
 
-  let storageSheet = dataSources[department][role].targetSheet;
+  let storageSheet = userSettings.storageSheet;
   let storageData = storageSheet.getDataRange().getValues();
-  let archiveSheet = dataSources[department][role].archiveSheet;
+  let archiveSheet = userSettings.archiveSheet;
   let arrayOfRows = [];
 
   // находим все строки, с искомым ID, помещаем их номера в отдельный массив
   storageData.forEach((elem, index) => {
     if (elem[3]+"/"+elem[4] === ID) {
-      arrayOfRows.push(index);
+      arrayOfRows.push(index+1);
     }
   })
   // проходим по массиву строк копируем данные и удаляем строку

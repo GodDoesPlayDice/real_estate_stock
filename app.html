@@ -12,14 +12,9 @@ var serverSideData = {
         statuses: false,
         edit: false,
         verify: false,
+        delete: false,
     }
 };
-// данные на фронте
-var frontEndData = {
-    timestamp: '',
-    document: {},
-    preloader: '',
-}
 main();
 
 function main() {
@@ -128,7 +123,6 @@ class App extends React.Component {
         });
     };
     handleSaveBtn(e) {
-        frontEndData.document = this.state.document;
         this.setState({
             modalConfirmButtonPurpose: 'save',
             modalHeader: "Сохранить документ",
@@ -211,7 +205,7 @@ class App extends React.Component {
                         {/* поля сделки и кнопка сохранения */}
                         {(this.state.current_view === 'create_new_doc' || this.state.current_view === 'edit_doc')&&
                         <React.Fragment>
-                            <DocFieldsHandler 
+                            <OasisDocFieldsHandler 
                             onFieldChange={this.handleDocChange}
                             onSaveButton={this.handleSaveBtn}
                             currentDocument={this.state.document}

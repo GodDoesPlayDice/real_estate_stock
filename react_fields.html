@@ -504,4 +504,259 @@ class DocFieldsHandler extends React.Component {
         )
     }
 };
+
+class OasisDocFieldsHandler extends React.Component {
+    constructor (props) {
+        super(props);
+        this.handleChildChange = this.handleChildChange.bind(this);
+        this.handleSaveBtn = this.handleSaveBtn.bind(this);
+        this.state = this.props.currentDocument;
+    }
+    componentWillUnmount() {
+        this.props.onFieldChange('document', {})
+    }
+    // принимает изменения от всех полей 
+    handleChildChange(field, value) {
+        this.setState({
+            [field]: value,
+        });
+    };
+    handleSaveBtn () {
+        this.props.onFieldChange("document", this.state);
+        this.props.onSaveButton();
+    }
+
+    render () {
+        return (
+            <React.Fragment>
+                <DocFieldsWrapper color='deep-purple'>
+                    <Select
+                        id = "DocStatus"
+                        label = "Текущий статус документа:"
+                        value = {getSingleCol("doc_statuses", "utilitySheet")}
+
+                        oldValue={this.state.DocStatus}
+                        onChange={this.handleChildChange}
+                    />
+                    <TextField
+                        id = "ClientName"
+                        label = "ФИО клиента:"
+                        value={this.state.ClientName}
+
+                        onChange={this.handleChildChange}
+                    />
+                    {this.props.current_view === 'create_new_doc' &&
+                    <Select
+                        id = "SelectLiter"
+                        label = "Литер:"
+                        value = {getSingleCol("liters", "utilitySheet")}
+                        onChange={this.handleChildChange}
+                    />
+                    }
+                    {this.state.SelectLiter != '' && this.props.current_view === 'create_new_doc' &&
+                    <Select
+                        id = "SelectFlat"
+                        label = "Номер квартиры:"
+                        value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
+                        purpose = "flat"
+                        onChange={this.handleChildChange}
+                    />
+                    }
+                </DocFieldsWrapper>
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div className="section"></div>
+                            <DatePicker
+                                id = "ReservationDate"
+                                label = "Дата бронирования:"
+                                value = {this.state.ReservationDate}
+
+                                onChange={this.handleChildChange}
+                            />
+                            {
+                            (this.state.DocStatus === "Расторгнут ДДУ" ||
+                            this.state.DocStatus === "Расторжение ДДУ" ||
+                            this.state.DocStatus === "Зарегистрирован ДДУ" ||
+                            this.state.DocStatus ===  "Сдача на регистрацию ДДУ")  && 
+                            (<DatePicker
+                                id = "RegistrationStartDate"
+                                label = "Дата сдачи на регистрацию:"
+                                value = {this.state.RegistrationStartDate}
+
+                                onChange={this.handleChildChange}
+                            />)  
+                            }
+                            {
+                            (this.state.DocStatus === "Расторгнут ДДУ" ||
+                            this.state.DocStatus === "Расторжение ДДУ" ||
+                            this.state.DocStatus === "Зарегистрирован ДДУ") && 
+                            (<DatePicker
+                                id = "DateOfRegistration"
+                                label = "Дата регистрации:"
+                                value = {this.state.DateOfRegistration}
+
+                                onChange={this.handleChildChange}
+                            />)
+                            }
+                            {
+                            (this.state.DocStatus === "Расторгнут ДДУ") &&    
+                            (<DatePicker
+                                id = "TerminationDate"
+                                label = "Дата расторжения:"
+                                value = {this.state.TerminationDate}
+
+                                onChange={this.handleChildChange}
+                            />)
+                            }   
+                            <DatePicker
+                                id = "NextStatusEstimatedDate"
+                                label = "Предполагаемая дата следующего статуса:"
+                                value = {this.state.NextStatusEstimatedDate}
+
+                                onChange={this.handleChildChange}
+                            />
+                        <div className="section"></div>
+                    </div>
+                </div>
+                <div className="row dp_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
+                            <Select
+                                id = "SelectManager"
+                                label = "Менеджер:"
+                                value = {getSingleCol("managers", "utilitySheet")}
+
+                                oldValue={this.state.SelectManager}
+                                onChange={this.handleChildChange}
+                            />
+                            <Select
+                                id = "DealType"
+                                label = "Тип сделки:"
+                                value ={getSingleCol("deal_types", "utilitySheet")}
+
+                                oldValue={this.state.DealType}
+                                onChange={this.handleChildChange}
+                            />
+                            <CheckBox
+                                id = "RemainsOnSale"
+                                label = "остается в продаже от физ. лица"
+                                value = {this.state.RemainsOnSale}
+
+                                onChange={this.handleChildChange}
+                            />
+                        <div className="section"></div>
+                    </div>
+                </div>
+                {this.state.DealType === 'АН' &&
+                <div className="row dp_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
+                            <React.Fragment>
+                            <TextField
+                                id = "RealEstateAgency"
+                                label = "Агентство недвижимости:"
+                                value={this.state.RealEstateAgency}
+
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "EstateAgent"
+                                label = "Сотрудник агентства:"
+                                value={this.state.EstateAgent}
+
+                                onChange={this.handleChildChange}
+                            />
+                            </React.Fragment>  
+                        <div className="section"></div>
+                    </div>
+                </div>
+                }                                                              
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                        <div className="section"></div>
+                            <Select
+                                id = "PayMethod"
+                                label = "Способ оплаты:"
+                                value = {getSingleCol("pay_method", "utilitySheet")}
+
+                                oldValue={this.state.PayMethod}
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "ActualCost"
+                                label = "Стоимость для расчета комиссии:"
+                                value={this.state.ActualCost}
+
+                                onChange={this.handleChildChange}
+                            />
+                            <TextField
+                                id = "LegalCost"
+                                label = "Стоимость по ДДУ:"
+                                value={this.state.LegalCost}
+
+                                onChange={this.handleChildChange}
+                            />
+                            {!this.state.LegalServiceNoPayment &&
+                            <TextField
+                                id = "LegalServiceCost"
+                                label = "Оплата юр. услуг:"
+                                value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
+
+                                onChange={this.handleChildChange}
+                            />
+                            }
+                            {!this.state.LegalServiceCost &&
+                            <Select
+                                id = "LegalServiceNoPayment"
+                                label = "Юр. услуги без оплаты:"
+                                value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
+
+                                oldValue={this.state.LegalServiceNoPayment ? this.state.LegalServiceNoPayment : ''}
+                                onChange={this.handleChildChange}
+                            />
+                            }
+                        <div className="section"></div>
+                    </div>
+                </div>
+                <div className="row i_sec">
+                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                        <div className="section"></div>
+                            <TextField
+                                id = "Comment"
+                                label = "Комментарий к документу:"
+                                purpose = "area"
+                                value={this.state.Comment}
+
+                                onChange={this.handleChildChange}
+                            />
+                        <div className="section"></div>
+                    </div>
+                </div>
+                <div className="section">
+                <div className="section row">
+                        <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3" 
+                        onClick={this.handleSaveBtn}>Сохранить</a>
+                    </div>
+                </div>
+            </React.Fragment>
+        )
+    }
+};
+
+class DocFieldsWrapper extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    render() {
+        return (
+            <div className="row dp_sec">
+                <div className={"col s10 offset-s1 card-panel lighten-5 " + this.props.color}>
+                    <div className="section"></div>
+                        {this.props.children}
+                    <div className="section"></div>
+                </div>
+            </div>
+        );
+    }
+}
 </script>

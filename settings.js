@@ -1,7 +1,7 @@
 // настройка пользователей
 var users = {
     "alikjackass@gmail.com": {
-        department: "test",
+        department: "O2",
         role: "admin"
     },
     "roxxxanafray@gmail.com": {
@@ -19,7 +19,7 @@ var users = {
 };
 
 var userSettings = {
-    test: {
+    O2: {
         ssID:'1eOrUozWjzBSw3ioWUF3GuAMYNo8oLuXgDc5ZEw5Hn34',
         departmentName: "Оазис 2",
         roles: {
@@ -65,9 +65,51 @@ var userSettings = {
         }
 
     },
-    B: {
-        admin: {departmentName: "Баланс",},
-        manager: {departmentName: "Баланс",}
+    test: {
+        ssID:'1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I',
+        departmentName: "Тестирование",
+        roles: {
+            admin: {
+                data: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+
+                    docsSheet: 'docs_current',
+                    //uncheckedSheet: 'unchecked_current',
+                },
+                links: {
+                    archiveSheet: 'archive',
+                    storageSheet: 'storage_raw',
+                },
+
+                features: {
+                    statuses: true,
+                    edit: true,
+                    verify: true,
+                    delete: true,
+                }
+            },
+            manager: {
+                data: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+
+                    docsSheet: 'docs_current',
+                    uncheckedSheet: 'unchecked_current',
+                },
+                links: {
+                    archiveSheet: 'archive',
+                    storageSheet: 'verification_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    verify: false,
+                    delete: false,
+                },
+            }
+        }
+
     }
 }
 
