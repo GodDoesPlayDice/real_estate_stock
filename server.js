@@ -156,20 +156,15 @@ function storeData (json) {
   // проходимся по объекту с фронта и вставляем данные с форматированием и без
   for (let key in data) {
     let column = columns[key];
-    let value;
+    let value = data[key];
     if (key.includes("Date")) {
-      if (data[key]) {
-        /* при попытке отформатировать пустую дату, в ячейку залетает 1970 год, как и должно быть
-        так что проверяем еще и тут */
-        value = data[key]
-      } else {
-        continue;
-      }
-    } else {
-      value = data[key];
+      /* решил не разбираться с парсингом UTC строки а просто оставить от
+      каждой даты только 10 первых символов (что мне и нужно) */
+      value = value.slice(0, 10);
     }
     targetSheet.getRange(lastRow+1, column).setValue(value);
   }
+  /* установка Timestamp */
   targetSheet.getRange(lastRow+1, 1).setValue(new Date());
 };
 
@@ -180,7 +175,6 @@ function storeData (json) {
 function archive(ID) {
   setSessionParameters();
   let userSettings = setDataForSession ();
-
   let storageSheet = userSettings.storageSheet;
   let storageData = storageSheet.getDataRange().getValues();
   let archiveSheet = userSettings.archiveSheet;

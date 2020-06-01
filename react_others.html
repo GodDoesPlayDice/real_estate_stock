@@ -13,6 +13,7 @@ class Header extends React.Component {
         this.props.onButtonsClicked("current_view", pressed);
     };
     handleClick() {
+        console.log(serverSideData.features)
     }
 
     updateAutocomplete (e) {
@@ -50,7 +51,8 @@ class Header extends React.Component {
                         </form>
                         <div className="col s4">
                             <ul id="nav-mobile" className="right hide-on-med-and-down">
-                                {(this.props.current_view === 'view_main' || this.props.current_view === 'edit_doc') &&
+                                {serverSideData.features.edit_screen === true &&
+                                (this.props.current_view === 'view_main' || this.props.current_view === 'edit_doc') &&
                                     <TopMenuButton 
                                     action="create_new_doc" 
                                     label="Новый документ"
@@ -264,7 +266,7 @@ class CollapsibleStatus extends React.Component {
             return result;
         }
         return (
-            <li className={this.props.liClassName}>
+            <li className={this.props.liClassName} key={this.props.status}>
                 <div className="collapsible-header">
                     <h5>
                         {this.props.status}
@@ -333,8 +335,12 @@ class DocTable extends React.Component {
         }
         return (
             <React.Fragment>
+                {serverSideData.features.delete === true &&
                 <a onClick={this.handleButtons.bind(this, 'archive')} className="btn waves-effect waves-light deep-purple lighten-3 right table_button"><i className="material-icons">delete</i></a>
+                }
+                {serverSideData.features.edit_screen === true &&
                 <a onClick={this.handleButtons.bind(this, 'edit')} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">edit</i></a>
+                }
                 <table className="client_info">
                     <tbody>
                         {generateDocDataRows()}
@@ -345,4 +351,24 @@ class DocTable extends React.Component {
     }
 }
 
+
+class Verification extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    render() {
+        return(
+            <div id={this.props.id} className="section">
+            <div className="row">
+                <div class="collection col s10 offset-s1">
+                    <a href="#!" class="collection-item">Alvin</a>
+                    <a href="#!" class="collection-item active">Alvin</a>
+                    <a href="#!" class="collection-item">Alvin</a>
+                    <a href="#!" class="collection-item">Alvin</a>
+                </div>
+            </div>
+            </div>
+        )
+    }
+}
 </script>

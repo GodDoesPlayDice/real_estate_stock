@@ -50,9 +50,9 @@ class DatePicker extends React.Component {
     componentDidMount() {
         let dateVal = new Date(this.props.value);
         let options = {
-                defaultDate: dateVal ? dateVal : new Date(),
+                defaultDate: dateVal ? dateVal : null,
                 setDefaultDate: true,
-                format: "dd/mm/yyyy",
+                format: "yyyy/mm/dd",
                 firstDay: 1,
                 i18n: {
                         cancel: "Отмена",
@@ -109,7 +109,9 @@ class DatePicker extends React.Component {
         let elem = document.getElementById(this.props.id);
         let instance = M.Datepicker.init(elem, options);
         elem.addEventListener('change', (e) => {
-            this.props.onChange(this.props.id, e.target.value)
+            let date = e.target.value;
+            /* this.props.onChange(this.props.id, `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`) */
+            this.props.onChange(this.props.id, date)
         });
     }
     componentWillUnmount() {
@@ -530,7 +532,7 @@ class OasisDocFieldsHandler extends React.Component {
         function generateInstallmentPayments () {
             if (!this.state.InstallmentPaymentsNumber) {return;}
             let userInput = parseInt(this.state.InstallmentPaymentsNumber, 10);
-            let numberOfPayments = userInput > 18 ? 18 : userInput;
+            let numberOfPayments = userInput > 24 ? 24 : userInput;
             let paymentsArr = [];
             for (let i = 1; i <= numberOfPayments; i++){
                 paymentsArr.push(

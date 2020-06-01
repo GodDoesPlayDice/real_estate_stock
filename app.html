@@ -78,6 +78,7 @@ class App extends React.Component {
         this.handleDocChange = this.handleDocChange.bind(this);
         this.handleCurrentDocClicked = this.handleCurrentDocClicked.bind(this)
         this.handleArchiveBtn = this.handleArchiveBtn.bind(this);
+        this.handleMainScreenClick = this.handleMainScreenClick.bind(this);
         this.state = {
             timestamp: '',
             current_view: 'view_main',
@@ -92,22 +93,30 @@ class App extends React.Component {
 
     handleHeaderClick(field, changes) {
         this.setState({
-            current_view: "view_main",
+            current_view: "",
             document: {}
         });
         setTimeout(()=>{
             this.setState({
                 [field]: changes
             });
-        },30)
+        },5)
     };
+    handleMainScreenClick(view) {
+        this.setState({
+            current_view: view,
+        });
+    }
     handleCurrentDocClicked(prettyID) {
+        /* для тех, у кого нет прав редактирования */
+        if (serverSideData.features.edit_screen === false) {return};
+        /* для тех, к кого есть права редактирования */
         let ID = prettyID.split(" ")[0];
         let position = getRowNumber(ID, serverSideData.docsSheet);
         let docDataObj = getSingleRowObj(position, "docsSheet");
 
         this.setState({
-            current_view: "view_main",
+            current_view: "",
             document: {}
         });
         setTimeout(()=>{
@@ -115,7 +124,7 @@ class App extends React.Component {
                 current_view: "edit_doc",
                 document: docDataObj,
             });
-        },30)
+        },5)
 
     }
     handleDocChange(field, value) {
@@ -124,6 +133,7 @@ class App extends React.Component {
         });
     };
     handleSaveBtn(e) {
+        console.log(this.state.document)
         this.setState({
             modalConfirmButtonPurpose: 'save',
             modalHeader: "Сохранить документ",
@@ -191,16 +201,23 @@ class App extends React.Component {
                     <div className="container section">
                         <div className="section row valign-wrapper">
                             <div className="col s10 offset-s1">
-                                <h4 className="indigo-text text-darken-4">
                                     {/* влияние состояния на заголовок в рабочей области */}
                                     {this.state.current_view === 'create_new_doc' &&
-                                    "Новый документ"
+                                    <h4 className="indigo-text text-darken-4">Новый документ</h4>
                                     }
                                     {this.state.current_view === 'edit_doc' &&
-                                    `Редактирование документа. Квартира - ${this.state.document.ID}`}
-                                    {this.state.current_view === 'view_main' &&
-                                    `Статусы документов`}
-                                </h4>
+                                    <h4 className="indigo-text text-darken-4">Редактирование документа. Квартира - {this.state.document.ID}</h4>
+                                    }
+                                    {(this.state.current_view === 'view_main' ||
+                                     this.state.current_view === 'view_verification') &&
+                                    <div className="row">
+                                        <h4 onClick={this.handleMainScreenClick.bind(this, "view_main")} className="indigo-text text-darken-4 col s6">Статусы документов</h4>
+                                        {/* показывать кнопку "верификация или нет в зависимости от настроек пользователя" */}
+                                        {serverSideData.features.verification_screen === true && 
+                                        <h4 onClick={this.handleMainScreenClick.bind(this, "view_verification")} className="indigo-text text-darken-4 col s6">Проверка документов</h4>
+                                        } 
+                                    </div>
+                                    }
                             </div> 
                         </div>
                         {/* поля сделки и кнопка сохранения */}
@@ -221,6 +238,15 @@ class App extends React.Component {
                             dataObj={serverSideData.statusesForDocs}
                             handleArchiveBtn={this.handleArchiveBtn}
                             handleEditBtn={this.handleCurrentDocClicked}
+                            />
+                        }
+                        {/* основной экран с проверкой документов */}
+                        {serverSideData.features.verification_screen === true &&
+                        this.state.current_view === 'view_verification' &&
+                            <Verification
+                            id="verifivation"
+                            dataObj={''}
+                            handleSaveBtn={''}
                             />
                         }
                         {/* модальное окно */}

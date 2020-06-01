@@ -2,7 +2,7 @@
 var users = {
     "alikjackass@gmail.com": {
         department: "O2",
-        role: "admin"
+        role: "manager"
     },
     "roxxxanafray@gmail.com": {
         department: "V2",
@@ -37,8 +37,8 @@ var userSettings = {
                 },
 
                 features: {
-                    statuses: true,
-                    edit: true,
+                    edit_screen: true,
+                    verification_screen: true,
                     verify: true,
                     delete: true,
                 }
@@ -56,14 +56,94 @@ var userSettings = {
                     storageSheet: 'verification_raw',
                 },
                 features: {
-                    statuses: true,
-                    edit: true,
+                    edit_screen: true,
+                    verification_screen: true,
                     verify: false,
                     delete: false,
                 },
             }
         }
 
+    },
+    V2: {
+        ssID:'15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M',
+        departmentName: "Виноград 2",
+        roles: {
+            admin: {
+                data: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+                    docsSheet: 'docs_current',
+                },
+                links: {
+                    archiveSheet: 'archive',
+                    storageSheet: 'storage_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    verify: false,
+                    delete: true,
+                }
+            },
+            manager: {
+                data: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+                    docsSheet: 'docs_current',
+                },
+                links: {
+                    archiveSheet: 'archive',
+                    storageSheet: 'storage_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    verify: false,
+                    delete: true,
+                },
+            }
+        }
+    },
+    B: {
+        ssID:'16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY',
+        departmentName: "Баланс",
+        roles: {
+            admin: {
+                data: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+                    docsSheet: 'docs_current',
+                },
+                links: {
+                    archiveSheet: 'archive',
+                    storageSheet: 'storage_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    verify: false,
+                    delete: true,
+                }
+            },
+            manager: {
+                data: {
+                    utilitySheet: 'utility_data',
+                    stockSheet: 'all_apartments',
+                    docsSheet: 'docs_current',
+                },
+                links: {
+                    archiveSheet: 'archive',
+                    storageSheet: 'storage_raw',
+                },
+                features: {
+                    statuses: true,
+                    edit: true,
+                    verify: false,
+                    delete: true,
+                },
+            }
+        }
     },
     test: {
         ssID:'1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I',
@@ -75,7 +155,6 @@ var userSettings = {
                     stockSheet: 'all_apartments',
 
                     docsSheet: 'docs_current',
-                    //uncheckedSheet: 'unchecked_current',
                 },
                 links: {
                     archiveSheet: 'archive',
@@ -85,7 +164,7 @@ var userSettings = {
                 features: {
                     statuses: true,
                     edit: true,
-                    verify: true,
+                    verify: false,
                     delete: true,
                 }
             },
@@ -95,21 +174,19 @@ var userSettings = {
                     stockSheet: 'all_apartments',
 
                     docsSheet: 'docs_current',
-                    uncheckedSheet: 'unchecked_current',
                 },
                 links: {
                     archiveSheet: 'archive',
-                    storageSheet: 'verification_raw',
+                    storageSheet: 'storage_raw',
                 },
                 features: {
                     statuses: true,
                     edit: true,
                     verify: false,
-                    delete: false,
+                    delete: true,
                 },
             }
         }
-
     }
 }
 
