@@ -1,8 +1,8 @@
 // настройка пользователей
 var users = {
     "alikjackass@gmail.com": {
-        department: "O2",
-        role: "admin"
+        department: "V2",
+        role: "manager"
     },
     "roxxxanafray@gmail.com": {
         department: "V2",
@@ -73,16 +73,19 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
+
                     docsSheet: 'docs_current',
+                    uncheckedSheet: 'unchecked_current',
                 },
                 links: {
                     archiveSheet: 'archive',
                     storageSheet: 'storage_raw',
                 },
+
                 features: {
-                    statuses: true,
-                    edit: true,
-                    verify: false,
+                    edit_screen: true,
+                    verification_screen: true,
+                    verify: true,
                     delete: true,
                 }
             },
@@ -90,6 +93,7 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
+
                     docsSheet: 'docs_current',
                 },
                 links: {
@@ -97,8 +101,8 @@ var userSettings = {
                     storageSheet: 'storage_raw',
                 },
                 features: {
-                    statuses: true,
-                    edit: true,
+                    edit_screen: true,
+                    verification_screen: false,
                     verify: false,
                     delete: true,
                 },
@@ -113,16 +117,19 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
+
                     docsSheet: 'docs_current',
+                    uncheckedSheet: 'unchecked_current',
                 },
                 links: {
                     archiveSheet: 'archive',
                     storageSheet: 'storage_raw',
                 },
+
                 features: {
-                    statuses: true,
-                    edit: true,
-                    verify: false,
+                    edit_screen: true,
+                    verification_screen: true,
+                    verify: true,
                     delete: true,
                 }
             },
@@ -130,6 +137,7 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
+
                     docsSheet: 'docs_current',
                 },
                 links: {
@@ -137,8 +145,8 @@ var userSettings = {
                     storageSheet: 'storage_raw',
                 },
                 features: {
-                    statuses: true,
-                    edit: true,
+                    edit_screen: true,
+                    verification_screen: false,
                     verify: false,
                     delete: true,
                 },

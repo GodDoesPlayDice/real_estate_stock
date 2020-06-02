@@ -14,7 +14,9 @@ var serverSideData = {
         verify: false,
         delete: false,
     },
-    dictionary: {}
+    dictionary: {},
+    department: '',
+    departmentName: ''
 };
 main();
 
@@ -223,12 +225,23 @@ class App extends React.Component {
                         {/* поля сделки и кнопка сохранения */}
                         {(this.state.current_view === 'create_new_doc' || this.state.current_view === 'edit_doc')&&
                         <React.Fragment>
-                            <OasisDocFieldsHandler 
-                            onFieldChange={this.handleDocChange}
-                            onSaveButton={this.handleSaveBtn}
-                            currentDocument={this.state.document}
-                            current_view={this.state.current_view}
-                            />
+                            {(serverSideData.department === "V2" || 
+                            serverSideData.department === "B") &&
+                                <DocFieldsHandler 
+                                onFieldChange={this.handleDocChange}
+                                onSaveButton={this.handleSaveBtn}
+                                currentDocument={this.state.document}
+                                current_view={this.state.current_view}
+                                />
+                            }
+                            {serverSideData.department === "O2" &&
+                                <OasisDocFieldsHandler 
+                                onFieldChange={this.handleDocChange}
+                                onSaveButton={this.handleSaveBtn}
+                                currentDocument={this.state.document}
+                                current_view={this.state.current_view}
+                                />
+                            }
                         </React.Fragment>
                         }
                         {/* основной экран со статусами документов */}

@@ -75,6 +75,7 @@ function getServerData() {
 
   result.departmentName = sessionData.departmentName;
   result.dictionary = dictionary;
+  result.department = sessionData.department;
   result.features = sessionData.features;
   return JSON.stringify(result);
 }
@@ -103,6 +104,7 @@ function setDataForSession () {
     });
     result.features = userSettings[department].roles[role].features;
     result.departmentName = userSettings[department].departmentName;
+    result.department = department;
     return result;
     /* [docsSheet, stockSheet, utilitySheet, departmentName, dictionary]; */
   } catch (e) {
