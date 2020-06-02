@@ -79,6 +79,7 @@ class App extends React.Component {
         this.handleModalDecision = this.handleModalDecision.bind(this);
         this.handleDocChange = this.handleDocChange.bind(this);
         this.handleCurrentDocClicked = this.handleCurrentDocClicked.bind(this)
+        this.handleVerificationDocClick = this.handleVerificationDocClick.bind(this)
         this.handleArchiveBtn = this.handleArchiveBtn.bind(this);
         this.handleMainScreenClick = this.handleMainScreenClick.bind(this);
         this.state = {
@@ -89,10 +90,15 @@ class App extends React.Component {
             modalConfirmButtonPurpose: '',
             modalHeader: '',
             modalBody: '',
-            docIDforArchive: ''
+            docIDforArchive: '',
+            modalForVerificaiton: false,
         }
     };
-
+    handleDocChange(field, value) {
+        this.setState({
+            [field]: value
+        });
+    };
     handleHeaderClick(field, changes) {
         this.setState({
             current_view: "",
@@ -114,7 +120,7 @@ class App extends React.Component {
         if (serverSideData.features.edit_screen === false) {return};
         /* для тех, к кого есть права редактирования */
         let ID = prettyID.split(" ")[0];
-        let position = getRowNumber(ID, serverSideData.docsSheet);
+        let position = getRowNumber(ID, 'docsSheet');
         let docDataObj = getSingleRowObj(position, "docsSheet");
 
         this.setState({
@@ -127,15 +133,23 @@ class App extends React.Component {
                 document: docDataObj,
             });
         },5)
-
     }
-    handleDocChange(field, value) {
+    handleVerificationDocClick(ID, row) {
+        console.log(row, ID);
         this.setState({
-            [field]: value
-        });
-    };
+            document: getSingleRowObj(row, "uncheckedSheet"),
+            modalConfirmButtonPurpose: 'approve',
+            modalHeader: "Утвердить документ для " + ID,
+            modalForVerificaiton: true,
+        })
+        setTimeout(() => {
+            this.setState({
+                modalBody: ID,
+                modal: true,
+            })
+        }, 30)
+    }
     handleSaveBtn(e) {
-        console.log(this.state.document)
         this.setState({
             modalConfirmButtonPurpose: 'save',
             modalHeader: "Сохранить документ",
@@ -147,7 +161,6 @@ class App extends React.Component {
             })
         }, 30)
     }
-    
     handleArchiveBtn (ID) {
         this.setState({
             modalConfirmButtonPurpose: 'archive',
@@ -174,6 +187,14 @@ class App extends React.Component {
                 break;
             case 'archive':
                 archive(this.state.docIDforArchive);
+                this.setState({
+                    modal: false,
+                    current_view: 'view_main',
+                    document: {},
+                });
+                break;
+            case 'approve':
+                console.log(this.state.document);
                 this.setState({
                     modal: false,
                     current_view: 'view_main',
@@ -257,9 +278,8 @@ class App extends React.Component {
                         {serverSideData.features.verification_screen === true &&
                         this.state.current_view === 'view_verification' &&
                             <Verification
-                            id="verifivation"
-                            dataObj={''}
-                            handleSaveBtn={''}
+                            id="verification"
+                            handleUncheckedDocClick={this.handleVerificationDocClick}
                             />
                         }
                         {/* модальное окно */}
@@ -267,6 +287,7 @@ class App extends React.Component {
                             <Modal 
                                 id="comfirmation_modal"
                                 header={this.state.modalHeader}
+                                verification={this.state.modalForVerificaiton}
                                 body={this.state.modalBody}
                                 onDecision={this.handleModalDecision}
                                 confirmButtonPurpose={this.state.modalConfirmButtonPurpose}

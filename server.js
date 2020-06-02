@@ -65,18 +65,9 @@ function setSessionParameters () {
 ее значение. Она возвращает данные таблиц, вспомогательные данные для полей, параметры 
 текущего пользователя, название департамента. */
 function getServerData() {
-  let result = {};
+  setSessionParameters ();
+  let result = setDataForSession();
   result.sessionParameters = setSessionParameters ();
-  let sessionData = setDataForSession();
-  result.docsSheet = getObjFromTable(sessionData.docsSheet);
-  result.stockSheet = getObjFromTable(sessionData.stockSheet);
-  result.utilitySheet = getObjFromTable(sessionData.utilitySheet);
-  result.departmentName = sessionData.departmentName;
-
-  result.departmentName = sessionData.departmentName;
-  result.dictionary = dictionary;
-  result.department = sessionData.department;
-  result.features = sessionData.features;
   return JSON.stringify(result);
 }
 
@@ -94,7 +85,7 @@ function setDataForSession () {
     let dataPart = userSettings[department].roles[role].data;
     let dataPartArr = Object.keys(dataPart);
     dataPartArr.forEach((elem) => {
-      result[elem] = dataPart[elem];
+      result[elem] = getObjFromTable(dataPart[elem]);
     })
 
     let linksPart = userSettings[department].roles[role].links;
@@ -102,9 +93,11 @@ function setDataForSession () {
     linksPartArr.forEach((elem) => {
       result[elem] = linksPart[elem];
     });
+
     result.features = userSettings[department].roles[role].features;
     result.departmentName = userSettings[department].departmentName;
     result.department = department;
+    result.dictionary = dictionary;
     return result;
     /* [docsSheet, stockSheet, utilitySheet, departmentName, dictionary]; */
   } catch (e) {
@@ -162,7 +155,8 @@ function storeData (json) {
     if (key.includes("Date")) {
       /* решил не разбираться с парсингом UTC строки а просто оставить от
       каждой даты только 10 первых символов (что мне и нужно) */
-      value = value.slice(0, 10);
+      /* value = value.slice(0, 10); */
+      if (value != '') value = new Date(value)/* .toLocaleString().slice(0, 10); */
     }
     targetSheet.getRange(lastRow+1, column).setValue(value);
   }

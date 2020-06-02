@@ -13,7 +13,7 @@ class Header extends React.Component {
         this.props.onButtonsClicked("current_view", pressed);
     };
     handleClick() {
-        console.log(serverSideData.features)
+        console.log(serverSideData.uncheckedSheet)
     }
 
     updateAutocomplete (e) {
@@ -117,7 +117,15 @@ class Modal extends React.Component {
                 <div id={this.props.id} className="modal">
                     <div className="modal-content">
                         <h3>{this.props.header}</h3>
+                        {this.props.verification === false &&
                         <h4>{this.props.body}</h4>
+                        }
+                        {this.props.verification === true &&
+                        <DifferenceTable
+                        docID={this.props.body}
+                        />
+                        }
+                        
                     </div>
                     <div className="modal-footer">
                         <a href="#"  onClick={this.handleClick} id="cancel"className="modal-close waves-effect waves-green btn-flat">Отмена</a>
@@ -354,21 +362,97 @@ class DocTable extends React.Component {
 
 class Verification extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.handleClick = this.handleClick.bind(this)
+    }
+    handleClick(ID, row) {
+        this.props.handleUncheckedDocClick(ID, row)
     }
     render() {
+        let prettyIDs = getDocsPrettyID("ID", "ClientName", "uncheckedSheet");
+        let IDs = getSingleCol("ID", "uncheckedSheet", "with_spaces")
+        function generateDocs () {
+            let result = []
+            IDs.forEach((elem, index) => {
+                result.push(
+                    <li onClick={this.handleClick.bind(this, elem, index+1)} key={elem} id={elem} className="collection-item">{prettyIDs[index]}</li>
+                )
+            })
+            return result;
+        }
         return(
             <div id={this.props.id} className="section">
             <div className="row">
-                <div class="collection col s10 offset-s1">
-                    <a href="#!" class="collection-item">Alvin</a>
-                    <a href="#!" class="collection-item active">Alvin</a>
-                    <a href="#!" class="collection-item">Alvin</a>
-                    <a href="#!" class="collection-item">Alvin</a>
+                <div className="collection col s10 offset-s1">
+                    {generateDocs.call(this)}
                 </div>
             </div>
             </div>
         )
+    }
+}
+
+class DifferenceTable extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    render() {
+        let newDocRow = getRowNumber(this.props.docID, 'uncheckedSheet');
+        let oldDocRow = getRowNumber(this.props.docID, 'docsSheet');
+
+        let oldDocObj = oldDocRow > 0 ? getSingleRowObj(oldDocRow, 'docsSheet') : false;
+        let newDocObj = getSingleRowObj(newDocRow, 'uncheckedSheet');
+        Object.keys(newDocObj).forEach((key) => {
+            if (key.includes("Date") && newDocObj[key] != '' ) {newDocObj[key] = new Date(newDocObj[key]).toLocaleDateString()}
+        })
+        Object.keys(oldDocObj).forEach((key) => {
+            if (key.includes("Date") && oldDocObj[key] != '') {oldDocObj[key] = new Date(oldDocObj[key]).toLocaleDateString()}
+        })
+
+        function generateChangesTable() {
+            let result = []
+            if (oldDocObj) {
+                result = Object.keys(newDocObj).map((key) => {
+                            if(newDocObj[key] != oldDocObj[key]) {
+                                return (
+                                    <tr>
+                                        <td>{serverSideData.dictionary[key]}</td>
+                                        <td>{oldDocObj[key]}</td>
+                                        <td>{newDocObj[key]}</td>
+                                    </tr>
+                                )
+                            }
+                        });
+            } else {
+                result = Object.keys(newDocObj).map((key) => {
+                            if (newDocObj[key] == '') {return}
+                            return (
+                                <tr>
+                                    <td>{serverSideData.dictionary[key]}</td>
+                                    <td>{newDocObj[key]}</td>
+                                </tr>
+                            )
+                        });
+            }
+            return result;
+        }
+
+        return (
+            <table>
+                <thead>
+                    <tr>
+                        <th>Поле</th>
+                        {oldDocObj &&
+                        <th>Старое значение</th>
+                        }
+                        <th>Новое значение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {generateChangesTable()}
+                </tbody>
+            </table>
+        );
     }
 }
 </script>

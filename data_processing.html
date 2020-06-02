@@ -41,7 +41,8 @@ function getSingleRowObj(row, sheetName) {
 
 /* принимает (ID документа, {объект с таблицей}) 
 возвращает номер строки, где найден данный ID*/
-function getRowNumber (ID, sheetObj) {
+function getRowNumber (ID, sheetName) {
+    let sheetObj = serverSideData[sheetName];
     let row;
     for (let key in sheetObj) {
         if (sheetObj[key][0] === ID) {
