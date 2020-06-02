@@ -2,7 +2,7 @@
 var users = {
     "alikjackass@gmail.com": {
         department: "O2",
-        role: "manager"
+        role: "admin"
     },
     "roxxxanafray@gmail.com": {
         department: "V2",

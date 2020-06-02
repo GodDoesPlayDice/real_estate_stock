@@ -186,13 +186,19 @@ function archive(ID) {
       arrayOfRows.push(index+1);
     }
   })
-  // проходим по массиву строк копируем данные и удаляем строку
+  console.log("найденные строки для удаления: ", arrayOfRows)
+  // проходим по массиву строк копируем данные в архив
   arrayOfRows.forEach((elem) => {
     let sourceRange = storageSheet.getRange(elem, 1, 1, storageSheet.getMaxColumns());
     let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow()+1, 1, 1, storageSheet.getMaxColumns());
-
+    console.log('копирование строки', elem)
     archiveRange.setValues(sourceRange.getValues());
-    console.log('currentRow', elem)
+    
+  })
+/* удаляем пустые строки 
+reverse чтобы строки удалялись с самой большой*/
+  arrayOfRows.reverse().forEach((elem) => {
+    console.log('удаление строки', elem)
     storageSheet.deleteRow(elem)
   })
 };
