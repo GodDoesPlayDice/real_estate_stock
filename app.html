@@ -84,14 +84,17 @@ class App extends React.Component {
         this.handleMainScreenClick = this.handleMainScreenClick.bind(this);
         this.state = {
             timestamp: '',
+            /* свойство, определяющее текущий экран приложения */
             current_view: 'view_main',
             document: {},
+            /* свойства определяющие параметры модального окна */
             modal: false,
             modalConfirmButtonPurpose: '',
             modalHeader: '',
             modalBody: '',
-            docIDforArchive: '',
             modalForVerificaiton: false,
+            /*  */
+            docIDforArchive: '',
         }
     };
     handleDocChange(field, value) {
@@ -135,7 +138,6 @@ class App extends React.Component {
         },5)
     }
     handleVerificationDocClick(ID, row) {
-        console.log(row, ID);
         this.setState({
             document: getSingleRowObj(row, "uncheckedSheet"),
             modalConfirmButtonPurpose: 'approve',
@@ -203,7 +205,11 @@ class App extends React.Component {
                 break;
             default:
                 this.setState({
-                    modal: false
+                    modal: false,
+                    modalConfirmButtonPurpose: '',
+                    modalHeader: '',
+                    modalBody: '',
+                    modalForVerificaiton: false,
                 });
         }
     }
