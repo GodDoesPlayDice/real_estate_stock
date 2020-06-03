@@ -327,15 +327,20 @@ class DocTable extends React.Component {
     }
     render () {
         let data = this.props.currentDocDataObj;
+/*         Object.keys(data).forEach((key) => {
+            if (key.includes("Date") && data[key] != '' ) {data[key] = new Date(data[key]).toLocaleString()}
+        }); */
         let result = [];
         function generateDocDataRows() {
            for (let key in data) {
-               if (data[key] === '') {continue;}
+                if (data[key] === '') {continue;}
+                let val = data[key];
+                if (key.includes("Date")) {val = new Date(data[key]).toLocaleDateString()}
                 result.push(
                     /* для названия поля ищем человеческий перевод в словаре */
                     <tr key={key } >
                         <td width="40%">{serverSideData.dictionary[key]}</td>
-                        <td>{data[key]}</td>
+                        <td>{val}</td>
                     </tr>
                 );
            }
