@@ -27,6 +27,7 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
+                    priceSheet: ''
 
                     docsSheet: 'docs_current',
                     uncheckedSheet: 'unchecked_current',

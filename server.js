@@ -6,7 +6,7 @@ Route.path = function (route, callback) {
 
 function doGet(e) {
   // проверка, указан ли пользователь в системе
-  if(!setSessionParameters()) return;
+  if (!setSessionParameters()) return;
   // проверка налиция в таблицах данных для сессии
   //if(!setDataForSession()) return;
   // непосредственно сам роутинг
@@ -19,11 +19,11 @@ function doGet(e) {
 function render(file, argsObject) {
   var template = HtmlService.createTemplateFromFile(file)
   if (argsObject) {
-     var keys = Object.keys(argsObject);
-     keys.forEach(function (key) {
-        template[key] = argsObject[key];
-     });
-     return template.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    var keys = Object.keys(argsObject);
+    keys.forEach(function (key) {
+      template[key] = argsObject[key];
+    });
+    return template.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
 };
 // эта маленькая функция нужна для встраивания кода в  HTML страницу
@@ -32,6 +32,8 @@ function include(filename) {
 };
 
 function loadMainPage() {
+  let test = new CalculatedFields ({});
+  console.log(test.priceSheet)
   return render("index", {});
 };
 
@@ -43,11 +45,11 @@ var sessionParameters = {
 
 /* проверка авторизации в сервисах Google (имя аккаунта) 
 и сверка его с пользователями, определенными в settings*/
-function setSessionParameters () {
+function setSessionParameters() {
   let userMail = Session.getActiveUser().getEmail();
   try {
     // установка департамента текущего пользователя
-    let currentDepartment =  users[userMail].department;
+    let currentDepartment = users[userMail].department;
     sessionParameters.department = currentDepartment;
     sessionParameters.userName = userMail;
     // установка роли текущего пользователя
@@ -55,26 +57,26 @@ function setSessionParameters () {
     sessionParameters.role = currentRole;
     return sessionParameters;
   } catch (e) {
-      console.log(`Попытка входа неавторизованным пользователем - ${userMail}`);
-      console.log(e);
+    console.log(`Попытка входа неавторизованным пользователем - ${userMail}`);
+    console.log(e);
     return false;
-  } 
+  }
 };
 
 /* При загрузке шаблона страницы первым делом запускается эта ф-ция, и фронтенд ожидает
 ее значение. Она возвращает данные таблиц, вспомогательные данные для полей, параметры 
 текущего пользователя, название департамента. */
-function getServerData() {
-  setSessionParameters ();
+function getServerData() {  
+  setSessionParameters();
   let result = setDataForSession();
-  result.sessionParameters = setSessionParameters ();
+  result.sessionParameters = setSessionParameters();
   return JSON.stringify(result);
 }
 
 /* Легкая ф-ция которая проверяет департамент текущего пользователя
 , выбирает из объекта настроек данные для данного департамента и возвращает их
 в виде массива */
-function setDataForSession () {
+function setDataForSession() {
   let department = sessionParameters.department;
   let role = sessionParameters.role;
   // делаем свойства из опций пользователей ленивыми функциями
@@ -110,14 +112,14 @@ function setDataForSession () {
 /* меняет формат данных на следующий:
  - первый ключ объекта - массив с хэдерами столбцов 
  - последующие ключи - строки: массив со строкой */
-function getObjFromTable (table) {
+function getObjFromTable(table) {
   let result = {};
   table.forEach((elem, index) => {
-      if (index == 0) {
-          result.headers = elem;
-      } else {
-          result[index] = elem;
-      }
+    if (index == 0) {
+      result.headers = elem;
+    } else {
+      result[index] = elem;
+    }
   });
   return result;
 }
@@ -127,10 +129,10 @@ function getObjFromTable (table) {
 находит последнюю строку в targetSheet вставляет туда значения
 пришедших ключей объекта, предварительно рассчитав номера столбцов в targetSheet. 
  попутно удаляются лишние ключи и форматируются ключи с датами */
-function storeData (json) {
+function storeData(json) {
   let data = JSON.parse(json);
-  setSessionParameters ();
-  let userSettings = setDataForSession ();
+  setSessionParameters();
+  let userSettings = setDataForSession();
   let department = sessionParameters.department;
   let role = sessionParameters.role;
   // лист с учетом отдела продаж
@@ -141,8 +143,8 @@ function storeData (json) {
   let columns = {};
 
   // заголовки столбцов с их номерами в таблице начиная с ID
-  headers.forEach((el,i) => {
-    columns[el] = i+2;
+  headers.forEach((el, i) => {
+    columns[el] = i + 2;
   })
   let lastRow = targetSheet.getLastRow();
   // удаляем поля объекта, которых не предусмотрены в таблице
@@ -156,12 +158,12 @@ function storeData (json) {
       /* решил не разбираться с парсингом UTC строки а просто оставить от
       каждой даты только 10 первых символов (что мне и нужно) */
       /* value = value.slice(0, 10); */
-      if (value != '') value = new Date(value)/* .toLocaleString().slice(0, 10); */
+      if (value != '') value = new Date(value) /* .toLocaleString().slice(0, 10); */
     }
-    targetSheet.getRange(lastRow+1, column).setValue(value);
+    targetSheet.getRange(lastRow + 1, column).setValue(value);
   }
   /* установка Timestamp */
-  targetSheet.getRange(lastRow+1, 1).setValue(new Date());
+  targetSheet.getRange(lastRow + 1, 1).setValue(new Date());
 };
 
 /* Функция осуществляет поиск в листе, собирающем данные от данного приложения
@@ -170,7 +172,7 @@ function storeData (json) {
 */
 function archive(ID, sheetName) {
   setSessionParameters();
-  let userSettings = setDataForSession ();
+  let userSettings = setDataForSession();
   let storageSheet = userSettings[sheetName];
   let storageData = storageSheet.getDataRange().getValues();
   let archiveSheet = userSettings.archiveSheet;
@@ -178,23 +180,37 @@ function archive(ID, sheetName) {
 
   // находим все строки, с искомым ID, помещаем их номера в отдельный массив
   storageData.forEach((elem, index) => {
-    if (elem[3]+"/"+elem[4] === ID) {
-      arrayOfRows.push(index+1);
+    if (elem[3] + "/" + elem[4] === ID) {
+      arrayOfRows.push(index + 1);
     }
   })
   console.log("найденные строки для удаления: ", arrayOfRows)
   // проходим по массиву строк копируем данные в архив
   arrayOfRows.forEach((elem) => {
     let sourceRange = storageSheet.getRange(elem, 1, 1, storageSheet.getMaxColumns());
-    let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow()+1, 1, 1, storageSheet.getMaxColumns());
+    let archiveRange = archiveSheet.getRange(archiveSheet.getLastRow() + 1, 1, 1, storageSheet.getMaxColumns());
     console.log('копирование строки', elem)
     archiveRange.setValues(sourceRange.getValues());
-    
+
   })
-/* удаляем пустые строки 
-reverse чтобы строки удалялись с самой большой*/
+  /* удаляем пустые строки 
+  reverse чтобы строки удалялись с самой большой*/
   arrayOfRows.reverse().forEach((elem) => {
     console.log('удаление строки', elem)
     storageSheet.deleteRow(elem)
   })
 };
+
+
+class CalculatedFields {
+  constructor(rawDataObj) {
+    this.tableData = JSON.parse(getServerData());
+    this.stockSheet = this.tableData.stockSheet;
+    this.docsSheet = this.tableData.docsSheet;
+    this.priceSheet = this.tableData.priceSheet;
+
+  }
+  get TotalArea() {
+    this.tableData
+  }
+} 
