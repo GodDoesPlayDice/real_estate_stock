@@ -34,6 +34,7 @@ var userSettings = {
                 links: {
                     archiveSheet: 'archive',
                     storageSheet: 'storage_raw',
+                    uncheckedStorageSheet: 'verification_raw',
                 },
 
                 features: {

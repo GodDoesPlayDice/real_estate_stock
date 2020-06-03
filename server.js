@@ -168,10 +168,10 @@ function storeData (json) {
 вырезает каждую строку (сделку), соответствующую искомому ID и вставляет ее в архивный лист
 ("ID") -> (void)
 */
-function archive(ID) {
+function archive(ID, sheetName) {
   setSessionParameters();
   let userSettings = setDataForSession ();
-  let storageSheet = userSettings.storageSheet;
+  let storageSheet = userSettings[sheetName];
   let storageData = storageSheet.getDataRange().getValues();
   let archiveSheet = userSettings.archiveSheet;
   let arrayOfRows = [];

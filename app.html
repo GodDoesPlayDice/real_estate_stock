@@ -39,24 +39,31 @@ function main() {
 };
 
 // отправка одной строки функции на сервере, преобразующей ее в массив для записи
-function storeData (data) {
+function storeData (data, options) {
     renderApp(true, "Сохранение данных...");
     google.script.run.withSuccessHandler(onSuccess).storeData(JSON.stringify(data));
+
+    function onSuccess () {
+        if (options != undefined) {
+            if (options.archiving === true) {
+                archive(data.ID, options.archivingSheet);
+            } 
+        } else {
+            renderApp(true, "Загрузка последних данных...");
+            main();
+        }
+
+    };
+}
+
+function archive(ID, sheetName) {
+    renderApp(true, "Архивация документа: " + ID);
+    google.script.run.withSuccessHandler(onSuccess).archive(ID, sheetName);
     function onSuccess () {
         renderApp(true, "Загрузка последних данных...");
         main();
     };
 }
-
-function archive(ID) {
-    renderApp(true, "Удаление документа: " + ID);
-    google.script.run.withSuccessHandler(onSuccess).archive(ID);
-    function onSuccess () {
-        renderApp(true, "Загрузка последних данных...");
-        main();
-    };
-}
-
 
 function renderApp(preloaderStatus, preloaderMessage) {
     ReactDOM.render(
@@ -69,8 +76,6 @@ function renderApp(preloaderStatus, preloaderMessage) {
 }
 
 
-
-
 class App extends React.Component {
     constructor (props) {
         super(props);
@@ -79,7 +84,7 @@ class App extends React.Component {
         this.handleModalDecision = this.handleModalDecision.bind(this);
         this.handleDocChange = this.handleDocChange.bind(this);
         this.handleCurrentDocClicked = this.handleCurrentDocClicked.bind(this)
-        this.handleVerificationDocClick = this.handleVerificationDocClick.bind(this)
+        this.handleApproveClick = this.handleApproveClick.bind(this)
         this.handleArchiveBtn = this.handleArchiveBtn.bind(this);
         this.handleMainScreenClick = this.handleMainScreenClick.bind(this);
         this.state = {
@@ -92,16 +97,20 @@ class App extends React.Component {
             modalConfirmButtonPurpose: '',
             modalHeader: '',
             modalBody: '',
-            modalForVerificaiton: false,
             /*  */
             docIDforArchive: '',
         }
     };
+    /* срабатывает по время изменения поля документа 
+    в режиме редактирования (получает срез всего документа) */
     handleDocChange(field, value) {
         this.setState({
             [field]: value
         });
     };
+    /* срабатывает при нажатии кнопки верхнего меню
+    получает команду, устанавливает ее в state (от этих полей state 
+    зависит отображение экранов) */
     handleHeaderClick(field, changes) {
         this.setState({
             current_view: "",
@@ -113,18 +122,23 @@ class App extends React.Component {
             });
         },5)
     };
+    /* срабатывает когда пользователь выбирает раздел на основном экране
+    (либо статусы либо проверка документов), также устанавливает current_view */
     handleMainScreenClick(view) {
         this.setState({
             current_view: view,
         });
     }
-    handleCurrentDocClicked(prettyID) {
+    /* срабатывает, когда пользователь инициирует редактирование документа
+    меняет отображаемый экран на экран редактирования документа и собирает для
+    него данные документа по ID и имени листа, где требуется этот документ считать */
+    handleCurrentDocClicked(prettyID, sheetName) {
         /* для тех, у кого нет прав редактирования */
         if (serverSideData.features.edit_screen === false) {return};
         /* для тех, к кого есть права редактирования */
         let ID = prettyID.split(" ")[0];
-        let position = getRowNumber(ID, 'docsSheet');
-        let docDataObj = getSingleRowObj(position, "docsSheet");
+        let position = getRowNumber(ID, sheetName);
+        let docDataObj = getSingleRowObj(position, sheetName);
 
         this.setState({
             current_view: "",
@@ -137,21 +151,26 @@ class App extends React.Component {
             });
         },5)
     }
-    handleVerificationDocClick(ID, row) {
+    /* срабатывает, когда пользователь нажал кнопку одобрить документ
+    отображает модальное окно с подтверждением и устанавливает в state прове
+    ряемый документ для последующего сохранения */
+    handleApproveClick(ID, row) {
         this.setState({
             document: getSingleRowObj(row, "uncheckedSheet"),
             modalConfirmButtonPurpose: 'approve',
-            modalHeader: "Утвердить документ для " + ID,
-            modalForVerificaiton: true,
+            modalHeader: "Утвердить документ",
         })
         setTimeout(() => {
             this.setState({
-                modalBody: ID,
+                modalBody: this.state.document.ID + " " + this.state.document.ClientName ,
                 modal: true,
             })
         }, 30)
     }
-    handleSaveBtn(e) {
+    /* срабатывает, когда пользователь нажал кнопку сохранить в 
+    режиме редактирования документа. открывает модальное окно с подтверждением
+    (в state.document должен уже храниться текущий документ) */
+    handleSaveBtn() {
         this.setState({
             modalConfirmButtonPurpose: 'save',
             modalHeader: "Сохранить документ",
@@ -163,6 +182,9 @@ class App extends React.Component {
             })
         }, 30)
     }
+    /* срабатывает когда пользователь нажал кнопку архивировать в текущих документах
+    устанавливает ID документа в специальное поле в state, отображает модальное окно для
+    подтверждения (оно будет удалять документ, считывая state.docIDforArchive) */
     handleArchiveBtn (ID) {
         this.setState({
             modalConfirmButtonPurpose: 'archive',
@@ -176,6 +198,9 @@ class App extends React.Component {
             });
         },30)
     } 
+    /* срабатывает когда пользователь нажимает на подтверждение в модальном окне
+    принимает строку с решением и в зависимости от этой строки либо сохраняет данные
+    либо архивирует сделку либо одобряет документ на проверке */
     handleModalDecision(decision) {
         switch (decision) {
             case 'save':
@@ -189,11 +214,10 @@ class App extends React.Component {
                     modalConfirmButtonPurpose: '',
                     modalHeader: '',
                     modalBody: '',
-                    modalForVerificaiton: false,
                 });
                 break;
             case 'archive':
-                archive(this.state.docIDforArchive);
+                archive(this.state.docIDforArchive, 'storageSheet');
                 this.setState({
                     current_view: 'view_main',
                     document: {},
@@ -202,12 +226,10 @@ class App extends React.Component {
                     modalConfirmButtonPurpose: '',
                     modalHeader: '',
                     modalBody: '',
-                    modalForVerificaiton: false,
                 });
                 break;
             case 'approve':
-                storeData(this.state.document);
-
+                storeData(this.state.document, {archiving: true, archivingSheet: 'uncheckedStorageSheet'});
                 this.setState({
                     current_view: 'view_main',
                     document: {},
@@ -215,8 +237,7 @@ class App extends React.Component {
                     modal: false,
                     modalConfirmButtonPurpose: '',
                     modalHeader: '',
-                    modalBody: '',
-                    modalForVerificaiton: false,
+                    modalBody: ''
                 });
                 break;
             default:
@@ -226,7 +247,6 @@ class App extends React.Component {
                     modalConfirmButtonPurpose: '',
                     modalHeader: '',
                     modalBody: '',
-                    modalForVerificaiton: false,
                 });
         }
     }
@@ -254,15 +274,25 @@ class App extends React.Component {
                                     {this.state.current_view === 'edit_doc' &&
                                     <h4 className="indigo-text text-darken-4">Редактирование документа. Квартира - {this.state.document.ID}</h4>
                                     }
+                                    
+                                    {/* табы для главного меню */}
                                     {(this.state.current_view === 'view_main' ||
                                      this.state.current_view === 'view_verification') &&
-                                    <div className="row">
-                                        <h4 onClick={this.handleMainScreenClick.bind(this, "view_main")} className="indigo-text text-darken-4 col s6">Статусы документов</h4>
+                                     <MainScreenTabs>
+                                        <li key='statuses_tab' className='tab col s6' onClick={this.handleMainScreenClick.bind(this, "view_main")}>
+                                            <a className='active'>
+                                                <h6 className="indigo-text text-darken-4 col s6">Статусы документов</h6>
+                                            </a>
+                                        </li>
                                         {/* показывать кнопку "верификация или нет в зависимости от настроек пользователя" */}
                                         {serverSideData.features.verification_screen === true && 
-                                        <h4 onClick={this.handleMainScreenClick.bind(this, "view_verification")} className="indigo-text text-darken-4 col s6">Проверка документов</h4>
-                                        } 
-                                    </div>
+                                        <li key='verification_tab' className='tab col s6' onClick={this.handleMainScreenClick.bind(this, "view_verification")}>
+                                            <a>
+                                                <h6 className="indigo-text text-darken-4 col s6">Проверка документов</h6>
+                                            </a>
+                                        </li>
+                                        }
+                                     </MainScreenTabs>
                                     }
                             </div> 
                         </div>
@@ -302,7 +332,8 @@ class App extends React.Component {
                         this.state.current_view === 'view_verification' &&
                             <Verification
                             id="verification"
-                            handleUncheckedDocClick={this.handleVerificationDocClick}
+                            handleApproveClick={this.handleApproveClick}
+                            hadleEditClick={this.handleCurrentDocClicked}
                             />
                         }
                         {/* модальное окно */}
@@ -310,7 +341,6 @@ class App extends React.Component {
                             <Modal 
                                 id="comfirmation_modal"
                                 header={this.state.modalHeader}
-                                verification={this.state.modalForVerificaiton}
                                 body={this.state.modalBody}
                                 onDecision={this.handleModalDecision}
                                 confirmButtonPurpose={this.state.modalConfirmButtonPurpose}
