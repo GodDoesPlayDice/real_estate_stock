@@ -429,6 +429,7 @@ class DifferenceTable extends React.Component {
 
         let oldDocObj = oldDocRow > 0 ? getSingleRowObj(oldDocRow, 'docsSheet') : false;
         let newDocObj = getSingleRowObj(newDocRow, 'uncheckedSheet');
+        /* форматирование дат */
         Object.keys(newDocObj).forEach((key) => {
             if (key.includes("Date") && newDocObj[key] != '' ) {newDocObj[key] = new Date(newDocObj[key]).toLocaleDateString()}
         })
@@ -466,6 +467,7 @@ class DifferenceTable extends React.Component {
 
         return (
             <React.Fragment>
+            {/* кнопки для документа (с условиями) */}
             {serverSideData.features.verify === true &&
             <a onClick={this.handleSaveButton} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">verified</i></a>
             }
