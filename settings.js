@@ -2,7 +2,7 @@
 var users = {
     "alikjackass@gmail.com": {
         department: "O2",
-        role: "admin"
+        role: "manager"
     },
     "roxxxanafray@gmail.com": {
         department: "V2",
@@ -27,7 +27,8 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
-                    priceSheet: ''
+                    priceSheet: 'price',
+                    salarySheet: 'salary',
 
                     docsSheet: 'docs_current',
                     uncheckedSheet: 'unchecked_current',
@@ -49,6 +50,8 @@ var userSettings = {
                 data: {
                     utilitySheet: 'utility_data',
                     stockSheet: 'all_apartments',
+                    priceSheet: 'price',
+                    salarySheet: 'salary',
 
                     docsSheet: 'docs_current',
                     uncheckedSheet: 'unchecked_current',
