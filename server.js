@@ -140,11 +140,11 @@ function storeData(json) {
         'MagangerComissionPercent', 'HeadComissionPercent', 'ManagerComission',
         'HeadComission', 'AgencyComissionPercent', 'AgencyComission'
     ]
-    fieldsList.forEach((elem) => {
-        console.log(elem, calculatedFields[elem])
-    });
-    let department = sessionParameters.department;
-    let role = sessionParameters.role;
+    if (userSettings.department === "O2") {
+        fieldsList.forEach((elem) => {
+            data[elem] = calculatedFields[elem]
+        });
+    }
     // лист с учетом отдела продаж
     let targetSheet = userSettings.storageSheet;
     //let targetSheet = dataSources[department][role].targetSheet;
@@ -355,6 +355,7 @@ class CalculatedFields {
         let dateString = this.rawFields.RegistrationStartDate;
         if (dateString === '') return 0;
         if (this.rawFields.SelectManager === "АВБ") return 0;
+        if (parseFloat(this.rawFields.IndPercentManagerComission) > 0) return parseFloat(this.rawFields.IndPercentManagerComission);
 
         let salaryDate = new Date(dateString);
         let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
@@ -368,6 +369,7 @@ class CalculatedFields {
         let dateString = this.rawFields.RegistrationStartDate;
         if (dateString === '') return 0;
         if (this.rawFields.SelectManager === "АВБ") return 0;
+        if (parseFloat(this.rawFields.IndPercentHeadComission) > 0) return parseFloat(this.rawFields.IndPercentHeadComission);
 
         let salaryDate = new Date(dateString);
         let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
@@ -385,6 +387,7 @@ class CalculatedFields {
     get AgencyComissionPercent() {
         if (this.rawFields.SelectManager === "АВБ") return 0;
         if (this.rawFields.DealType === "Л") return 0;
+        if (parseFloat(this.rawFields.IndPercentAgencyComission) >0) return parseFloat(this.rawFields.IndPercentAgencyComission);
         return 0.05;
     }
     get AgencyComission() {

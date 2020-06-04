@@ -309,12 +309,17 @@ class App extends React.Component {
                                 />
                             }
                             {serverSideData.department === "O2" &&
+                                <React.Fragment>
                                 <OasisDocFieldsHandler 
                                 onFieldChange={this.handleDocChange}
                                 onSaveButton={this.handleSaveBtn}
                                 currentDocument={this.state.document}
                                 current_view={this.state.current_view}
                                 />
+                                <EditScreenCalculatedFields 
+                                docObj={this.state.document}
+                                />
+                                </React.Fragment>
                             }
                         </React.Fragment>
                         }
@@ -358,4 +363,188 @@ class App extends React.Component {
         );
     };
 };
+
+
+class CalculatedFields {
+    constructor(rawDataObj, tableData) {
+        this.rawFields = rawDataObj;
+        this.tableData = tableData;
+        this.stockSheet = this.tableData.stockSheet;
+        this.docsSheet = this.tableData.docsSheet;
+        this.priceSheet = this.tableData.priceSheet;
+        this.salarySheet = this.tableData.salarySheet;
+    }
+    definePricingDate(ReservationDate, RegistrationStartDate, DateOfRegistration, Timestamp) {
+        if (ReservationDate != '') return new Date(ReservationDate);
+        if (RegistrationStartDate != '') return new Date(RegistrationStartDate);
+        if (DateOfRegistration != '') return new Date(DateOfRegistration);
+        if (Timestamp != '') return new Date(Timestamp);
+    }
+    filterSheetByDate(startDateCol, endDateCol, dateInDoc, sheet) {
+        let result = {
+            headers: sheet.headers
+        };
+
+        let headers = sheet.headers;
+        let startDateColPos = headers.findIndex((col) => {
+            return col === startDateCol
+        });
+        let endDateColPos = headers.findIndex((col) => {
+            return col === endDateCol
+        });
+
+        Object.keys(sheet).forEach((key) => {
+            let row = sheet[key];
+            
+            let startDate = new Date(row[startDateColPos]);
+            let endDate = new Date(row[endDateColPos]);
+
+            if (dateInDoc >= startDate && dateInDoc <= endDate) {
+                result[key] = row;
+            }
+        });
+
+        return result;
+    }
+    vlookup(searchInCol, searchForVal, returnFromCol, sheet) {
+        let result;
+        let headers = sheet.headers;
+
+        let searchInColPos = headers.findIndex((col) => {
+            return col === searchInCol
+        });
+        let returnFromColPos = headers.findIndex((col) => {
+            return col === returnFromCol
+        });
+
+        let isFound = Object.keys(sheet).some((key) => {
+            result = sheet[key][returnFromColPos];
+            return sheet[key][searchInColPos] === searchForVal;
+        });
+        return isFound ? result : isFound;
+    }
+
+    get TotalArea() {
+        if (this.CurrentTotalArea) return this.CurrentTotalArea;
+
+        this.CurrentTotalArea = this.vlookup("ID", this.rawFields.ID, "total_area", this.stockSheet);
+        return this.CurrentTotalArea;
+    }
+    get AreaWithoutBalconies() {
+        return this.vlookup("ID", this.rawFields.ID, "area_without_balconies", this.stockSheet)
+    }
+    get Floor() {
+        return this.vlookup("ID", this.rawFields.ID, "floor", this.stockSheet)
+    }
+    get ActualCost() {
+        if (this.CurrentActualCost) return this.CurrentActualCost;
+
+        let discountOnFlat = this.rawFields.DiscountOnFlat ? parseFloat(this.rawFields.DiscountOnFlat) : 0;
+        let discountPerOneSquareMeter = this.rawFields.DiscountPerOneSquareMeter ? parseFloat(this.rawFields.DiscountPerOneSquareMeter) : 0;
+        let discount = discountOnFlat > 0 ? discountOnFlat : (discountPerOneSquareMeter*this.TotalArea);
+
+        let actualCost = parseFloat(this.StockFlatCost) - discount;
+        
+        this.CurrentActualCost = (actualCost === this.LegalCost - this.FormalCostIncrease ? actualCost : "где-то тут ошибка...");
+        return this.CurrentActualCost;
+    }
+    get LegalCost() {
+        if (this.CurrentLegalCost) return this.CurrentLegalCost; 
+
+        let fieldsToSum = ['FirstSubsidyPayment', 'SecondSubsidyPayment', 'BankLoanPayment',
+            'PaymentFromDeveloper', 'InitialPaymentFromClient', "InstallmentPayment1", 
+            "InstallmentPayment2", "InstallmentPayment3", "InstallmentPayment4", 
+            "InstallmentPayment5", "InstallmentPayment6", "InstallmentPayment7", 
+            "InstallmentPayment8", "InstallmentPayment9", "InstallmentPayment10", 
+            "InstallmentPayment11", "InstallmentPayment12", "InstallmentPayment13", 
+            "InstallmentPayment14", "InstallmentPayment15", "InstallmentPayment16", 
+            "InstallmentPayment17", "InstallmentPayment18", "InstallmentPayment19", 
+            "InstallmentPayment20", "InstallmentPayment21", "InstallmentPayment22", 
+            "InstallmentPayment23", "InstallmentPayment24", "InstallmentPayment25", 
+            "InstallmentPayment26", "InstallmentPayment27"
+        ]
+
+        const reducer = (accumulator, fieldName) => accumulator + (parseFloat(this.rawFields[fieldName]) >= 0 ? parseFloat(this.rawFields[fieldName]) : 0);
+        
+        this.CurrentLegalCost = fieldsToSum.reduce(reducer, 0);
+        return this.CurrentLegalCost;
+    }
+    get ActualOneSquareMeterCost() {
+        if (this.CurrentActualOneSquareMeterCost) return this.CurrentActualOneSquareMeterCost; 
+
+        this.CurrentActualOneSquareMeterCost = parseFloat(this.ActualCost)/parseFloat(this.TotalArea);
+        return this.CurrentActualOneSquareMeterCost;
+    }
+    get StockOneSquareMeterCost() {
+        if (this.CurrentStockOneSquareMeterCost) return this.CurrentStockOneSquareMeterCost;
+
+        let pricingDate = this.definePricingDate(this.rawFields.ReservationDate,
+            this.rawFields.RegistrationStartDate,
+            this.rawFields.DateOfRegistration,
+            this.rawFields.Timestamp);
+        let filteredSheet = this.filterSheetByDate("StartDate", "EndDate", pricingDate, this.priceSheet);
+        let priceID = `${this.rawFields.SelectLiter}/${this.TotalArea}`;
+
+        this.CurrentStockOneSquareMeterCost = this.vlookup("ID", priceID, "StockOneSquareMeterCost",  filteredSheet);  
+        return this.CurrentStockOneSquareMeterCost;
+    }
+    get StockFlatCost() {
+        if (this.CurrentStockFlatCost) return this.CurrentStockFlatCost; 
+
+        this.CurrentStockFlatCost = (parseFloat(this.TotalArea)*parseFloat(this.StockOneSquareMeterCost)).toFixed(2);
+        return this.CurrentStockFlatCost;
+    }
+    get FormalCostIncrease() {
+        if (this.CurrentFormalCostIncrease) return this.CurrentFormalCostIncrease; 
+        
+        let increase = parseFloat(this.rawFields.PaymentFromDeveloper)+parseFloat(this.rawFields.FoolTaxPaymentInBankLoan);
+        this.CurrentFormalCostIncrease = increase > 0 ? increase : 0;
+        return (this.CurrentFormalCostIncrease).toFixed(2);
+    }
+    get LegalOneSquareMeterCost() {
+        return  (parseFloat(this.LegalCost)/parseFloat(this.TotalArea)).toFixed(2);
+    }
+    get MagangerComissionPercent() {
+        let dateString = this.rawFields.RegistrationStartDate;
+        if (dateString === '') return 0;
+        if (this.rawFields.SelectManager === "АВБ") return 0;
+        if (parseFloat(this.rawFields.IndPercentManagerComission) > 0) return parseFloat(this.rawFields.IndPercentManagerComission);
+
+        let salaryDate = new Date(dateString);
+        let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
+        
+        let managerName = this.rawFields.SelectManager;
+        let dealType = this.rawFields.DealType;
+
+        return parseFloat(this.vlookup("employee", managerName, dealType, filteredByDate))
+    }
+    get HeadComissionPercent() {
+        let dateString = this.rawFields.RegistrationStartDate;
+        if (dateString === '') return 0;
+        if (this.rawFields.SelectManager === "АВБ") return 0;
+        if (parseFloat(this.rawFields.IndPercentHeadComission) > 0) return parseFloat(this.rawFields.IndPercentHeadComission);
+
+        let salaryDate = new Date(dateString);
+        let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
+        
+        let dealType = this.rawFields.DealType;
+
+        return parseFloat(this.vlookup("position", "РОП", dealType, filteredByDate))
+    }
+    get ManagerComission() {
+        return (this.MagangerComissionPercent*this.ActualCost).toFixed(2);
+    }
+    get HeadComission() {
+        return (this.HeadComissionPercent*this.ActualCost).toFixed(2);
+    }
+    get AgencyComissionPercent() {
+        if (this.rawFields.SelectManager === "АВБ") return 0;
+        if (this.rawFields.DealType === "Л") return 0;
+        if (parseFloat(this.rawFields.IndPercentAgencyComission) >0) return parseFloat(this.rawFields.IndPercentAgencyComission);
+        return 0.05;
+    }
+    get AgencyComission() {
+        return (this.AgencyComissionPercent*this.ActualCost).toFixed(2);
+    }
+}
 </script>
