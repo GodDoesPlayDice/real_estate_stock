@@ -489,7 +489,7 @@ class CalculatedFields {
         let dateString = this.rawFields.ReservationDate;
         if (dateString === '') return 0;
         if (this.rawFields.SelectManager === "АВБ") return 0;
-        if (parseFloat(this.rawFields.IndPercentManagerComission) > 0) return parseFloat(this.rawFields.IndPercentManagerComission);
+        if (parseFloat(this.rawFields.IndPercentMagangerComission) > 0) return parseFloat(this.rawFields.IndPercentMagangerComission);
 
         let salaryDate = new Date(dateString);
         let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
