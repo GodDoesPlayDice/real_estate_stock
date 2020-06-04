@@ -212,4 +212,46 @@
     .main_screen_headers .indicator {
         background-color: #3f51b5 !important;
     }
+
+    /* Подсказочная таблица справа */
+    .calculated_fields_table {
+        position: sticky;
+        top: 70px;
+        padding-top: 5px !important;
+        padding-bottom: 35px !important;
+    }
+
+    .calculated_fields_table table {
+        background-color: #efecfa;
+        border-radius: 2px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    /* Отступ содержимого таблицы сверху */
+    .calculated_fields_table>table>tbody>tr:first-child>td {
+        padding-top: 10px !important;
+    }
+
+    /* Отступ содержимого таблицы снизу */
+    .calculated_fields_table>table>tbody>tr:last-child>td {
+        padding-bottom: 10px !important;
+    }
+
+    /* Убираем межстрочные линии в таблице */
+    .calculated_fields_table table tr {
+        border-bottom: none !important;
+    }
+
+    /* Характеристики содержимого таблицы */
+    .calculated_fields_table table td {
+        padding: 3px 15px !important;
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px !important;
+    }
+
+    /* Фон элементов таблицы при наведении */
+    .calculated_fields_table>table>tbody>tr:hover {
+        background-color: #e8e5f3;
+    }
 </style>

@@ -520,9 +520,35 @@ class EditScreenCalculatedFields extends React.Component {
 
     }
     render() {
-        console.log(this.props.docObj)
+        function generateRows(){
+            let result = [];
+            console.log(this.props.docObj)
+            let calculatedFields = new CalculatedFields (this.props.docObj, serverSideData);
+            let fieldsToShow = [
+                'TotalArea', 'AreaWithoutBalconies', 'Floor', 'ActualCost',
+                'LegalCost', 'ActualOneSquareMeterCost', 'StockOneSquareMeterCost',
+                'StockFlatCost', 'FormalCostIncrease', 'LegalOneSquareMeterCost',
+                'MagangerComissionPercent', 'HeadComissionPercent', 'ManagerComission',
+                'HeadComission', 'AgencyComissionPercent', 'AgencyComission'
+            ];
+
+            fieldsToShow.forEach((elem) => {
+                console.log(calculatedFields[elem])
+                result.push(
+                    <tr key={elem}>
+                        <td width='50%'>{serverSideData.dictionary[elem]}</td>
+                        <td >{calculatedFields[elem] > 0 ? calculatedFields[elem] : "0.00"}</td>
+                    </tr>
+                );
+            });
+            return result;
+        }
         return (
-            <div></div>
+            <table key={this.props.id}>
+                <tbody>
+                    {generateRows.call(this)}
+                </tbody>
+            </table>
         );
     }
 }

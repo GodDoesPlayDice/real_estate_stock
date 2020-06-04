@@ -558,6 +558,8 @@ class OasisDocFieldsHandler extends React.Component {
         }
         return (
             <React.Fragment>
+                <div className='row'>
+                <div className='col s7'>
                 <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
                     <Select
                         id = "DocStatus"
@@ -941,12 +943,22 @@ class OasisDocFieldsHandler extends React.Component {
                         onChange={this.handleChildChange}
                     />
                 </DocFieldsWrapper>
+                </div>
+                {/* таблица с рассчитываемыми полями */}
+                <div className='col s5 calculated_fields_table'>
+                    <EditScreenCalculatedFields 
+                    id='calculated-fields-table'
+                    docObj={this.state}
+                    />
+                </div>
+                </div>
                 <div className="section">
                 <div className="section row">
                         <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3" 
                         onClick={this.handleSaveBtn}>Сохранить</a>
                     </div>
                 </div>
+            
             </React.Fragment>
         )
     }
@@ -959,7 +971,7 @@ class DocFieldsWrapper extends React.Component {
     render() {
         return (
             <div className={"row " + this.props.customClass}>
-                <div className={"col s10 offset-s1 card-panel lighten-5 " + this.props.color}>
+                <div className={"card-panel lighten-5 " + this.props.color}>
                     <div className="section"></div>
                         {this.props.children}
                     <div className="section"></div>

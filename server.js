@@ -353,7 +353,7 @@ class CalculatedFields {
         return  (parseFloat(this.LegalCost)/parseFloat(this.TotalArea)).toFixed(2);
     }
     get MagangerComissionPercent() {
-        let dateString = this.rawFields.RegistrationStartDate;
+        let dateString = this.rawFields.ReservationDate;
         if (dateString === '') return 0;
         if (this.rawFields.SelectManager === "АВБ") return 0;
         if (parseFloat(this.rawFields.IndPercentManagerComission) > 0) return parseFloat(this.rawFields.IndPercentManagerComission);
@@ -367,7 +367,7 @@ class CalculatedFields {
         return parseFloat(this.vlookup("employee", managerName, dealType, filteredByDate))
     }
     get HeadComissionPercent() {
-        let dateString = this.rawFields.RegistrationStartDate;
+        let dateString = this.rawFields.ReservationDate;
         if (dateString === '') return 0;
         if (this.rawFields.SelectManager === "АВБ") return 0;
         if (parseFloat(this.rawFields.IndPercentHeadComission) > 0) return parseFloat(this.rawFields.IndPercentHeadComission);
@@ -387,7 +387,7 @@ class CalculatedFields {
     }
     get AgencyComissionPercent() {
         if (this.rawFields.SelectManager === "АВБ") return 0;
-        if (this.rawFields.DealType === "Л") return 0;
+        if (this.rawFields.DealType != "АН") return 0;
         if (parseFloat(this.rawFields.IndPercentAgencyComission) > 0) return parseFloat(this.rawFields.IndPercentAgencyComission);
         return 0.05;
     }
