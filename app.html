@@ -540,7 +540,7 @@ class CalculatedFields {
     get AgencyComissionPercent() {
         if (this.rawFields.SelectManager === "АВБ") return 0;
         if (this.rawFields.DealType === "Л") return 0;
-        if (parseFloat(this.rawFields.IndPercentAgencyComission) >0) return parseFloat(this.rawFields.IndPercentAgencyComission);
+        if (parseFloat(this.rawFields.IndPercentAgencyComission) > 0) return parseFloat(this.rawFields.IndPercentAgencyComission);
         return 0.05;
     }
     get AgencyComission() {

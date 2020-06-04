@@ -173,6 +173,7 @@ function storeData(json) {
         targetSheet.getRange(lastRow + 1, column).setValue(value);
     }
     /* установка Timestamp */
+    targetSheet.getRange(lastRow + 1, 1).setNumberFormat('yyyy-dd-mm hh:mm:ss')
     targetSheet.getRange(lastRow + 1, 1).setValue(new Date());
 };
 
@@ -387,7 +388,7 @@ class CalculatedFields {
     get AgencyComissionPercent() {
         if (this.rawFields.SelectManager === "АВБ") return 0;
         if (this.rawFields.DealType === "Л") return 0;
-        if (parseFloat(this.rawFields.IndPercentAgencyComission) >0) return parseFloat(this.rawFields.IndPercentAgencyComission);
+        if (parseFloat(this.rawFields.IndPercentAgencyComission) > 0) return parseFloat(this.rawFields.IndPercentAgencyComission);
         return 0.05;
     }
     get AgencyComission() {
