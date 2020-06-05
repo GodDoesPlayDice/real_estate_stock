@@ -13,7 +13,6 @@ class Header extends React.Component {
         this.props.onButtonsClicked("current_view", pressed);
     };
     handleClick() {
-        console.log(serverSideData.uncheckedSheet)
     }
 
     updateAutocomplete (e) {
@@ -189,53 +188,51 @@ class CurrentDocs extends React.Component {
     render(){
         return (
             <React.Fragment>
-                <div className="section">
-                    <div className="row">
-                        <ul className="collapsible col s10 offset-s1 main_collaps">
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Бронирование"
-                                dataForStatus={this.props.dataObj["Бронирование"]}
-                                handleButtons={this.handleButtons}
-                            />
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Заявка на ДДУ"
-                                dataForStatus={this.props.dataObj["Заявка на ДДУ"]}
-                                handleButtons={this.handleButtons}
-                            />
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Сдача на регистрацию ДДУ"
-                                dataForStatus={this.props.dataObj["Сдача на регистрацию ДДУ"]}
-                                handleButtons={this.handleButtons}
-                            />
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Зарегистрирован ДДУ"
-                                dataForStatus={this.props.dataObj["Зарегистрирован ДДУ"]}
-                                handleButtons={this.handleButtons}
-                            />
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Расторжение ДДУ"
-                                dataForStatus={this.props.dataObj["Расторжение ДДУ"]}
-                                handleButtons={this.handleButtons}
-                            />
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Расторгнут ДДУ"
-                                dataForStatus={this.props.dataObj["Расторгнут ДДУ"]}
-                                handleButtons={this.handleButtons}
-                            />
-                            <CollapsibleStatus
-                                liClassName="new_status"
-                                status="Без статуса"
-                                dataForStatus={this.props.dataObj[""]}
-                                handleButtons={this.handleButtons}
-                            />
-                        </ul>
-                    </div>
+                <div className="row">
+                    <ul className="collapsible col s10 offset-s1 main_collaps">
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Бронирование"
+                            dataForStatus={this.props.dataObj["Бронирование"]}
+                            handleButtons={this.handleButtons}
+                        />
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Заявка на ДДУ"
+                            dataForStatus={this.props.dataObj["Заявка на ДДУ"]}
+                            handleButtons={this.handleButtons}
+                        />
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Сдача на регистрацию ДДУ"
+                            dataForStatus={this.props.dataObj["Сдача на регистрацию ДДУ"]}
+                            handleButtons={this.handleButtons}
+                        />
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Зарегистрирован ДДУ"
+                            dataForStatus={this.props.dataObj["Зарегистрирован ДДУ"]}
+                            handleButtons={this.handleButtons}
+                        />
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Расторжение ДДУ"
+                            dataForStatus={this.props.dataObj["Расторжение ДДУ"]}
+                            handleButtons={this.handleButtons}
+                        />
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Расторгнут ДДУ"
+                            dataForStatus={this.props.dataObj["Расторгнут ДДУ"]}
+                            handleButtons={this.handleButtons}
+                        />
+                        <CollapsibleStatus
+                            liClassName="new_status"
+                            status="Без статуса"
+                            dataForStatus={this.props.dataObj[""]}
+                            handleButtons={this.handleButtons}
+                        />
+                    </ul>
                 </div>
             </React.Fragment>
         )
@@ -527,7 +524,6 @@ class EditScreenCalculatedFields extends React.Component {
     render() {
         function generateRows(){
             let result = [];
-            console.log(this.props.docObj)
             let calculatedFields = new CalculatedFields (this.props.docObj, serverSideData);
             let fieldsToShow = [
                 'TotalArea', 'AreaWithoutBalconies', 'Floor', 'ActualCost',
@@ -538,7 +534,6 @@ class EditScreenCalculatedFields extends React.Component {
             ];
 
             fieldsToShow.forEach((elem) => {
-                console.log(calculatedFields[elem])
                 result.push(
                     <tr key={elem}>
                         <td width='50%'>{serverSideData.dictionary[elem]}</td>
