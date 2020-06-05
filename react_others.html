@@ -182,6 +182,8 @@ class CurrentDocs extends React.Component {
             case 'edit': 
                 this.props.handleEditBtn(PrettyID, 'docsSheet');
                 break;
+            case 'mail':
+                this.props.handleMailBtn(PrettyID, 'docsSheet');
         };
     }
     render(){
@@ -342,7 +344,10 @@ class DocTable extends React.Component {
         return (
             <React.Fragment>
                 {serverSideData.features.delete === true &&
-                <a onClick={this.handleButtons.bind(this, 'archive')} className="btn waves-effect waves-light deep-purple lighten-3 right table_button"><i className="material-icons">delete</i></a>
+                <a onClick={this.handleButtons.bind(this, 'archive')} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">delete</i></a>
+                }
+                {serverSideData.features.mail === true &&
+                <a onClick={this.handleButtons.bind(this, 'mail')} className="btn waves-effect waves-light deep-purple lighten-3 right table_button"><i className="material-icons">email</i></a>
                 }
                 {serverSideData.features.edit_screen === true &&
                 <a onClick={this.handleButtons.bind(this, 'edit')} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">edit</i></a>

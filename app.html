@@ -87,6 +87,7 @@ class App extends React.Component {
         this.handleApproveClick = this.handleApproveClick.bind(this)
         this.handleArchiveBtn = this.handleArchiveBtn.bind(this);
         this.handleMainScreenClick = this.handleMainScreenClick.bind(this);
+        this.handleMailBtn = this.handleMailBtn.bind(this);
         this.state = {
             timestamp: '',
             /* свойство, определяющее текущий экран приложения */
@@ -198,6 +199,18 @@ class App extends React.Component {
             });
         },30)
     } 
+    handleMailBtn(PrettyID, sheetName) {
+        this.setState({
+            modalConfirmButtonPurpose: 'mail',
+            modalHeader: "Отправить документ по электронной почте",
+            modalBody: `${PrettyID}`,
+        })
+        setTimeout(()=>{
+            this.setState({
+                modal: true,
+            });
+        },30)
+    }
     /* срабатывает когда пользователь нажимает на подтверждение в модальном окне
     принимает строку с решением и в зависимости от этой строки либо сохраняет данные
     либо архивирует сделку либо одобряет документ на проверке */
@@ -238,6 +251,16 @@ class App extends React.Component {
                     modalConfirmButtonPurpose: '',
                     modalHeader: '',
                     modalBody: ''
+                });
+                break;
+            case 'mail':
+                alert("Письма пока не работают")
+                this.setState({
+                    /* обнуляем модальное окно */
+                    modal: false,
+                    modalConfirmButtonPurpose: '',
+                    modalHeader: '',
+                    modalBody: '',
                 });
                 break;
             default:
@@ -325,6 +348,7 @@ class App extends React.Component {
                             dataObj={serverSideData.statusesForDocs}
                             handleArchiveBtn={this.handleArchiveBtn}
                             handleEditBtn={this.handleCurrentDocClicked}
+                            handleMailBtn={this.handleMailBtn}
                             />
                         }
                         {/* основной экран с проверкой документов */}

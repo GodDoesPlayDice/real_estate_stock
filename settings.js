@@ -2,6 +2,10 @@
 var users = {
     "alikjackass@gmail.com": {
         department: "O2",
+        role: "admin"
+    },
+    "t2484958@gmail.com": {
+        department: "O2",
         role: "manager"
     },
     "roxxxanafray@gmail.com": {
@@ -44,6 +48,7 @@ var userSettings = {
                     verification_screen: true,
                     verify: true,
                     delete: true,
+                    mail: true,
                 }
             },
             manager: {
@@ -65,6 +70,7 @@ var userSettings = {
                     verification_screen: true,
                     verify: false,
                     delete: false,
+                    mail: true
                 },
             }
         }
