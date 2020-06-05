@@ -65,6 +65,15 @@ function archive(ID, sheetName) {
     };
 }
 
+function sendDocAsPDF(docObj) {
+    renderApp(true, "Отправка документа: " + docObj.ID);
+    google.script.run.withSuccessHandler(onSuccess).evaluateEmailTemplate(JSON.stringify(docObj));
+    function onSuccess () {
+        google.script.run.sendEmail(JSON.stringify(docObj));
+        renderApp(false);
+    };
+}
+
 function renderApp(preloaderStatus, preloaderMessage) {
     ReactDOM.render(
         <App 
@@ -199,11 +208,13 @@ class App extends React.Component {
             });
         },30)
     } 
-    handleMailBtn(PrettyID, sheetName) {
+    handleMailBtn(PrettyID, ID,  sheetName) {
+        let row = getRowNumber(ID, sheetName)
         this.setState({
             modalConfirmButtonPurpose: 'mail',
             modalHeader: "Отправить документ по электронной почте",
             modalBody: `${PrettyID}`,
+            document: getSingleRowObj(row, "docsSheet")
         })
         setTimeout(()=>{
             this.setState({
@@ -254,13 +265,14 @@ class App extends React.Component {
                 });
                 break;
             case 'mail':
-                alert("Письма пока не работают")
+                sendDocAsPDF(this.state.document);
                 this.setState({
                     /* обнуляем модальное окно */
                     modal: false,
                     modalConfirmButtonPurpose: '',
                     modalHeader: '',
                     modalBody: '',
+                    document: {}
                 });
                 break;
             default:

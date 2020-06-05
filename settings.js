@@ -4,13 +4,13 @@ var users = {
         department: "O2",
         role: "admin"
     },
+    "roxxxanafray@gmail.com": {
+        department: "O2",
+        role: "admin"
+    },
     "t2484958@gmail.com": {
         department: "O2",
         role: "manager"
-    },
-    "roxxxanafray@gmail.com": {
-        department: "V2",
-        role: "admin"
     },
     "viktorboldareff@gmail.com": {
         department: "B",
