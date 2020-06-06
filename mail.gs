@@ -74,8 +74,10 @@ function sendEmail(nameAndPay) {
     
 
     let recipients = "alikjackass@gmail.com";
-    if (payMethod.includes('Ипотека')) {
-        recipients += ", newlondoolachile@mail.ru";
+    if (payMethod) {
+        if (payMethod.includes('Ипотека')) {
+            recipients += ", newlondoolachile@mail.ru";
+        }
     }
     let title = "Заявка ЖК Оазис 2: " + `${docName}`;
     let body = "Принимайте свежее мясо.";
