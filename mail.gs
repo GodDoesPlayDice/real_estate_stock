@@ -26,12 +26,18 @@ function evaluateEmailTemplate(json) {
 
     sheet.insertRowsAfter(1, (docArr.length - 1));
     sheet.getRange(1,1,docArr.length, 2).setValues(docArr);
-    return true;
+
+    let nameAndPay = {
+        docName: `${docObj.ID}_${docObj.ClientName}`,
+        payMethod: docObj.PayMethod,
+    }
+    return JSON.stringify(nameAndPay);
 };
 
-function sendEmail(someData) {
-    let payMethod = someData.PayMethod;
-    let docName = `${someData.ID}_${someData.ClientName}`;
+function sendEmail(nameAndPay) {
+    let someData = JSON.parse(nameAndPay)
+    let payMethod = someData.payMethod;
+    let docName = someData.docName;
     let ss = SpreadsheetApp.openById(SS);
     
     let url_base = ss.getUrl().replace(/edit$/, '');

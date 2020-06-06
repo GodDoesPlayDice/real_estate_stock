@@ -536,8 +536,12 @@ class EditScreenCalculatedFields extends React.Component {
             fieldsToShow.forEach((elem) => {
                 result.push(
                     <tr key={elem}>
-                        <td width='50%'>{serverSideData.dictionary[elem]}</td>
-                        <td >{calculatedFields[elem] > 0 ? calculatedFields[elem] : "0.00"}</td>
+                        {calculatedFields[elem] > 0 &&
+                            <React.Fragment>
+                            <td width='50%'>{serverSideData.dictionary[elem]}</td>
+                            <td >{calculatedFields[elem] > 0 ? calculatedFields[elem] : "0.00"}</td>
+                            </React.Fragment>
+                        }
                     </tr>
                 );
             });

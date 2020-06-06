@@ -68,8 +68,8 @@ function archive(ID, sheetName) {
 function sendDocAsPDF(docObj) {
     renderApp(true, "Отправка документа: " + docObj.ID);
     google.script.run.withSuccessHandler(onSuccess).evaluateEmailTemplate(JSON.stringify(docObj));
-    function onSuccess () {
-        google.script.run.sendEmail(JSON.stringify(docObj));
+    function onSuccess (nameAndPay) {
+        google.script.run.sendEmail(nameAndPay);
         renderApp(false);
     };
 }
@@ -514,7 +514,9 @@ class CalculatedFields {
         return this.CurrentStockFlatCost;
     }
     get FormalCostIncrease() {
-        let increase = parseFloat(this.rawFields.PaymentFromDeveloper)+parseFloat(this.rawFields.FoolTaxPaymentInBankLoan);
+        let devPayment = parseFloat(this.rawFields.PaymentFromDeveloper) > 0 ? parseFloat(this.rawFields.PaymentFromDeveloper) : 0;
+        let foolPayment = parseFloat(this.rawFields.FoolTaxPaymentInBankLoan) > 0 ? parseFloat(this.rawFields.FoolTaxPaymentInBankLoan) : 0;
+        let increase = devPayment + foolPayment;
         this.CurrentFormalCostIncrease = increase > 0 ? increase : 0;
         return (this.CurrentFormalCostIncrease).toFixed(2);
     }

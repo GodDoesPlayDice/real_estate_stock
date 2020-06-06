@@ -340,9 +340,9 @@ class CalculatedFields {
         return this.CurrentStockFlatCost;
     }
     get FormalCostIncrease() {
-        if (this.CurrentFormalCostIncrease) return this.CurrentFormalCostIncrease; 
-        
-        let increase = parseFloat(this.rawFields.PaymentFromDeveloper)+parseFloat(this.rawFields.FoolTaxPaymentInBankLoan);
+        let devPayment = parseFloat(this.rawFields.PaymentFromDeveloper) > 0 ? parseFloat(this.rawFields.PaymentFromDeveloper) : 0;
+        let foolPayment = parseFloat(this.rawFields.FoolTaxPaymentInBankLoan) > 0 ? parseFloat(this.rawFields.FoolTaxPaymentInBankLoan) : 0;
+        let increase = devPayment + foolPayment;
         this.CurrentFormalCostIncrease = increase > 0 ? increase : 0;
         return (this.CurrentFormalCostIncrease).toFixed(2);
     }

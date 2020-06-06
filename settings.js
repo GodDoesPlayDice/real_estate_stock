@@ -409,11 +409,11 @@ var dictionary = {
     StockFlatCost: 'Стоимость квартиры по шахматке:',
     FormalCostIncrease: 'Увеличение стоимости:',
     LegalOneSquareMeterCost: 'Стоимость 1 кв. м. по ДДУ:',
-    MagangerComissionPercent: 'Стандартный % МОП за сделку:',
-    HeadComissionPercent: 'Стандартный % РОП за сделку:',
+    MagangerComissionPercent: '% МОП за сделку:',
+    HeadComissionPercent: '% РОП за сделку:',
     ManagerComission: 'Комиссия МОП за сделку (сумма):',
     HeadComission: 'Комиссия РОП за сделку (сумма):',
-    AgencyComissionPercent: 'Стандартный % АН:',
+    AgencyComissionPercent: '% АН за сделку:',
     AgencyComission: 'Комиссия АН (сумма):',
     }
 
