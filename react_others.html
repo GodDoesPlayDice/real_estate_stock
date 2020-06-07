@@ -52,27 +52,93 @@ class Header extends React.Component {
                             <ul id="nav-mobile" className="right hide-on-med-and-down">
                                 {serverSideData.features.edit_screen === true &&
                                 (this.props.current_view === 'view_main' || this.props.current_view === 'edit_doc') &&
+                                    <li>
                                     <TopMenuButton 
                                     action="create_new_doc" 
                                     label="Новый документ"
                                     onChange={this.handleChange}
                                     />
+                                    </li>
                                 }
                                 {this.props.current_view != 'view_main' &&
+                                    <li>
                                     <TopMenuButton 
                                     action="view_main"
                                     label="Назад"
                                     onChange={this.handleChange}
                                     />
+                                    </li>
                                 }
                             </ul>
                         </div>
                     </div>
                 </nav>
+                {/* боковое меню */}
+                <SideMenu 
+                    currentDoc={this.state.currentDoc}
+                    updateAutocomplete={this.updateAutocomplete}
+                    search={
+                        <div className="input-field">
+                            <input id="search" value={this.state.currentDoc} type="search" className="autocomplete" placeholder="Поиск сделки" onChange={this.updateAutocomplete} value={this.state.currentDoc} required />
+                            <i className="material-icons">close</i>
+                        </div>
+                    }
+                    button1={serverSideData.features.edit_screen === true &&
+                            (this.props.current_view === 'view_main' || this.props.current_view === 'edit_doc') &&
+                                <li>
+                                <TopMenuButton 
+                                action="create_new_doc" 
+                                label="Новый документ"
+                                onChange={this.handleChange}
+                                />
+                                </li>
+                            }
+                    button2={this.props.current_view != 'view_main' &&
+                                <li>
+                                <TopMenuButton 
+                                action="view_main"
+                                label="Назад"
+                                onChange={this.handleChange}
+                                />
+                                </li>
+                            }
+                />
+                {/*  */}
+                <a href="#" data-target='slide-out' className='sidenav-trigger menu-button'>
+                    <i className='material-icons white-text'>menu</i>
+                </a>
             </div>    
         );
     }
 }
+
+class SideMenu extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    componentDidMount() {
+        let elems = document.querySelectorAll('.sidenav');
+        let instances = M.Sidenav.init(elems, {});
+    }
+    render() {
+        return (
+            <ul id='slide-out' className='sidenav'>
+                <li>
+                    <form>
+                        {this.props.search}
+                    </form>
+                </li>
+                <li className='sidenav_menu_item'>
+                    {this.props.button1}
+                </li>
+                <li className='sidenav_menu_item'>
+                    {this.props.button2}
+                </li>
+            </ul>
+        )
+    }
+}
+
 
 class TopMenuButton extends React.Component {
     constructor (props) {
@@ -84,7 +150,7 @@ class TopMenuButton extends React.Component {
     }
     render () {
         return (
-            <li><a href="#" onClick={this.handleClick}>{this.props.label}</a></li>
+            <a href="#" onClick={this.handleClick}>{this.props.label}</a>
         )
     }
 };

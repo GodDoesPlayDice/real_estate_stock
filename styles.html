@@ -254,4 +254,76 @@
     .calculated_fields_table>table>tbody>tr:hover {
         background-color: #e8e5f3;
     }
+
+    /* БОКОВОЕ МЕНЮ */
+
+    /* Кнопка бокового меню */
+    .menu-button {
+        position: absolute;
+        top: 15px !important;
+        left: 15px;
+        display: none;
+    }
+
+    /* Этот стиль здесь по непонятной причине, 
+по умолчанию стоит 997 и оверлэй закрывает боковое меню
+и вообще, похоже, в материалайз ошибка */
+    .sidenav-overlay {
+        z-index: 996 !important;
+    }
+
+    /* Пункты меню */
+    .sidenav_menu_item>li>a {
+        margin-bottom: 10px;
+        height: 58px !important;
+        padding-left: 20px;
+    }
+
+    /* Чтобы поиск в боковом меню не прокручивался и текст не писался поверх иконок */
+    .input-place {
+        width: 70% !important;
+        padding: 0 15% !important;
+    }
+
+
+    /* Параметры для разных размеров экрана */
+
+    @media screen and (max-width:992px) {
+
+        /* Отображение кнопки меню */
+        .menu-button {
+            display: block;
+        }
+
+        /* Убираем поиск и пункты меню */
+        .nav-wrapper form,
+        .nav-wrapper .s4 {
+            display: none;
+        }
+
+        /* Убираем 20px под заголовком страницы */
+        .page_name {
+            margin-bottom: 0 !important;
+        }
+
+        /* Делаем s12 из s10 у главного collapsible и заголовка  */
+        .main_collaps,
+        .page_name>div {
+            width: 100% !important;
+            margin-left: 0px !important;
+        }
+
+        /* Убираем табличку справа */
+        .calculated_fields_table {
+            position: relative;
+            width: 100% !important;
+            top: 0px !important;
+        }
+
+        /* Делаем s12 из s7 в форме заполнения */
+        .edit_forms {
+            width: 100% !important;
+        }
+
+    }
 </style>
