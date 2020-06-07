@@ -235,66 +235,6 @@ function initUserProperties(userName) {
     });
 };
 
-/* 
-var roles = ['admin', 'manager'];
-var departments = ['V2', 'B', 'test'];
-var ssID = {
-    V2: '15iA9-3RpTFuFWLUHsjs4eUBjCKjU0dbdUPNxgwrw17M',
-    B: '16k9kb_Kv6VoHXVe-9ZQHTX_8UkHP3_8W3A6Qz8Ec7uY',
-    test: '1ex7gzC35SjS4f4y8U0LvYR8zKMPbPzso8B90ac_571I'
-};
-
-var dataSources = {
-    V2: {
-        admin: {departmentName: "Виноград 2",},
-        manager: {departmentName: "Виноград 2",}
-    },
-    B: {
-        admin: {departmentName: "Баланс",},
-        manager: {departmentName: "Баланс",}
-    },
-    "test": {
-        admin: {departmentName: "Тестовый полигон",},
-        manager: {departmentName: "Тестовый полигон",}
-    }
-};
- */
-
-
-
-/* Общие параметры */
-/* 
-roles.forEach((role) => {
-    departments.forEach((dep) => {
-        // ленивые свойства для винограда
-        Object.defineProperty(dataSources[dep][role], "archiveSheet", {
-            get: function() {
-                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("archive");
-            }
-        });
-        Object.defineProperty(dataSources[dep][role], "stockSheet", {
-            get: function() {
-                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("all_apartments").getDataRange().getValues()
-            }
-        });
-        Object.defineProperty(dataSources[dep][role], "docsSheet", {
-            get: function() {
-                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("docs_current").getDataRange().getValues()
-            }
-        });
-        Object.defineProperty(dataSources[dep][role], "utilitySheet", {
-            get: function() {
-                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("utility_data").getDataRange().getValues()
-            }
-        });
-        Object.defineProperty(dataSources[dep][role], "targetSheet", {
-            get: function() {
-                return SpreadsheetApp.openById(ssID[dep]).getSheetByName("storage_raw")
-            }
-        });
-    })
-});
- */
 
 var dictionary = {
     ID: 'Идентификатор документа:',
@@ -327,7 +267,7 @@ var dictionary = {
     IndPercentMagangerComission: 'Индивидуальный % МОП за сделку:',
     IndPercentHeadComission: 'Индивидуальный % РОП за сделку:',
     IndPercentAgencyComission: 'Индивидуальный % АН за сделку:',
-    ShareInOwnership: 'Доля собственности или %:',
+    ShareInOwnership: 'Доля собственности:',
     OwnershipType: 'Форма собственности:',
     PhoneNumber: 'Телефон:',
     Email: 'E-mail:',
@@ -341,7 +281,7 @@ var dictionary = {
     BankLoanPayment: 'Банковский кредит:',
     DaysBeforeBankLoan: 'Дней на зачисление Кредита:',
     PaymentFromDeveloper: 'ПВ от Застройщика:',
-    FoolTaxPaymentInBankLoan: 'ННЛ (в составе кредита):',
+    FoolTaxPaymentInBankLoan: 'ННЛ в составе кредита:',
     FoolTaxPaymentFromClient: 'ННЛ от дольщика:',
     InitialPaymentFromClient: 'Первоначальный взнос (от клиента):',
     InitialPaymentType: 'Вид первоначального взноса:',
