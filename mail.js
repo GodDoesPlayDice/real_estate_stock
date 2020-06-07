@@ -1,7 +1,7 @@
 const SS = '1eOrUozWjzBSw3ioWUF3GuAMYNo8oLuXgDc5ZEw5Hn34';
 const SHEETNAME = 'mail_template';
 
-// отправка email с открытым в режиме просмотра документом
+/* здесь только готовится табличный шаблон с документом для последующей отправки по почте */
 function evaluateEmailTemplate(json) {
     let docObj = JSON.parse(json);
     let ss = SpreadsheetApp.openById(SS);
