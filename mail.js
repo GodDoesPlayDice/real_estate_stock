@@ -76,10 +76,11 @@ function sendEmail(nameAndPay) {
     let blob = promise.getBlob().setName(`${docName}.pdf`);
     
 
-    let recipients = "alikjackass@gmail.com";
+    let recipients = `alikjackass@gmail.ru, avb-oasis@mail.ru, nt.mir@yandex.ru, f_ulya7@mail.ru, legashovai@inbox.ru, 
+    anna-avb-rs2017@yandex.ru, mn@oasis23.ru, t2484958@gmail.com`;
     if (payMethod) {
         if (payMethod.includes('Ипотека')) {
-            recipients += ", newlondoolachile@mail.ru";
+            recipients += ", li@oasis23.ru";
         }
     }
     let title = "Заявка ЖК Оазис 2: " + `${docName}`;

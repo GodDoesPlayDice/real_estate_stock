@@ -85,22 +85,18 @@ class Header extends React.Component {
                     }
                     button1={serverSideData.features.edit_screen === true &&
                             (this.props.current_view === 'view_main' || this.props.current_view === 'edit_doc') &&
-                                <li>
                                 <TopMenuButton 
                                 action="create_new_doc" 
                                 label="Новый документ"
                                 onChange={this.handleChange}
                                 />
-                                </li>
                             }
                     button2={this.props.current_view != 'view_main' &&
-                                <li>
                                 <TopMenuButton 
                                 action="view_main"
                                 label="Назад"
                                 onChange={this.handleChange}
                                 />
-                                </li>
                             }
                 />
                 {/*  */}
