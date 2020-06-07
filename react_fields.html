@@ -3,33 +3,35 @@ class TextField extends React.Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {
+/*         this.state = {
             value: this.props.value
-        }
+        } */
     }
     componentDidMount(){
-        let elem = document.getElementById(this.props.id);
+/*         let elem = document.getElementById(this.props.id);
         elem.addEventListener('focusout', (e) => {
-            this.props.onChange(this.props.id, e.target.value/*this.state.value*/);
-        });
+            this.props.onChange(this.props.id, e.target.value);
+        }); */
         M.updateTextFields();
     }
     componentWillUnmount(){
         this.props.onChange(this.props.id, '');
     }
     handleChange(e) {
-        this.setState({
+        this.props.onChange(this.props.id, e.target.value);
+/*         this.setState({
             value: e.target.value
-        })
+        }) */
     }
     render() {
+        
         let element;
         switch (this.props.purpose) {
             case "area":
-                element = <textarea id={this.props.id} key={this.props.id} value={this.state.value} className="materialize-textarea" onChange={this.handleChange}></textarea>;
+                element = <textarea id={this.props.id} key={this.props.id} value={this.props.value} className="materialize-textarea" onChange={this.handleChange}></textarea>;
                 break;
             default:
-                element = <input id={this.props.id} key={this.props.id} value={this.state.value} type="text" className="validate" onChange={this.handleChange} />
+                element = <input id={this.props.id} key={this.props.id} value={this.props.value} type="text" className="validate" onChange={this.handleChange} />
         }
         return (
             <div className="row">
@@ -524,6 +526,7 @@ class OasisDocFieldsHandler extends React.Component {
         });
     };
     handleSaveBtn () {
+        console.log(this.state)
         this.props.onFieldChange("document", this.state);
         this.props.onSaveButton();
     }

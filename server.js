@@ -270,20 +270,16 @@ class CalculatedFields {
     }
 
     get TotalArea() {
-        if (this.CurrentTotalArea) return this.CurrentTotalArea;
-
-        this.CurrentTotalArea = this.vlookup("ID", this.rawFields.ID, "total_area", this.stockSheet);
+        this.CurrentTotalArea = this.vlookup("ID", `${this.rawFields.SelectLiter}/${this.rawFields.SelectFlat}`, "total_area", this.stockSheet);
         return this.CurrentTotalArea;
     }
     get AreaWithoutBalconies() {
-        return this.vlookup("ID", this.rawFields.ID, "area_without_balconies", this.stockSheet)
+        return this.vlookup("ID", `${this.rawFields.SelectLiter}/${this.rawFields.SelectFlat}`, "area_without_balconies", this.stockSheet)
     }
     get Floor() {
-        return this.vlookup("ID", this.rawFields.ID, "floor", this.stockSheet)
+        return this.vlookup("ID", `${this.rawFields.SelectLiter}/${this.rawFields.SelectFlat}`, "floor", this.stockSheet)
     }
     get ActualCost() {
-        if (this.CurrentActualCost) return this.CurrentActualCost;
-
         let discountOnFlat = this.rawFields.DiscountOnFlat ? parseFloat(this.rawFields.DiscountOnFlat) : 0;
         let discountPerOneSquareMeter = this.rawFields.DiscountPerOneSquareMeter ? parseFloat(this.rawFields.DiscountPerOneSquareMeter) : 0;
         let discount = discountOnFlat > 0 ? discountOnFlat : (discountPerOneSquareMeter*this.TotalArea);
@@ -294,8 +290,6 @@ class CalculatedFields {
         return this.CurrentActualCost;
     }
     get LegalCost() {
-        if (this.CurrentLegalCost) return this.CurrentLegalCost; 
-
         let fieldsToSum = ['FirstSubsidyPayment', 'SecondSubsidyPayment', 'BankLoanPayment',
             'PaymentFromDeveloper', 'InitialPaymentFromClient', "InstallmentPayment1", 
             "InstallmentPayment2", "InstallmentPayment3", "InstallmentPayment4", 
@@ -315,14 +309,10 @@ class CalculatedFields {
         return this.CurrentLegalCost;
     }
     get ActualOneSquareMeterCost() {
-        if (this.CurrentActualOneSquareMeterCost) return this.CurrentActualOneSquareMeterCost; 
-
         this.CurrentActualOneSquareMeterCost = parseFloat(this.ActualCost)/parseFloat(this.TotalArea);
         return this.CurrentActualOneSquareMeterCost;
     }
     get StockOneSquareMeterCost() {
-        if (this.CurrentStockOneSquareMeterCost) return this.CurrentStockOneSquareMeterCost;
-
         let pricingDate = this.definePricingDate(this.rawFields.ReservationDate,
             this.rawFields.RegistrationStartDate,
             this.rawFields.DateOfRegistration,
@@ -334,8 +324,6 @@ class CalculatedFields {
         return this.CurrentStockOneSquareMeterCost;
     }
     get StockFlatCost() {
-        if (this.CurrentStockFlatCost) return this.CurrentStockFlatCost; 
-
         this.CurrentStockFlatCost = (parseFloat(this.TotalArea)*parseFloat(this.StockOneSquareMeterCost)).toFixed(2);
         return this.CurrentStockFlatCost;
     }
@@ -353,7 +341,7 @@ class CalculatedFields {
         let dateString = this.rawFields.ReservationDate;
         if (dateString === '') return 0;
         if (this.rawFields.SelectManager === "АВБ") return 0;
-        if (parseFloat(this.rawFields.IndPercentManagerComission) > 0) return parseFloat(this.rawFields.IndPercentManagerComission);
+        if (parseFloat(this.rawFields.IndPercentMagangerComission) > 0) return parseFloat(this.rawFields.IndPercentMagangerComission);
 
         let salaryDate = new Date(dateString);
         let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
