@@ -34,6 +34,9 @@ function evaluateEmailTemplate(json) {
     return JSON.stringify(nameAndPay);
 };
 
+
+/* эта функция существует отдельно, потому что я не разгадал
+как заставить рабоать метод fetch как любой другой код */
 function sendEmail(nameAndPay) {
     let someData = JSON.parse(nameAndPay)
     let payMethod = someData.payMethod;
