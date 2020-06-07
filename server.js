@@ -132,7 +132,7 @@ function storeData(json) {
     setSessionParameters();
     let userSettings = setDataForSession();
 
-    let calculatedFields = new CalculatedFields (data, userSettings);
+    let calculatedFields = new CalculatedFields(data, userSettings);
     let fieldsList = [
         'TotalArea', 'AreaWithoutBalconies', 'Floor', 'ActualCost',
         'LegalCost', 'ActualOneSquareMeterCost', 'StockOneSquareMeterCost',
@@ -240,7 +240,7 @@ class CalculatedFields {
 
         Object.keys(sheet).forEach((key) => {
             let row = sheet[key];
-            
+
             let startDate = new Date(row[startDateColPos]);
             let endDate = new Date(row[endDateColPos]);
 
@@ -270,8 +270,7 @@ class CalculatedFields {
     }
 
     get TotalArea() {
-        this.CurrentTotalArea = this.vlookup("ID", `${this.rawFields.SelectLiter}/${this.rawFields.SelectFlat}`, "total_area", this.stockSheet);
-        return this.CurrentTotalArea;
+        return this.vlookup("ID", `${this.rawFields.SelectLiter}/${this.rawFields.SelectFlat}`, "total_area", this.stockSheet);
     }
     get AreaWithoutBalconies() {
         return this.vlookup("ID", `${this.rawFields.SelectLiter}/${this.rawFields.SelectFlat}`, "area_without_balconies", this.stockSheet)
@@ -282,35 +281,31 @@ class CalculatedFields {
     get ActualCost() {
         let discountOnFlat = this.rawFields.DiscountOnFlat ? parseFloat(this.rawFields.DiscountOnFlat) : 0;
         let discountPerOneSquareMeter = this.rawFields.DiscountPerOneSquareMeter ? parseFloat(this.rawFields.DiscountPerOneSquareMeter) : 0;
-        let discount = discountOnFlat > 0 ? discountOnFlat : (discountPerOneSquareMeter*this.TotalArea);
+        let discount = (discountOnFlat > 0) || (discountOnFlat < 0) ? discountOnFlat : (discountPerOneSquareMeter * this.TotalArea);
 
         let actualCost = parseFloat(this.StockFlatCost) - discount;
-        
-        this.CurrentActualCost = (actualCost === this.LegalCost - this.FormalCostIncrease ? actualCost : "где-то тут ошибка...");
-        return this.CurrentActualCost;
+
+        return (actualCost === this.LegalCost - this.FormalCostIncrease ? actualCost : "ошибка");
     }
     get LegalCost() {
         let fieldsToSum = ['FirstSubsidyPayment', 'SecondSubsidyPayment', 'BankLoanPayment',
-            'PaymentFromDeveloper', 'InitialPaymentFromClient', "InstallmentPayment1", 
-            "InstallmentPayment2", "InstallmentPayment3", "InstallmentPayment4", 
-            "InstallmentPayment5", "InstallmentPayment6", "InstallmentPayment7", 
-            "InstallmentPayment8", "InstallmentPayment9", "InstallmentPayment10", 
-            "InstallmentPayment11", "InstallmentPayment12", "InstallmentPayment13", 
-            "InstallmentPayment14", "InstallmentPayment15", "InstallmentPayment16", 
-            "InstallmentPayment17", "InstallmentPayment18", "InstallmentPayment19", 
-            "InstallmentPayment20", "InstallmentPayment21", "InstallmentPayment22", 
-            "InstallmentPayment23", "InstallmentPayment24", "InstallmentPayment25", 
+            'PaymentFromDeveloper', 'InitialPaymentFromClient', "InstallmentPayment1",
+            "InstallmentPayment2", "InstallmentPayment3", "InstallmentPayment4",
+            "InstallmentPayment5", "InstallmentPayment6", "InstallmentPayment7",
+            "InstallmentPayment8", "InstallmentPayment9", "InstallmentPayment10",
+            "InstallmentPayment11", "InstallmentPayment12", "InstallmentPayment13",
+            "InstallmentPayment14", "InstallmentPayment15", "InstallmentPayment16",
+            "InstallmentPayment17", "InstallmentPayment18", "InstallmentPayment19",
+            "InstallmentPayment20", "InstallmentPayment21", "InstallmentPayment22",
+            "InstallmentPayment23", "InstallmentPayment24", "InstallmentPayment25",
             "InstallmentPayment26", "InstallmentPayment27"
         ]
 
-        const reducer = (accumulator, fieldName) => accumulator + (parseFloat(this.rawFields[fieldName]) >= 0 ? parseFloat(this.rawFields[fieldName]) : 0);
-        
-        this.CurrentLegalCost = fieldsToSum.reduce(reducer, 0);
-        return this.CurrentLegalCost;
+        const reducer = (accumulator, fieldName) => accumulator + (!isNaN(this.rawFields[fieldName]) ? parseFloat(this.rawFields[fieldName]) : 0);
+        return fieldsToSum.reduce(reducer, 0);
     }
     get ActualOneSquareMeterCost() {
-        this.CurrentActualOneSquareMeterCost = parseFloat(this.ActualCost)/parseFloat(this.TotalArea);
-        return this.CurrentActualOneSquareMeterCost;
+        return parseFloat(this.ActualCost) / parseFloat(this.TotalArea);
     }
     get StockOneSquareMeterCost() {
         let pricingDate = this.definePricingDate(this.rawFields.ReservationDate,
@@ -320,12 +315,10 @@ class CalculatedFields {
         let filteredSheet = this.filterSheetByDate("StartDate", "EndDate", pricingDate, this.priceSheet);
         let priceID = `${this.rawFields.SelectLiter}/${this.TotalArea}`;
 
-        this.CurrentStockOneSquareMeterCost = this.vlookup("ID", priceID, "StockOneSquareMeterCost",  filteredSheet);  
-        return this.CurrentStockOneSquareMeterCost;
+        return this.vlookup("ID", priceID, "StockOneSquareMeterCost", filteredSheet);
     }
     get StockFlatCost() {
-        this.CurrentStockFlatCost = (parseFloat(this.TotalArea)*parseFloat(this.StockOneSquareMeterCost)).toFixed(2);
-        return this.CurrentStockFlatCost;
+        return (parseFloat(this.TotalArea) * parseFloat(this.StockOneSquareMeterCost)).toFixed(2);
     }
     get FormalCostIncrease() {
         let devPayment = parseFloat(this.rawFields.PaymentFromDeveloper) > 0 ? parseFloat(this.rawFields.PaymentFromDeveloper) : 0;
@@ -335,7 +328,7 @@ class CalculatedFields {
         return (this.CurrentFormalCostIncrease).toFixed(2);
     }
     get LegalOneSquareMeterCost() {
-        return  (parseFloat(this.LegalCost)/parseFloat(this.TotalArea)).toFixed(2);
+        return (parseFloat(this.LegalCost) / parseFloat(this.TotalArea)).toFixed(2);
     }
     get MagangerComissionPercent() {
         let dateString = this.rawFields.ReservationDate;
@@ -345,7 +338,7 @@ class CalculatedFields {
 
         let salaryDate = new Date(dateString);
         let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
-        
+
         let managerName = this.rawFields.SelectManager;
         let dealType = this.rawFields.DealType;
 
@@ -359,16 +352,16 @@ class CalculatedFields {
 
         let salaryDate = new Date(dateString);
         let filteredByDate = this.filterSheetByDate("StartDate", "EndDate", salaryDate, this.salarySheet);
-        
+
         let dealType = this.rawFields.DealType;
 
         return parseFloat(this.vlookup("position", "РОП", dealType, filteredByDate))
     }
     get ManagerComission() {
-        return (this.MagangerComissionPercent*this.ActualCost).toFixed(2);
+        return (this.MagangerComissionPercent * this.ActualCost).toFixed(2);
     }
     get HeadComission() {
-        return (this.HeadComissionPercent*this.ActualCost).toFixed(2);
+        return (this.HeadComissionPercent * this.ActualCost).toFixed(2);
     }
     get AgencyComissionPercent() {
         if (this.rawFields.SelectManager === "АВБ") return 0;
@@ -377,6 +370,6 @@ class CalculatedFields {
         return 0.05;
     }
     get AgencyComission() {
-        return (this.AgencyComissionPercent*this.ActualCost).toFixed(2);
+        return (this.AgencyComissionPercent * this.ActualCost).toFixed(2);
     }
 }

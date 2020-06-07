@@ -24,19 +24,48 @@ class TextField extends React.Component {
         }) */
     }
     render() {
-        
-        let element;
-        switch (this.props.purpose) {
-            case "area":
-                element = <textarea id={this.props.id} key={this.props.id} value={this.props.value} className="materialize-textarea" onChange={this.handleChange}></textarea>;
-                break;
-            default:
-                element = <input id={this.props.id} key={this.props.id} value={this.props.value} type="text" className="validate" onChange={this.handleChange} />
+        function testInput() {
+            
+            let format = this.props.formatRule;
+            let currentVal = this.props.value;
+            let regex;
+            console.log(currentVal)
+            switch (format) {
+                case 'float-positive': 
+                    regex = /^[0-9]+(?:\.[0-9]+)?$/;
+                    if (regex.test(currentVal)) {return currentVal} else {return null};
+                    break;
+                case 'float-all': 
+                    regex = /^(?!0\d)\d*(\.\d+)?$/mg;
+                    if (regex.test(currentVal)) {return currentVal} else {return null};
+                    break;
+                case 'float-under-one': 
+                    return (currentVal <= 1) && (currentVal >=0) ? parseFloat(currentVal) : '';
+                    break;
+                case 'int': 
+                    return parseInt(currentVal) > 0 ? parseInt(currentVal) : null;
+                    break;
+                default:
+                    return currentVal;
+            }
         }
         return (
             <div className="row">
                     <div className="input-field col s10 offset-s1">
-                        {element}
+                        {this.props.purpose === "area" && 
+                        <textarea 
+                            id={this.props.id} key={this.props.id} 
+                            value={testInput.call(this)} className="materialize-textarea" 
+                            onChange={this.handleChange}>
+                        </textarea>
+                        }
+                        {this.props.purpose != "area" && 
+                        <input 
+                            id={this.props.id} key={this.props.id} 
+                            value={testInput.call(this)} type="text" 
+                            className="validate" onChange={this.handleChange} 
+                        />
+                        }
                         <label htmlFor={this.props.id} >{this.props.label}</label>
                     </div>
             </div>
@@ -544,6 +573,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = {"InstallmentPayment"+i}
                         label =  {serverSideData.dictionary["InstallmentPayment"+i]}
                         value={this.state["InstallmentPayment"+i]}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -669,6 +699,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "IndPercentMagangerComission"
                         label ={serverSideData.dictionary.IndPercentMagangerComission}
                         value={this.state.IndPercentMagangerComission}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -676,6 +707,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "IndPercentHeadComission"
                         label ={serverSideData.dictionary.IndPercentHeadComission}
                         value={this.state.IndPercentHeadComission}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -701,6 +733,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "IndPercentAgencyComission"
                         label ={serverSideData.dictionary.IndPercentAgencyComission}
                         value={this.state.IndPercentAgencyComission}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -719,6 +752,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "ShareInOwnership"
                         label = {serverSideData.dictionary.ShareInOwnership}
                         value={this.state.ShareInOwnership}
+                        formatRule='float-under-one'
 
                         onChange={this.handleChildChange}
                     />
@@ -734,6 +768,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "PhoneNumber"
                         label = {serverSideData.dictionary.PhoneNumber}
                         value={this.state.PhoneNumber}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
@@ -775,6 +810,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "DaysBeforeInitialPayment"
                         label =  {serverSideData.dictionary.DaysBeforeInitialPayment}
                         value={this.state.DaysBeforeInitialPayment}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
@@ -782,6 +818,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "PaymentForRemoteDeal"
                         label =  {serverSideData.dictionary.PaymentForRemoteDeal}
                         value={this.state.PaymentForRemoteDeal}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -790,6 +827,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "LegalServiceCost"
                         label = {serverSideData.dictionary.LegalServiceCost}
                         value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -809,6 +847,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "DiscountPerOneSquareMeter"
                         label = {serverSideData.dictionary.DiscountPerOneSquareMeter}
                         value={this.state.DiscountPerOneSquareMeter ? this.state.DiscountPerOneSquareMeter : ''}
+                        formatRule='float-all'
 
                         onChange={this.handleChildChange}
                     />
@@ -818,6 +857,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "DiscountOnFlat"
                         label = {serverSideData.dictionary.DiscountOnFlat}
                         value={this.state.DiscountOnFlat ? this.state.DiscountOnFlat : ''}
+                        formatRule='float-all'
 
                         onChange={this.handleChildChange}
                     />
@@ -833,6 +873,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "InitialPaymentFromClient"
                         label =  {serverSideData.dictionary.InitialPaymentFromClient}
                         value={this.state.InitialPaymentFromClient}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -844,6 +885,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "FirstSubsidyPayment"
                         label =  {serverSideData.dictionary.FirstSubsidyPayment}
                         value={this.state.FirstSubsidyPayment}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -851,6 +893,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "DaysBeforeFirstSubsidy"
                         label =  {serverSideData.dictionary.DaysBeforeFirstSubsidy}
                         value={this.state.DaysBeforeFirstSubsidy}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
@@ -858,6 +901,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "SecondSubsidyPayment"
                         label =  {serverSideData.dictionary.SecondSubsidyPayment}
                         value={this.state.SecondSubsidyPayment}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -865,6 +909,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "DaysBeforeSecondSubsidy"
                         label =  {serverSideData.dictionary.DaysBeforeSecondSubsidy}
                         value={this.state.DaysBeforeSecondSubsidy}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
@@ -876,6 +921,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "BankLoanPayment"
                         label =  {serverSideData.dictionary.BankLoanPayment}
                         value={this.state.BankLoanPayment}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -883,6 +929,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "DaysBeforeBankLoan"
                         label =  {serverSideData.dictionary.DaysBeforeBankLoan}
                         value={this.state.DaysBeforeBankLoan}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
@@ -894,6 +941,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "PaymentFromDeveloper"
                         label =  {serverSideData.dictionary.PaymentFromDeveloper}
                         value={this.state.PaymentFromDeveloper}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -901,6 +949,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "FoolTaxPaymentInBankLoan"
                         label =  {serverSideData.dictionary.FoolTaxPaymentInBankLoan}
                         value={this.state.FoolTaxPaymentInBankLoan}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -908,6 +957,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "FoolTaxPaymentFromClient"
                         label =  {serverSideData.dictionary.FoolTaxPaymentFromClient}
                         value={this.state.FoolTaxPaymentFromClient}
+                        formatRule='float-positive'
 
                         onChange={this.handleChildChange}
                     />
@@ -919,6 +969,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "InstallmentMonthsNumber"
                         label =  {serverSideData.dictionary.InstallmentMonthsNumber}
                         value={this.state.InstallmentMonthsNumber}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
@@ -926,6 +977,7 @@ class OasisDocFieldsHandler extends React.Component {
                         id = "InstallmentPaymentsNumber"
                         label =  {serverSideData.dictionary.InstallmentPaymentsNumber}
                         value={this.state.InstallmentPaymentsNumber}
+                        formatRule='int'
 
                         onChange={this.handleChildChange}
                     />
