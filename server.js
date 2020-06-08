@@ -283,7 +283,7 @@ class CalculatedFields {
          
         let discountOnFlat = this.rawFields.DiscountOnFlat ? parseFloat(this.rawFields.DiscountOnFlat) : 0;
         let discountPerOneSquareMeter = this.rawFields.DiscountPerOneSquareMeter ? parseFloat(this.rawFields.DiscountPerOneSquareMeter) : 0;
-        let discount = !isNaN(discountOnFlat) ? discountOnFlat : (discountPerOneSquareMeter*this.TotalArea);
+        let discount = (discountOnFlat != 0) ? discountOnFlat : (discountPerOneSquareMeter * parseFloat(this.TotalArea));
 
         let actualCost = parseFloat(this.StockFlatCost) - discount;
         return (actualCost === (this.LegalCost - this.FormalCostIncrease) ? actualCost : "ошибка");
