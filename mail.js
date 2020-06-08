@@ -94,3 +94,11 @@ function sendEmail(nameAndPay) {
         body,
         mailOptions)
 }
+
+function sendEmailNotificaiton (recipients, title, body, opitons) {
+    MailApp.sendEmail(
+        recipients,
+        title,
+        body,
+        opitons)
+}

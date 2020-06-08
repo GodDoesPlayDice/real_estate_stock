@@ -549,7 +549,6 @@ class OasisDocFieldsHandler extends React.Component {
         });
     };
     handleSaveBtn () {
-        console.log(this.state)
         this.props.onFieldChange("document", this.state);
         this.props.onSaveButton();
     }
@@ -859,6 +858,7 @@ class OasisDocFieldsHandler extends React.Component {
 
                 </DocFieldsWrapper>
                 {(this.state.PayMethod === 'Ипотека' ||
+                 this.state.PayMethod === 'Ипотека без ПВ' ||
                  this.state.PayMethod === '100% оплата' ||
                  this.state.PayMethod === 'Рассрочка' ||
                  this.state.PayMethod === 'Субсидия и ПВ') &&
