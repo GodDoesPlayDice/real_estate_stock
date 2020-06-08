@@ -48,20 +48,18 @@ function storeData (data, options) {
             if (options.archiving === true) {
                 archive(data.ID, options.archivingSheet);
             } 
-        } else {
-            /* добавочка для уведомлений */
-            /* надо бы переделать потом */
-            if (serverSideData.userName === "alikjackass@gmail.com") {
-                google.script.run.sendEmailNotificaiton("t2484958@gmail.com", "Сохранен документ", `${data.ID} ${data.ClientName}`, {});
-            }
-            if (serverSideData.userName === "t2484958@gmail.com") {
-                google.script.run.sendEmailNotificaiton("alikjackass@gmail.com", "Документ на проверку", `${data.ID} ${data.ClientName}`, {});
-            }
-            /*  */
-            renderApp(true, "Загрузка последних данных...");
-            main();
         }
-
+        /* добавочка для уведомлений */
+        /* надо бы переделать потом  */
+        if (serverSideData.userName === "alikjackass@gmail.com") {
+            google.script.run.sendEmailNotificaiton("t2484958@gmail.com", `Сохранен документ ${data.ID}`, `${data.ID} ${data.ClientName}`, {});
+        }
+        if (serverSideData.userName === "t2484958@gmail.com") {
+            google.script.run.sendEmailNotificaiton("alikjackass@gmail.com", `Документ ${data.ID} отправлен на проверку`, `${data.ID} ${data.ClientName}`, {});
+        }
+        /*  */
+        renderApp(true, "Загрузка последних данных...");
+        main();
     };
 }
 
@@ -238,7 +236,6 @@ class App extends React.Component {
         switch (decision) {
             case 'save':
                 storeData(this.state.document);
-
                 this.setState({
                     current_view: 'view_main',
                     document: {},
@@ -477,7 +474,7 @@ class CalculatedFields {
          
         let discountOnFlat = this.rawFields.DiscountOnFlat ? parseFloat(this.rawFields.DiscountOnFlat) : 0;
         let discountPerOneSquareMeter = this.rawFields.DiscountPerOneSquareMeter ? parseFloat(this.rawFields.DiscountPerOneSquareMeter) : 0;
-        let discount = !isNaN(discountOnFlat) ? discountOnFlat : (discountPerOneSquareMeter*this.TotalArea);
+        let discount = (discountOnFlat != 0) ? discountOnFlat : (discountPerOneSquareMeter * parseFloat(this.TotalArea));
 
         let actualCost = parseFloat(this.StockFlatCost) - discount;
         return (actualCost === (this.LegalCost - this.FormalCostIncrease) ? actualCost : "ошибка");

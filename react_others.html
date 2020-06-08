@@ -13,6 +13,8 @@ class Header extends React.Component {
         this.props.onButtonsClicked("current_view", pressed);
     };
     handleClick() {
+        renderApp(true, "Загрузка последних данных...");
+        main();
     }
 
     updateAutocomplete (e) {
