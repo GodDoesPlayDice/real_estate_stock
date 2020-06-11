@@ -52,10 +52,10 @@ function storeData (data, options) {
         /* добавочка для уведомлений */
         /* надо бы переделать потом  */
         if (serverSideData.userName === "alikjackass@gmail.com") {
-            google.script.run.sendEmailNotificaiton("t2484958@gmail.com", `Сохранен документ ${data.ID}`, `${data.ID} ${data.ClientName}`, {});
+            google.script.run.sendEmailNotificaiton("t2484958@gmail.com", `Сохранен документ ${data.SelectLiter}/${data.SelectFlat}`, `${data.SelectLiter}/${data.SelectFlat} ${data.ClientName}`, {});
         }
         if (serverSideData.userName === "t2484958@gmail.com") {
-            google.script.run.sendEmailNotificaiton("alikjackass@gmail.com", `Документ ${data.ID} отправлен на проверку`, `${data.ID} ${data.ClientName}`, {});
+            google.script.run.sendEmailNotificaiton("alikjackass@gmail.com", `Документ ${data.SelectLiter}/${data.SelectFlat} отправлен на проверку`, `${data.SelectLiter}/${data.SelectFlat} ${data.ClientName}`, {});
         }
         /*  */
         renderApp(true, "Загрузка последних данных...");
