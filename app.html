@@ -322,14 +322,14 @@ class App extends React.Component {
                                      <MainScreenTabs>
                                         <li key='statuses_tab' className='tab col s6' onClick={this.handleMainScreenClick.bind(this, "view_main")}>
                                             <a className='active'>
-                                                <h6 className="indigo-text text-darken-4 col s6">Статусы документов</h6>
+                                                <h6 className="indigo-text text-darken-4">Статусы документов</h6>
                                             </a>
                                         </li>
                                         {/* показывать кнопку "верификация или нет в зависимости от настроек пользователя" */}
                                         {serverSideData.features.verification_screen === true && 
                                         <li key='verification_tab' className='tab col s6' onClick={this.handleMainScreenClick.bind(this, "view_verification")}>
                                             <a>
-                                                <h6 className="indigo-text text-darken-4 col s6">Проверка документов</h6>
+                                                <h6 className="indigo-text text-darken-4 ">Проверка документов</h6>
                                             </a>
                                         </li>
                                         }
