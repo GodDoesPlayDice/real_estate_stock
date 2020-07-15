@@ -270,6 +270,7 @@ var dictionary = {
     ShareInOwnership: 'Доля собственности:',
     OwnershipType: 'Форма собственности:',
     PhoneNumber: 'Телефон:',
+    SecondPhoneNumber: 'Второй телефон:',
     Email: 'E-mail:',
     Passport: 'Паспортные данные:',
     HomeAddres: 'Адрес регистрации:',

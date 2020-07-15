@@ -757,6 +757,7 @@ class OasisDocFieldsHandler extends React.Component {
                         oldValue={this.state.OwnershipType}
                         onChange={this.handleChildChange}
                     />
+                    
                     <TextField
                         id = "PhoneNumber"
                         label = {serverSideData.dictionary.PhoneNumber}
@@ -765,6 +766,16 @@ class OasisDocFieldsHandler extends React.Component {
 
                         onChange={this.handleChildChange}
                     />
+                    {this.state.PhoneNumber !== '' &&
+                    <TextField
+                        id = "SecondPhoneNumber"
+                        label = {serverSideData.dictionary.SecondPhoneNumber}
+                        value={this.state.SecondPhoneNumber}
+                        formatRule='int'
+
+                        onChange={this.handleChildChange}
+                    />
+                    }
                     <TextField
                         id = "Passport"
                         label = {serverSideData.dictionary.Passport}
