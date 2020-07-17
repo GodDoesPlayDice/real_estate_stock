@@ -968,6 +968,14 @@ class OasisDocFieldsHandler extends React.Component {
 
                         onChange={this.handleChildChange}
                     />
+                    <TextField
+                        id = "CashFromClient"
+                        label =  {serverSideData.dictionary.CashFromClient}
+                        value={this.state.CashFromClient}
+                        formatRule='float-positive'
+
+                        onChange={this.handleChildChange}
+                    />
                 </DocFieldsWrapper>
                 }
                 {new String(this.state.PayMethod).includes("Рассрочка") &&

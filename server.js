@@ -284,9 +284,10 @@ class CalculatedFields {
         let discountOnFlat = this.rawFields.DiscountOnFlat ? parseFloat(this.rawFields.DiscountOnFlat) : 0;
         let discountPerOneSquareMeter = this.rawFields.DiscountPerOneSquareMeter ? parseFloat(this.rawFields.DiscountPerOneSquareMeter) : 0;
         let discount = (discountOnFlat != 0) ? discountOnFlat : (discountPerOneSquareMeter * parseFloat(this.TotalArea));
-
+        /* платеж наличными от клиента. попадает только в стоимость для рассчета комиссии */
+        let cashFromClient = this.rawFields.CashFromClient ? parseFloat(this.rawFields.CashFromClient) : 0;
         let actualCost = parseFloat(this.StockFlatCost) - discount;
-        return (actualCost === (this.LegalCost - this.FormalCostIncrease) ? actualCost : "ошибка");
+        return (actualCost === ((this.LegalCost - this.FormalCostIncrease) + cashFromClient) ? actualCost : "ошибка");
     }
     get LegalCost() {
         let fieldsToSum = ['FirstSubsidyPayment', 'SecondSubsidyPayment', 'BankLoanPayment',
