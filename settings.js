@@ -240,6 +240,7 @@ var dictionary = {
     ID: 'Идентификатор документа:',
     Timestamp: 'Отметка времени:',
     DocStatus: 'Статус документа:',
+    IsCession: 'уступка права требования',
     CurrentStatusDate: 'Дата текущего статуса:',
     ReservationDate:  'Дата бронирования:',
     RegistrationStartDate: 'Дата сдачи на регистрацию:',

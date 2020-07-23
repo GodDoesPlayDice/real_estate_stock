@@ -619,6 +619,15 @@ class OasisDocFieldsHandler extends React.Component {
 
                         onChange={this.handleChildChange}
                     />
+                    {this.state.DocStatus !== "Расторгнут ДДУ" &&
+                    <CheckBox
+                        id = "IsCession"
+                        label = "уступка права требования"
+                        value = {this.state.IsCession}
+
+                        onChange={this.handleChildChange}
+                    />
+                    }
                 </DocFieldsWrapper>
                 <DocFieldsWrapper color='indigo' customClass='i_sec'>
                     <DatePicker
