@@ -343,14 +343,22 @@ class App extends React.Component {
                             {(serverSideData.department === "V2" || 
                             serverSideData.department === "B") &&
                                 <DocFieldsHandler 
-                                onFieldChange={this.handleDocChange}
+                                mode={this.state.current_view}
                                 onSaveButton={this.handleSaveBtn}
+                                onDeleteButton={this.handleArchiveBtn}
+
+                                onFieldChange={this.handleDocChange}
+                                onMailButton={this.handleMailBtn}
                                 currentDocument={this.state.document}
                                 current_view={this.state.current_view}
                                 />
                             }
                             {serverSideData.department === "O2" &&
                                 <OasisDocFieldsHandler 
+                                mode={this.state.current_view}
+                                onSaveButton={this.handleSaveBtn}
+                                onDeleteButton={this.handleArchiveBtn}
+                                
                                 onFieldChange={this.handleDocChange}
                                 onSaveButton={this.handleSaveBtn}
                                 currentDocument={this.state.document}

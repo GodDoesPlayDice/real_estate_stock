@@ -1,1069 +1,1088 @@
 <script type="text/babel">
-class TextField extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-    componentDidMount(){
-        M.updateTextFields();
-    }
-    componentWillUnmount(){
-        this.props.onChange(this.props.id, '');
-    }
-    handleChange(e) {
-        this.props.onChange(this.props.id, e.target.value);
-    }
-    render() {
-        function testInput() {
-            let value = this.props.value;
-            if (!this.props.formatRule)  return value;
-            let regex;
-            switch (this.props.formatRule) {
-                case 'float-positive': 
-                    regex = /^[0-9]*(?:\.[0-9]*)?$/
-                    break;
-                case 'float-all': 
-                    regex = /^[-+]?\d*\.?\d*$/
-                    break;
-                case 'float-under-one': 
-                    if (parseFloat(value) >= 0 && parseFloat(value) <= 1) {
-                        regex = /^[0-9]*(?:\.[0-9]*)?$/
-                    } else {
-                        return '';
-                    }
-                    break;
-                case 'int': 
-                    if (parseInt(value) >0) {return parseInt(value)} else {return ''}
-                default:
-                    return value
-            }
-            if (!regex.test(value)) {
-                return !isNaN(parseFloat(value)) ? parseFloat(value) : '';
-            } else {
-                return value;
-            }
+    class TextField extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
         }
-        return (
-            <div className="row">
-                    <div className="input-field col s10 offset-s1">
-                        {this.props.purpose === "area" && 
-                        <textarea 
-                            id={this.props.id} key={this.props.id} 
-                            value={testInput.call(this)} className="materialize-textarea" 
-                            onChange={this.handleChange}>
-                        </textarea>
+        componentDidMount() {
+            M.updateTextFields();
+        }
+        componentWillUnmount() {
+            this.props.onChange(this.props.id, '');
+        }
+        handleChange(e) {
+            this.props.onChange(this.props.id, e.target.value);
+        }
+        render() {
+            function testInput() {
+                let value = this.props.value;
+                if (!this.props.formatRule) return value;
+                let regex;
+                switch (this.props.formatRule) {
+                    case 'float-positive':
+                        regex = /^[0-9]*(?:\.[0-9]*)?$/
+                        break;
+                    case 'float-all':
+                        regex = /^[-+]?\d*\.?\d*$/
+                        break;
+                    case 'float-under-one':
+                        if (parseFloat(value) >= 0 && parseFloat(value) <= 1) {
+                            regex = /^[0-9]*(?:\.[0-9]*)?$/
+                        } else {
+                            return '';
                         }
-                        {this.props.purpose != "area" && 
-                        <input 
-                            id={this.props.id} key={this.props.id} 
-                            value={testInput.call(this)} type="text" 
-                            className="validate" onChange={this.handleChange} 
-                        />
+                        break;
+                    case 'int':
+                        if (parseInt(value) > 0) { return parseInt(value) } else { return '' }
+                    default:
+                        return value
+                }
+                if (!regex.test(value)) {
+                    return !isNaN(parseFloat(value)) ? parseFloat(value) : '';
+                } else {
+                    return value;
+                }
+            }
+            return (
+                <div className="row">
+                    <div className="input-field col s10 offset-s1">
+                        {this.props.purpose === "area" &&
+                            <textarea
+                                id={this.props.id} key={this.props.id}
+                                value={testInput.call(this)} className="materialize-textarea"
+                                onChange={this.handleChange}>
+                            </textarea>
+                        }
+                        {this.props.purpose != "area" &&
+                            <input
+                                id={this.props.id} key={this.props.id}
+                                value={testInput.call(this)} type="text"
+                                className="validate" onChange={this.handleChange}
+                            />
                         }
                         <label htmlFor={this.props.id} >{this.props.label}</label>
                     </div>
-            </div>
-        )
+                </div>
+            )
+        }
     }
-}
 
-class DatePicker extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-    componentDidMount() {
-        let dateVal = new Date(this.props.value);
-        let options = {
+    class DatePicker extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+        }
+        componentDidMount() {
+            let dateVal = new Date(this.props.value);
+            let options = {
                 defaultDate: dateVal ? dateVal : null,
                 setDefaultDate: true,
                 format: "yyyy/mm/dd",
                 firstDay: 1,
                 i18n: {
-                        cancel: "Отмена",
-                        clear: "Очистить",
-                        done: "Готово",
-                            months: ['Январь',
-                                'Февраль',
-                                'Март',
-                                'Апрель',
-                                'Май',
-                                'Июнь',
-                                'Июль',
-                                'Август',
-                                'Сентябрь',
-                                'Октябрь',
-                                'Ноябрь',
-                                'Декабрь'
-                        ],
-                            monthsShort: [
-                                'Янв',
-                                'Фев',
-                                'Мар',
-                                'Апр',
-                                'Май',
-                                'Июн',
-                                'Июл',
-                                'Авг',
-                                'Сен',
-                                'Окт',
-                                'Ноя',
-                                'Дек'
-                        ],
-                            weekdays: [
-                                'Воскресенье',
-                                'Понедельник',
-                                'Вторник',
-                                'Среда',
-                                'Четверг',
-                                'Пятница',
-                                'Суббота'
-                        ],
-                            weekdaysShort: [
-                                'Вос',
-                                'Пон',
-                                'Вт',
-                                'Ср',
-                                'Чет',
-                                'Пят',
-                                'Суб'
-                        ],
-                            weekdaysAbbrev: ['В', 'П', 'В', 'С', 'Ч', 'П', 'С']
-                    }
+                    cancel: "Отмена",
+                    clear: "Очистить",
+                    done: "Готово",
+                    months: ['Январь',
+                        'Февраль',
+                        'Март',
+                        'Апрель',
+                        'Май',
+                        'Июнь',
+                        'Июль',
+                        'Август',
+                        'Сентябрь',
+                        'Октябрь',
+                        'Ноябрь',
+                        'Декабрь'
+                    ],
+                    monthsShort: [
+                        'Янв',
+                        'Фев',
+                        'Мар',
+                        'Апр',
+                        'Май',
+                        'Июн',
+                        'Июл',
+                        'Авг',
+                        'Сен',
+                        'Окт',
+                        'Ноя',
+                        'Дек'
+                    ],
+                    weekdays: [
+                        'Воскресенье',
+                        'Понедельник',
+                        'Вторник',
+                        'Среда',
+                        'Четверг',
+                        'Пятница',
+                        'Суббота'
+                    ],
+                    weekdaysShort: [
+                        'Вос',
+                        'Пон',
+                        'Вт',
+                        'Ср',
+                        'Чет',
+                        'Пят',
+                        'Суб'
+                    ],
+                    weekdaysAbbrev: ['В', 'П', 'В', 'С', 'Ч', 'П', 'С']
                 }
-        let elem = document.getElementById(this.props.id);
-        let instance = M.Datepicker.init(elem, options);
-        elem.addEventListener('change', (e) => {
-            let date = e.target.value;
-            /* this.props.onChange(this.props.id, `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`) */
-            this.props.onChange(this.props.id, date)
-        });
-    }
-    componentWillUnmount() {
-        this.props.onChange(this.props.id, '');
-    }
-    handleChange(e) {
-    };
-    render() {
-        return (
-            <div className="row">
-                <div className="input-field col s10 offset-s1">
-                    <input id={this.props.id} key={this.props.id} onChange={this.handleChange} type="text" className="datepicker"  />
-                    <label htmlFor={this.props.id}>{this.props.label}
-                    </label>
-                </div>
-            </div>
-        )
-    }
-};
-
-class Radio extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = ({
-            span1: 'normal',
-            span2: 'normal',
-            checked1: this.props.oldValue === this.props.first ? true : false,
-            checked2: this.props.oldValue === this.props.second ? true : false,
-        })
-    }
-    handleChange(e) {
-        this.props.onChange(this.props.id, e.target.value);
-        this.setState({
-            span1: e.target.value === this.props.first ? "bolder" : "normal",
-            span2: e.target.value === this.props.second ? "bolder" : "normal",
-            checked1: e.target.value === this.props.first ? true : false,
-            checked2: e.target.value === this.props.second ? true : false,
-        });
-    }
-    componentDidMount(){
-    }
-    componentWillUnmount(){
-        this.props.onChange(this.props.id, '');
-    }
-    render() {
-        return (
-            <div className="row">
-                <div className="col s10 offset-s1">
-                <label>{this.props.label}</label>
-                    <form key={this.props.id}>
-                        <p>
-                        <label>
-                            <input id={this.props.first}  type="radio" value={this.props.first} checked={this.state.checked1} onClick={this.handleChange} />
-                            <span style={{"fontWeight": this.state.span1}} >{this.props.first}</span>
-                        </label>
-                        </p>
-                        <p>
-                        <label>
-                            <input id={this.props.second} type="radio" value={this.props.second} checked={this.state.checked2} onClick={this.handleChange} />
-                            <span style={{"fontWeight": this.state.span2}} >{this.props.second}</span>
-                        </label>
-                        </p>
-                    </form>
-                </div>
-            </div>
-        )
-    }
-};
-
-class CheckBox extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = ({
-            span: "normal"
-        })
-    }
-    componentDidMount() {
-    }
-    componentWillUnmount(){
-        this.props.onChange(this.props.id, '');
-    }
-    handleChange(e) {
-        this.props.onChange(this.props.id, this.props.value === 'да' ? 'нет' : 'да');
-        this.setState({
-            span:  (this.props.value === 'да' ? "normal" : "bolder")
-        });
-    }
-    render() {
-        return (
-            <div className="row">
-                <div className="col s10 offset-s1">
-                    <p>
-                        <label>
-                            <input id={this.props.id} key={this.props.id} type="checkbox"  className="filled-in" checked={this.props.value === 'да' ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
-                            <span style={{"fontWeight": this.state.span}} >{this.props.label}</span>
-                        </label>
-                    </p>
-                </div>
-            </div>
-        )
-    }
-}
-
-class Select extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    };
-    componentDidMount(){
-        let elem = document.getElementById(this.props.id);
-        let instance = M.FormSelect.init(elem, {});
-    };
-    componentWillUnmount(){
-        this.props.onChange(this.props.id, '');
-    }
-    handleChange(e) {
-        let val = e.target.value;
-        {this.props.id === "SelectLiter" &&  this.props.onChange(this.props.id, '');}
-        setTimeout(() => {
-        this.props.onChange(this.props.id, val);
-        }, 20)    
-    }
-    render () {
-        function generateOptions (arr) {
-            if (arr != null) {
-                return arr.map((el) =>
-                    <option key={el} value={el}>{el}</option>
-                );
-            } else {
-                return; /**/
-            } 
+            }
+            let elem = document.getElementById(this.props.id);
+            let instance = M.Datepicker.init(elem, options);
+            elem.addEventListener('change', (e) => {
+                let date = e.target.value;
+                /* this.props.onChange(this.props.id, `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`) */
+                this.props.onChange(this.props.id, date)
+            });
+        }
+        componentWillUnmount() {
+            this.props.onChange(this.props.id, '');
+        }
+        handleChange(e) {
         };
-        let options = generateOptions(this.props.value); 
-        let defaultOption = this.props.oldValue; 
-        return (
-            <div className="row">
-                <div className="input-field col s10 offset-s1">
-                    {<select key={this.props.id} id={this.props.id} defaultValue={defaultOption}  onChange={this.handleChange} >
-                        {defaultOption &&
-                            <option value={defaultOption} key={defaultOption} >{defaultOption}</option>
-                        }
-                        <option value=""></option>
-                        {options}
-                    </select>}
-                    <label htmlFor={this.props.id}>{this.props.label}</label>
+        render() {
+            return (
+                <div className="row">
+                    <div className="input-field col s10 offset-s1">
+                        <input id={this.props.id} key={this.props.id} onChange={this.handleChange} type="text" className="datepicker" />
+                        <label htmlFor={this.props.id}>{this.props.label}
+                        </label>
+                    </div>
                 </div>
-            </div>
-        );
+            )
+        }
     };
-};
 
-class DocFieldsHandler extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleChildChange = this.handleChildChange.bind(this);
-        this.handleSaveBtn = this.handleSaveBtn.bind(this);
-        this.state = this.props.currentDocument;
-    }
-    componentWillUnmount() {
-        this.props.onFieldChange('document', {})
-    }
-    // принимает изменения от всех полей 
-    handleChildChange(field, value) {
-        this.setState({
-            [field]: value,
-        });
+    class Radio extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+            this.state = ({
+                span1: 'normal',
+                span2: 'normal',
+                checked1: this.props.oldValue === this.props.first ? true : false,
+                checked2: this.props.oldValue === this.props.second ? true : false,
+            })
+        }
+        handleChange(e) {
+            this.props.onChange(this.props.id, e.target.value);
+            this.setState({
+                span1: e.target.value === this.props.first ? "bolder" : "normal",
+                span2: e.target.value === this.props.second ? "bolder" : "normal",
+                checked1: e.target.value === this.props.first ? true : false,
+                checked2: e.target.value === this.props.second ? true : false,
+            });
+        }
+        componentDidMount() {
+        }
+        componentWillUnmount() {
+            this.props.onChange(this.props.id, '');
+        }
+        render() {
+            return (
+                <div className="row">
+                    <div className="col s10 offset-s1">
+                        <label>{this.props.label}</label>
+                        <form key={this.props.id}>
+                            <p>
+                                <label>
+                                    <input id={this.props.first} type="radio" value={this.props.first} checked={this.state.checked1} onClick={this.handleChange} />
+                                    <span style={{ "fontWeight": this.state.span1 }} >{this.props.first}</span>
+                                </label>
+                            </p>
+                            <p>
+                                <label>
+                                    <input id={this.props.second} type="radio" value={this.props.second} checked={this.state.checked2} onClick={this.handleChange} />
+                                    <span style={{ "fontWeight": this.state.span2 }} >{this.props.second}</span>
+                                </label>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            )
+        }
     };
-    handleSaveBtn () {
-        this.props.onFieldChange("document", this.state);
-        this.props.onSaveButton();
+
+    class CheckBox extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+            this.state = ({
+                span: "normal"
+            })
+        }
+        componentDidMount() {
+        }
+        componentWillUnmount() {
+            this.props.onChange(this.props.id, '');
+        }
+        handleChange(e) {
+            this.props.onChange(this.props.id, this.props.value === 'да' ? 'нет' : 'да');
+            this.setState({
+                span: (this.props.value === 'да' ? "normal" : "bolder")
+            });
+        }
+        render() {
+            return (
+                <div className="row">
+                    <div className="col s10 offset-s1">
+                        <p>
+                            <label>
+                                <input id={this.props.id} key={this.props.id} type="checkbox" className="filled-in" checked={this.props.value === 'да' ? "checked" : ""} value={this.props.value} onChange={this.handleChange} />
+                                <span style={{ "fontWeight": this.state.span }} >{this.props.label}</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            )
+        }
     }
 
-    render () {
-        return (
-            <React.Fragment>
-                <div className="row dp_sec">
-                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div className="section"></div>
+    class Select extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChange = this.handleChange.bind(this);
+        };
+        componentDidMount() {
+            let elem = document.getElementById(this.props.id);
+            let instance = M.FormSelect.init(elem, {});
+        };
+        componentWillUnmount() {
+            this.props.onChange(this.props.id, '');
+        }
+        handleChange(e) {
+            let val = e.target.value;
+            { this.props.id === "SelectLiter" && this.props.onChange(this.props.id, ''); }
+            setTimeout(() => {
+                this.props.onChange(this.props.id, val);
+            }, 20)
+        }
+        render() {
+            function generateOptions(arr) {
+                if (arr != null) {
+                    return arr.map((el) =>
+                        <option key={el} value={el}>{el}</option>
+                    );
+                } else {
+                    return; /**/
+                }
+            };
+            let options = generateOptions(this.props.value);
+            let defaultOption = this.props.oldValue;
+            return (
+                <div className="row">
+                    <div className="input-field col s10 offset-s1">
+                        {<select key={this.props.id} id={this.props.id} defaultValue={defaultOption} onChange={this.handleChange} >
+                            {defaultOption &&
+                                <option value={defaultOption} key={defaultOption} >{defaultOption}</option>
+                            }
+                            <option value=""></option>
+                            {options}
+                        </select>}
+                        <label htmlFor={this.props.id}>{this.props.label}</label>
+                    </div>
+                </div>
+            );
+        };
+    };
+
+    class DocFieldsHandler extends React.Component {
+        constructor(props) {
+            super(props);
+            this.handleChildChange = this.handleChildChange.bind(this);
+            this.handleSaveBtn = this.handleSaveBtn.bind(this);
+            this.handleDeleteBtn = this.handleDeleteBtn.bind(this);
+
+            this.state = this.props.currentDocument;
+        }
+        componentWillUnmount() {
+            this.props.onFieldChange('document', {})
+        }
+        // принимает изменения от всех полей 
+        handleChildChange(field, value) {
+            this.setState({
+                [field]: value,
+            });
+        };
+        handleSaveBtn() {
+            this.props.onFieldChange("document", this.state);
+            this.props.onSaveButton();
+        }
+        handleDeleteBtn() {
+            this.props.onDeleteButton(this.state.ID);
+        }
+
+        render() {
+            return (
+                <React.Fragment>
+                    <div className="row dp_sec">
+                        {serverSideData.features.delete === true && this.props.mode === 'edit_doc' &&
+                            <a onClick={this.handleDeleteBtn} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">delete</i></a>
+                        }
+                        <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                            <div className="section"></div>
                             <Select
-                                id = "DocStatus"
-                                label = "Текущий статус документа:"
-                                value = {getSingleCol("doc_statuses", "utilitySheet")}
+                                id="DocStatus"
+                                label="Текущий статус документа:"
+                                value={getSingleCol("doc_statuses", "utilitySheet")}
 
                                 oldValue={this.state.DocStatus}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
-                                id = "ClientName"
-                                label = "ФИО клиента:"
+                                id="ClientName"
+                                label="ФИО клиента:"
                                 value={this.state.ClientName}
 
                                 onChange={this.handleChildChange}
                             />
                             {this.props.current_view === 'create_new_doc' &&
-                            <Select
-                                id = "SelectLiter"
-                                label = "Литер:"
-                                value = {getSingleCol("liters", "utilitySheet")}
-                                onChange={this.handleChildChange}
-                            />
+                                <Select
+                                    id="SelectLiter"
+                                    label="Литер:"
+                                    value={getSingleCol("liters", "utilitySheet")}
+                                    onChange={this.handleChildChange}
+                                />
                             }
                             {this.state.SelectLiter != '' && this.props.current_view === 'create_new_doc' &&
-                            <Select
-                                id = "SelectFlat"
-                                label = "Номер квартиры:"
-                                value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
-                                purpose = "flat"
-                                onChange={this.handleChildChange}
-                            />
+                                <Select
+                                    id="SelectFlat"
+                                    label="Номер квартиры:"
+                                    value={getFlatsInStock(this.state.SelectLiter, 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
+                                    purpose="flat"
+                                    onChange={this.handleChildChange}
+                                />
                             }
-                        <div className="section"></div>
+                            <div className="section"></div>
+                        </div>
                     </div>
-                </div>
-                <div className="row i_sec">
-                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
-                        <div className="section"></div>
+                    <div className="row i_sec">
+                        <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                            <div className="section"></div>
                             <DatePicker
-                                id = "ReservationDate"
-                                label = "Дата бронирования:"
-                                value = {this.state.ReservationDate}
+                                id="ReservationDate"
+                                label="Дата бронирования:"
+                                value={this.state.ReservationDate}
 
                                 onChange={this.handleChildChange}
                             />
                             {
-                            (this.state.DocStatus === "Расторгнут ДДУ" ||
-                            this.state.DocStatus === "Расторжение ДДУ" ||
-                            this.state.DocStatus === "Зарегистрирован ДДУ" ||
-                            this.state.DocStatus ===  "Сдача на регистрацию ДДУ")  && 
-                            (<DatePicker
-                                id = "RegistrationStartDate"
-                                label = "Дата сдачи на регистрацию:"
-                                value = {this.state.RegistrationStartDate}
+                                (this.state.DocStatus === "Расторгнут ДДУ" ||
+                                    this.state.DocStatus === "Расторжение ДДУ" ||
+                                    this.state.DocStatus === "Зарегистрирован ДДУ" ||
+                                    this.state.DocStatus === "Сдача на регистрацию ДДУ") &&
+                                (<DatePicker
+                                    id="RegistrationStartDate"
+                                    label="Дата сдачи на регистрацию:"
+                                    value={this.state.RegistrationStartDate}
 
-                                onChange={this.handleChildChange}
-                            />)  
+                                    onChange={this.handleChildChange}
+                                />)
                             }
                             {
-                            (this.state.DocStatus === "Расторгнут ДДУ" ||
-                            this.state.DocStatus === "Расторжение ДДУ" ||
-                            this.state.DocStatus === "Зарегистрирован ДДУ") && 
-                            (<DatePicker
-                                id = "DateOfRegistration"
-                                label = "Дата регистрации:"
-                                value = {this.state.DateOfRegistration}
+                                (this.state.DocStatus === "Расторгнут ДДУ" ||
+                                    this.state.DocStatus === "Расторжение ДДУ" ||
+                                    this.state.DocStatus === "Зарегистрирован ДДУ") &&
+                                (<DatePicker
+                                    id="DateOfRegistration"
+                                    label="Дата регистрации:"
+                                    value={this.state.DateOfRegistration}
 
-                                onChange={this.handleChildChange}
-                            />)
+                                    onChange={this.handleChildChange}
+                                />)
                             }
                             {
-                            (this.state.DocStatus === "Расторгнут ДДУ") &&    
-                            (<DatePicker
-                                id = "TerminationDate"
-                                label = "Дата расторжения:"
-                                value = {this.state.TerminationDate}
+                                (this.state.DocStatus === "Расторгнут ДДУ") &&
+                                (<DatePicker
+                                    id="TerminationDate"
+                                    label="Дата расторжения:"
+                                    value={this.state.TerminationDate}
 
-                                onChange={this.handleChildChange}
-                            />)
-                            }   
+                                    onChange={this.handleChildChange}
+                                />)
+                            }
                             <DatePicker
-                                id = "NextStatusEstimatedDate"
-                                label = "Предполагаемая дата следующего статуса:"
-                                value = {this.state.NextStatusEstimatedDate}
+                                id="NextStatusEstimatedDate"
+                                label="Предполагаемая дата следующего статуса:"
+                                value={this.state.NextStatusEstimatedDate}
 
                                 onChange={this.handleChildChange}
                             />
-                        <div className="section"></div>
+                            <div className="section"></div>
+                        </div>
                     </div>
-                </div>
-                <div className="row dp_sec">
-                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div className="section"></div>
+                    <div className="row dp_sec">
+                        <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                            <div className="section"></div>
                             <Select
-                                id = "SelectManager"
-                                label = "Менеджер:"
-                                value = {getSingleCol("managers", "utilitySheet")}
+                                id="SelectManager"
+                                label="Менеджер:"
+                                value={getSingleCol("managers", "utilitySheet")}
 
                                 oldValue={this.state.SelectManager}
                                 onChange={this.handleChildChange}
                             />
                             <Select
-                                id = "DealType"
-                                label = "Тип сделки:"
-                                value ={getSingleCol("deal_types", "utilitySheet")}
+                                id="DealType"
+                                label="Тип сделки:"
+                                value={getSingleCol("deal_types", "utilitySheet")}
 
                                 oldValue={this.state.DealType}
                                 onChange={this.handleChildChange}
                             />
                             <CheckBox
-                                id = "RemainsOnSale"
-                                label = "остается в продаже от физ. лица"
-                                value = {this.state.RemainsOnSale}
+                                id="RemainsOnSale"
+                                label="остается в продаже от физ. лица"
+                                value={this.state.RemainsOnSale}
 
                                 onChange={this.handleChildChange}
                             />
                             <CheckBox
-                                id = "IsCession"
-                                label = "уступка права требования"
-                                value = {this.state.IsCession}
+                                id="IsCession"
+                                label="уступка права требования"
+                                value={this.state.IsCession}
 
                                 onChange={this.handleChildChange}
                             />
-                        <div className="section"></div>
+                            <div className="section"></div>
+                        </div>
                     </div>
-                </div>
-                {this.state.DealType === 'АН' &&
-                <div className="row dp_sec">
-                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div className="section"></div>
-                            <React.Fragment>
-                            <TextField
-                                id = "RealEstateAgency"
-                                label = "Агентство недвижимости:"
-                                value={this.state.RealEstateAgency}
+                    {this.state.DealType === 'АН' &&
+                        <div className="row dp_sec">
+                            <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                                <div className="section"></div>
+                                <React.Fragment>
+                                    <TextField
+                                        id="RealEstateAgency"
+                                        label="Агентство недвижимости:"
+                                        value={this.state.RealEstateAgency}
 
-                                onChange={this.handleChildChange}
-                            />
-                            <TextField
-                                id = "EstateAgent"
-                                label = "Сотрудник агентства:"
-                                value={this.state.EstateAgent}
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="EstateAgent"
+                                        label="Сотрудник агентства:"
+                                        value={this.state.EstateAgent}
 
-                                onChange={this.handleChildChange}
-                            />
-                            </React.Fragment>  
-                        <div className="section"></div>
-                    </div>
-                </div>
-                }                                                              
-                <div className="row i_sec">
-                    <div className="col s10 offset-s1 card-panel indigo lighten-5">
-                        <div className="section"></div>
+                                        onChange={this.handleChildChange}
+                                    />
+                                </React.Fragment>
+                                <div className="section"></div>
+                            </div>
+                        </div>
+                    }
+                    <div className="row i_sec">
+                        <div className="col s10 offset-s1 card-panel indigo lighten-5">
+                            <div className="section"></div>
                             <Select
-                                id = "PayMethod"
-                                label = "Способ оплаты:"
-                                value = {getSingleCol("pay_method", "utilitySheet")}
+                                id="PayMethod"
+                                label="Способ оплаты:"
+                                value={getSingleCol("pay_method", "utilitySheet")}
 
                                 oldValue={this.state.PayMethod}
                                 onChange={this.handleChildChange}
                             />
                             <TextField
-                                id = "ActualCost"
-                                label = "Стоимость для расчета комиссии:"
+                                id="ActualCost"
+                                label="Стоимость для расчета комиссии:"
                                 value={this.state.ActualCost}
 
                                 onChange={this.handleChildChange}
                             />
                             <TextField
-                                id = "LegalCost"
-                                label = "Стоимость по ДДУ:"
+                                id="LegalCost"
+                                label="Стоимость по ДДУ:"
                                 value={this.state.LegalCost}
 
                                 onChange={this.handleChildChange}
                             />
                             {!this.state.LegalServiceNoPayment &&
-                            <TextField
-                                id = "LegalServiceCost"
-                                label = "Оплата юр. услуг:"
-                                value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
+                                <TextField
+                                    id="LegalServiceCost"
+                                    label="Оплата юр. услуг:"
+                                    value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
 
-                                onChange={this.handleChildChange}
-                            />
+                                    onChange={this.handleChildChange}
+                                />
                             }
                             {!this.state.LegalServiceCost &&
-                            <Select
-                                id = "LegalServiceNoPayment"
-                                label = "Юр. услуги без оплаты:"
-                                value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
+                                <Select
+                                    id="LegalServiceNoPayment"
+                                    label="Юр. услуги без оплаты:"
+                                    value={getSingleCol("legal_service_no_payment", "utilitySheet")}
 
-                                oldValue={this.state.LegalServiceNoPayment ? this.state.LegalServiceNoPayment : ''}
-                                onChange={this.handleChildChange}
-                            />
+                                    oldValue={this.state.LegalServiceNoPayment ? this.state.LegalServiceNoPayment : ''}
+                                    onChange={this.handleChildChange}
+                                />
                             }
-                        <div className="section"></div>
+                            <div className="section"></div>
+                        </div>
                     </div>
-                </div>
-                <div className="row i_sec">
-                    <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
-                        <div className="section"></div>
+                    <div className="row i_sec">
+                        <div className="col s10 offset-s1 card-panel deep-purple lighten-5">
+                            <div className="section"></div>
                             <TextField
-                                id = "Comment"
-                                label = "Комментарий к документу:"
-                                purpose = "area"
+                                id="Comment"
+                                label="Комментарий к документу:"
+                                purpose="area"
                                 value={this.state.Comment}
 
                                 onChange={this.handleChildChange}
                             />
+                            <div className="section"></div>
+                        </div>
+                    </div>
+                    <div className="section">
+                        <div className="section row">
+                            <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3"
+                                onClick={this.handleSaveBtn}>Сохранить</a>
+                        </div>
+                    </div>
+                </React.Fragment>
+            )
+        }
+    };
+
+    class OasisDocFieldsHandler extends React.Component {
+        constructor(props) {
+            super(props);
+
+            this.handleDeleteBtn = this.handleDeleteBtn.bind(this);
+
+            this.handleChildChange = this.handleChildChange.bind(this);
+            this.handleSaveBtn = this.handleSaveBtn.bind(this);
+            this.state = this.props.currentDocument;
+        }
+        componentWillUnmount() {
+            this.props.onFieldChange('document', {})
+        }
+        // принимает изменения от всех полей 
+        handleChildChange(field, value) {
+            this.setState({
+                [field]: value,
+            });
+        };
+        handleSaveBtn() {
+            this.props.onFieldChange("document", this.state);
+            this.props.onSaveButton();
+        }
+
+        handleDeleteBtn() {
+            this.props.onDeleteButton(this.state.ID);
+        }
+
+
+        render() {
+            function generateInstallmentPayments() {
+                if (!this.state.InstallmentPaymentsNumber) { return; }
+                let userInput = parseInt(this.state.InstallmentPaymentsNumber, 10);
+                let numberOfPayments = userInput > 24 ? 24 : userInput;
+                let paymentsArr = [];
+                for (let i = 1; i <= numberOfPayments; i++) {
+                    paymentsArr.push(
+                        <React.Fragment>
+                            <TextField
+                                id={"InstallmentPayment" + i}
+                                label={serverSideData.dictionary["InstallmentPayment" + i]}
+                                value={this.state["InstallmentPayment" + i]}
+                                formatRule='float-positive'
+
+                                onChange={this.handleChildChange}
+                            />
+                            <DatePicker
+                                id={"DateOfInstallmentPayment" + i}
+                                label={serverSideData.dictionary["DateOfInstallmentPayment" + i]}
+                                value={this.state["DateOfInstallmentPayment" + i]}
+
+                                onChange={this.handleChildChange}
+                            />
+                        </React.Fragment>
+                    )
+                }
+                return paymentsArr;
+            }
+            return (
+                <React.Fragment>
+                    <div className='row'>
+                        <div className='col s7 edit_forms'>
+                            {serverSideData.features.delete === true && this.props.mode === 'edit_doc' &&
+                                    <a onClick={this.handleDeleteBtn} className="btn waves-effect waves-light indigo lighten-3 right table_button"><i className="material-icons">delete</i></a>
+                                }
+                            <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                <Select
+                                    id="DocStatus"
+                                    label="Текущий статус документа:"
+                                    value={getSingleCol("doc_statuses", "utilitySheet")}
+
+                                    oldValue={this.state.DocStatus}
+                                    onChange={this.handleChildChange}
+                                />
+                                {this.props.current_view === 'create_new_doc' &&
+                                    <Select
+                                        id="SelectLiter"
+                                        label="Литер:"
+                                        value={getSingleCol("liters", "utilitySheet")}
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                                {this.state.SelectLiter != '' && this.props.current_view === 'create_new_doc' &&
+                                    <Select
+                                        id="SelectFlat"
+                                        label="Номер квартиры:"
+                                        value={getFlatsInStock(this.state.SelectLiter, 'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
+                                        purpose="flat"
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                                <CheckBox
+                                    id="RemainsOnSale"
+                                    label="остается в продаже от физ. лица"
+                                    value={this.state.RemainsOnSale}
+
+                                    onChange={this.handleChildChange}
+                                />
+                                {this.state.DocStatus !== "Расторгнут ДДУ" &&
+                                    <CheckBox
+                                        id="IsCession"
+                                        label="уступка права требования"
+                                        value={this.state.IsCession}
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                            </DocFieldsWrapper>
+                            <DocFieldsWrapper color='indigo' customClass='i_sec'>
+                                <DatePicker
+                                    id="ReservationDate"
+                                    label="Дата бронирования:"
+                                    value={this.state.ReservationDate}
+
+                                    onChange={this.handleChildChange}
+                                />
+                                {
+                                    (this.state.DocStatus === "Расторгнут ДДУ" ||
+                                        this.state.DocStatus === "Расторжение ДДУ" ||
+                                        this.state.DocStatus === "Зарегистрирован ДДУ" ||
+                                        this.state.DocStatus === "Сдача на регистрацию ДДУ") &&
+                                    (<DatePicker
+                                        id="RegistrationStartDate"
+                                        label="Дата сдачи на регистрацию:"
+                                        value={this.state.RegistrationStartDate}
+
+                                        onChange={this.handleChildChange}
+                                    />)
+                                }
+                                {
+                                    (this.state.DocStatus === "Расторгнут ДДУ" ||
+                                        this.state.DocStatus === "Расторжение ДДУ" ||
+                                        this.state.DocStatus === "Зарегистрирован ДДУ") &&
+                                    (<DatePicker
+                                        id="DateOfRegistration"
+                                        label="Дата регистрации:"
+                                        value={this.state.DateOfRegistration}
+
+                                        onChange={this.handleChildChange}
+                                    />)
+                                }
+                                {
+                                    (this.state.DocStatus === "Расторгнут ДДУ") &&
+                                    (<DatePicker
+                                        id="TerminationDate"
+                                        label="Дата расторжения:"
+                                        value={this.state.TerminationDate}
+
+                                        onChange={this.handleChildChange}
+                                    />)
+                                }
+                                <DatePicker
+                                    id="NextStatusEstimatedDate"
+                                    label="Предполагаемая дата следующего статуса:"
+                                    value={this.state.NextStatusEstimatedDate}
+
+                                    onChange={this.handleChildChange}
+                                />
+                            </DocFieldsWrapper>
+                            <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                <Select
+                                    id="SelectManager"
+                                    label="Менеджер:"
+                                    value={getSingleCol("managers", "utilitySheet")}
+
+                                    oldValue={this.state.SelectManager}
+                                    onChange={this.handleChildChange}
+                                />
+                                <Select
+                                    id="DealType"
+                                    label="Тип сделки:"
+                                    value={getSingleCol("deal_types", "utilitySheet")}
+
+                                    oldValue={this.state.DealType}
+                                    onChange={this.handleChildChange}
+                                />
+                                <TextField
+                                    id="IndPercentMagangerComission"
+                                    label={serverSideData.dictionary.IndPercentMagangerComission}
+                                    value={this.state.IndPercentMagangerComission}
+                                    formatRule='float-positive'
+
+                                    onChange={this.handleChildChange}
+                                />
+                                <TextField
+                                    id="IndPercentHeadComission"
+                                    label={serverSideData.dictionary.IndPercentHeadComission}
+                                    value={this.state.IndPercentHeadComission}
+                                    formatRule='float-positive'
+
+                                    onChange={this.handleChildChange}
+                                />
+                            </DocFieldsWrapper>
+                            {this.state.DealType === 'АН' &&
+                                <DocFieldsWrapper color='indigo' customClass='i_sec'>
+                                    <React.Fragment>
+                                        <TextField
+                                            id="RealEstateAgency"
+                                            label="Агентство недвижимости:"
+                                            value={this.state.RealEstateAgency}
+
+                                            onChange={this.handleChildChange}
+                                        />
+                                        <TextField
+                                            id="EstateAgent"
+                                            label="Сотрудник агентства:"
+                                            value={this.state.EstateAgent}
+
+                                            onChange={this.handleChildChange}
+                                        />
+                                        <TextField
+                                            id="IndPercentAgencyComission"
+                                            label={serverSideData.dictionary.IndPercentAgencyComission}
+                                            value={this.state.IndPercentAgencyComission}
+                                            formatRule='float-positive'
+
+                                            onChange={this.handleChildChange}
+                                        />
+                                    </React.Fragment>
+                                </DocFieldsWrapper>
+                            }
+                            <DocFieldsWrapper color='indigo' customClass='i_sec'>
+                                <TextField
+                                    id="ClientName"
+                                    label="ФИО клиента:"
+                                    value={this.state.ClientName}
+
+                                    onChange={this.handleChildChange}
+                                />
+                                <TextField
+                                    id="ShareInOwnership"
+                                    label={serverSideData.dictionary.ShareInOwnership}
+                                    value={this.state.ShareInOwnership}
+                                    formatRule='float-under-one'
+
+                                    onChange={this.handleChildChange}
+                                />
+                                <Select
+                                    id="OwnershipType"
+                                    label={serverSideData.dictionary.OwnershipType}
+                                    value={getSingleCol("ownership_type", "utilitySheet")}
+
+                                    oldValue={this.state.OwnershipType}
+                                    onChange={this.handleChildChange}
+                                />
+
+                                <TextField
+                                    id="PhoneNumber"
+                                    label={serverSideData.dictionary.PhoneNumber}
+                                    value={this.state.PhoneNumber}
+                                    formatRule='int'
+
+                                    onChange={this.handleChildChange}
+                                />
+                                {this.state.PhoneNumber !== '' &&
+                                    <TextField
+                                        id="SecondPhoneNumber"
+                                        label={serverSideData.dictionary.SecondPhoneNumber}
+                                        value={this.state.SecondPhoneNumber}
+                                        formatRule='int'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                                <TextField
+                                    id="Passport"
+                                    label={serverSideData.dictionary.Passport}
+                                    purpose="area"
+                                    value={this.state.Passport}
+
+                                    onChange={this.handleChildChange}
+                                />
+                                <TextField
+                                    id="HomeAddres"
+                                    label={serverSideData.dictionary.HomeAddres}
+                                    purpose="area"
+                                    value={this.state.HomeAddres}
+
+                                    onChange={this.handleChildChange}
+                                />
+                            </DocFieldsWrapper>
+                            <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                <Select
+                                    id="PayMethod"
+                                    label={serverSideData.dictionary.PayMethod}
+                                    value={getSingleCol("pay_method", "utilitySheet")}
+
+                                    oldValue={this.state.PayMethod}
+                                    onChange={this.handleChildChange}
+                                />
+                                <Select
+                                    id="InitialPaymentType"
+                                    label={serverSideData.dictionary.InitialPaymentType}
+                                    value={getSingleCol("initial_payment_type", "utilitySheet")}
+
+                                    oldValue={this.state.InitialPaymentType ? this.state.InitialPaymentType : ''}
+                                    onChange={this.handleChildChange}
+                                />
+                                <TextField
+                                    id="DaysBeforeInitialPayment"
+                                    label={serverSideData.dictionary.DaysBeforeInitialPayment}
+                                    value={this.state.DaysBeforeInitialPayment}
+                                    formatRule='int'
+
+                                    onChange={this.handleChildChange}
+                                />
+                                <TextField
+                                    id="PaymentForRemoteDeal"
+                                    label={serverSideData.dictionary.PaymentForRemoteDeal}
+                                    value={this.state.PaymentForRemoteDeal}
+                                    formatRule='float-positive'
+
+                                    onChange={this.handleChildChange}
+                                />
+                                {!this.state.LegalServiceNoPayment &&
+                                    <TextField
+                                        id="LegalServiceCost"
+                                        label={serverSideData.dictionary.LegalServiceCost}
+                                        value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                                {!this.state.LegalServiceCost &&
+                                    <Select
+                                        id="LegalServiceNoPayment"
+                                        label={serverSideData.dictionary.LegalServiceNoPayment}
+                                        value={getSingleCol("legal_service_no_payment", "utilitySheet")}
+
+                                        oldValue={this.state.LegalServiceNoPayment ? this.state.LegalServiceNoPayment : ''}
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                                {!this.state.DiscountOnFlat &&
+                                    <TextField
+                                        id="DiscountPerOneSquareMeter"
+                                        label={serverSideData.dictionary.DiscountPerOneSquareMeter}
+                                        value={this.state.DiscountPerOneSquareMeter ? this.state.DiscountPerOneSquareMeter : ''}
+                                        formatRule='float-all'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+                                {!this.state.DiscountPerOneSquareMeter &&
+                                    <TextField
+                                        id="DiscountOnFlat"
+                                        label={serverSideData.dictionary.DiscountOnFlat}
+                                        value={this.state.DiscountOnFlat ? this.state.DiscountOnFlat : ''}
+                                        formatRule='float-all'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                }
+
+                            </DocFieldsWrapper>
+                            {(this.state.PayMethod === 'Ипотека' ||
+                                this.state.PayMethod === 'Ипотека без ПВ' ||
+                                this.state.PayMethod === '100% оплата' ||
+                                this.state.PayMethod === 'Рассрочка' ||
+                                this.state.PayMethod === 'Субсидия и Ипотека' ||
+                                this.state.PayMethod === 'Субсидия и Рассрочка' ||
+                                this.state.PayMethod === 'Субсидия и ПВ') &&
+                                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                    <TextField
+                                        id="InitialPaymentFromClient"
+                                        label={serverSideData.dictionary.InitialPaymentFromClient}
+                                        value={this.state.InitialPaymentFromClient}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                </DocFieldsWrapper>
+                            }
+                            {new String(this.state.PayMethod).includes("Субсидия") &&
+                                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                    <TextField
+                                        id="FirstSubsidyPayment"
+                                        label={serverSideData.dictionary.FirstSubsidyPayment}
+                                        value={this.state.FirstSubsidyPayment}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="DaysBeforeFirstSubsidy"
+                                        label={serverSideData.dictionary.DaysBeforeFirstSubsidy}
+                                        value={this.state.DaysBeforeFirstSubsidy}
+                                        formatRule='int'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="SecondSubsidyPayment"
+                                        label={serverSideData.dictionary.SecondSubsidyPayment}
+                                        value={this.state.SecondSubsidyPayment}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="DaysBeforeSecondSubsidy"
+                                        label={serverSideData.dictionary.DaysBeforeSecondSubsidy}
+                                        value={this.state.DaysBeforeSecondSubsidy}
+                                        formatRule='int'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                </DocFieldsWrapper>
+                            }
+                            {new String(this.state.PayMethod).includes("Ипотека") &&
+                                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                    <TextField
+                                        id="BankLoanPayment"
+                                        label={serverSideData.dictionary.BankLoanPayment}
+                                        value={this.state.BankLoanPayment}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="DaysBeforeBankLoan"
+                                        label={serverSideData.dictionary.DaysBeforeBankLoan}
+                                        value={this.state.DaysBeforeBankLoan}
+                                        formatRule='int'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                </DocFieldsWrapper>
+                            }
+                            {this.state.PayMethod === "Ипотека без ПВ" &&
+                                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                    <TextField
+                                        id="PaymentFromDeveloper"
+                                        label={serverSideData.dictionary.PaymentFromDeveloper}
+                                        value={this.state.PaymentFromDeveloper}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="FoolTaxPaymentInBankLoan"
+                                        label={serverSideData.dictionary.FoolTaxPaymentInBankLoan}
+                                        value={this.state.FoolTaxPaymentInBankLoan}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="FoolTaxPaymentFromClient"
+                                        label={serverSideData.dictionary.FoolTaxPaymentFromClient}
+                                        value={this.state.FoolTaxPaymentFromClient}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="CashFromClient"
+                                        label={serverSideData.dictionary.CashFromClient}
+                                        value={this.state.CashFromClient}
+                                        formatRule='float-positive'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                </DocFieldsWrapper>
+                            }
+                            {new String(this.state.PayMethod).includes("Рассрочка") &&
+                                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                    <TextField
+                                        id="InstallmentMonthsNumber"
+                                        label={serverSideData.dictionary.InstallmentMonthsNumber}
+                                        value={this.state.InstallmentMonthsNumber}
+                                        formatRule='int'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                    <TextField
+                                        id="InstallmentPaymentsNumber"
+                                        label={serverSideData.dictionary.InstallmentPaymentsNumber}
+                                        value={this.state.InstallmentPaymentsNumber}
+                                        formatRule='int'
+
+                                        onChange={this.handleChildChange}
+                                    />
+                                </DocFieldsWrapper>
+                            }
+                            {parseInt(this.state.InstallmentPaymentsNumber, 10) > 0 &&
+                                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
+                                    {generateInstallmentPayments.call(this)}
+                                </DocFieldsWrapper>
+                            }
+                            <DocFieldsWrapper color='indigo' customClass='i_sec'>
+                                <TextField
+                                    id="Comment"
+                                    label="Комментарий к документу:"
+                                    purpose="area"
+                                    value={this.state.Comment}
+
+                                    onChange={this.handleChildChange}
+                                />
+                            </DocFieldsWrapper>
+                        </div>
+                        {/* таблица с рассчитываемыми полями */}
+                        <div className='col s5 calculated_fields_table'>
+                            <EditScreenCalculatedFields
+                                id='calculated-fields-table'
+                                docObj={this.state}
+                            />
+                        </div>
+                    </div>
+                    <div className="section">
+                        <div className="section row">
+                            <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3"
+                                onClick={this.handleSaveBtn}>Сохранить</a>
+                        </div>
+                    </div>
+
+                </React.Fragment>
+            )
+        }
+    };
+
+    class DocFieldsWrapper extends React.Component {
+        constructor(props) {
+            super(props)
+        }
+        render() {
+            return (
+                <div className={"row " + this.props.customClass}>
+                    <div className={"card-panel lighten-5 " + this.props.color}>
+                        <div className="section"></div>
+                        {this.props.children}
                         <div className="section"></div>
                     </div>
                 </div>
-                <div className="section">
-                <div className="section row">
-                        <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3" 
-                        onClick={this.handleSaveBtn}>Сохранить</a>
-                    </div>
-                </div>
-            </React.Fragment>
-        )
-    }
-};
-
-class OasisDocFieldsHandler extends React.Component {
-    constructor (props) {
-        super(props);
-        this.handleChildChange = this.handleChildChange.bind(this);
-        this.handleSaveBtn = this.handleSaveBtn.bind(this);
-        this.state = this.props.currentDocument;
-    }
-    componentWillUnmount() {
-        this.props.onFieldChange('document', {})
-    }
-    // принимает изменения от всех полей 
-    handleChildChange(field, value) {
-        this.setState({
-            [field]: value,
-        });
-    };
-    handleSaveBtn () {
-        this.props.onFieldChange("document", this.state);
-        this.props.onSaveButton();
-    }
-
-    render () {
-        function generateInstallmentPayments () {
-            if (!this.state.InstallmentPaymentsNumber) {return;}
-            let userInput = parseInt(this.state.InstallmentPaymentsNumber, 10);
-            let numberOfPayments = userInput > 24 ? 24 : userInput;
-            let paymentsArr = [];
-            for (let i = 1; i <= numberOfPayments; i++){
-                paymentsArr.push(
-                    <React.Fragment>
-                    <TextField
-                        id = {"InstallmentPayment"+i}
-                        label =  {serverSideData.dictionary["InstallmentPayment"+i]}
-                        value={this.state["InstallmentPayment"+i]}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <DatePicker
-                        id = {"DateOfInstallmentPayment"+i}
-                        label = {serverSideData.dictionary["DateOfInstallmentPayment"+i]}
-                        value = {this.state["DateOfInstallmentPayment"+i]}
-
-                        onChange={this.handleChildChange}
-                    /> 
-                    </React.Fragment>
-                )
-            }
-            return paymentsArr;
+            );
         }
-        return (
-            <React.Fragment>
-                <div className='row'>
-                <div className='col s7 edit_forms'>
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <Select
-                        id = "DocStatus"
-                        label = "Текущий статус документа:"
-                        value = {getSingleCol("doc_statuses", "utilitySheet")}
-
-                        oldValue={this.state.DocStatus}
-                        onChange={this.handleChildChange}
-                    />
-                    {this.props.current_view === 'create_new_doc' &&
-                    <Select
-                        id = "SelectLiter"
-                        label = "Литер:"
-                        value = {getSingleCol("liters", "utilitySheet")}
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                    {this.state.SelectLiter != '' && this.props.current_view === 'create_new_doc' &&
-                    <Select
-                        id = "SelectFlat"
-                        label = "Номер квартиры:"
-                        value = {getFlatsInStock(this.state.SelectLiter,'flats_in_sale', 'flats_in_sale_liter', "utilitySheet")}
-                        purpose = "flat"
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                    <CheckBox
-                        id = "RemainsOnSale"
-                        label = "остается в продаже от физ. лица"
-                        value = {this.state.RemainsOnSale}
-
-                        onChange={this.handleChildChange}
-                    />
-                    {this.state.DocStatus !== "Расторгнут ДДУ" &&
-                    <CheckBox
-                        id = "IsCession"
-                        label = "уступка права требования"
-                        value = {this.state.IsCession}
-
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                </DocFieldsWrapper>
-                <DocFieldsWrapper color='indigo' customClass='i_sec'>
-                    <DatePicker
-                        id = "ReservationDate"
-                        label = "Дата бронирования:"
-                        value = {this.state.ReservationDate}
-
-                        onChange={this.handleChildChange}
-                    />
-                    {
-                    (this.state.DocStatus === "Расторгнут ДДУ" ||
-                    this.state.DocStatus === "Расторжение ДДУ" ||
-                    this.state.DocStatus === "Зарегистрирован ДДУ" ||
-                    this.state.DocStatus ===  "Сдача на регистрацию ДДУ")  && 
-                    (<DatePicker
-                        id = "RegistrationStartDate"
-                        label = "Дата сдачи на регистрацию:"
-                        value = {this.state.RegistrationStartDate}
-
-                        onChange={this.handleChildChange}
-                    />)  
-                    }
-                    {
-                    (this.state.DocStatus === "Расторгнут ДДУ" ||
-                    this.state.DocStatus === "Расторжение ДДУ" ||
-                    this.state.DocStatus === "Зарегистрирован ДДУ") && 
-                    (<DatePicker
-                        id = "DateOfRegistration"
-                        label = "Дата регистрации:"
-                        value = {this.state.DateOfRegistration}
-
-                        onChange={this.handleChildChange}
-                    />)
-                    }
-                    {
-                    (this.state.DocStatus === "Расторгнут ДДУ") &&    
-                    (<DatePicker
-                        id = "TerminationDate"
-                        label = "Дата расторжения:"
-                        value = {this.state.TerminationDate}
-
-                        onChange={this.handleChildChange}
-                    />)
-                    }   
-                    <DatePicker
-                        id = "NextStatusEstimatedDate"
-                        label = "Предполагаемая дата следующего статуса:"
-                        value = {this.state.NextStatusEstimatedDate}
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <Select
-                        id = "SelectManager"
-                        label = "Менеджер:"
-                        value = {getSingleCol("managers", "utilitySheet")}
-
-                        oldValue={this.state.SelectManager}
-                        onChange={this.handleChildChange}
-                    />
-                    <Select
-                        id = "DealType"
-                        label = "Тип сделки:"
-                        value ={getSingleCol("deal_types", "utilitySheet")}
-
-                        oldValue={this.state.DealType}
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "IndPercentMagangerComission"
-                        label ={serverSideData.dictionary.IndPercentMagangerComission}
-                        value={this.state.IndPercentMagangerComission}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "IndPercentHeadComission"
-                        label ={serverSideData.dictionary.IndPercentHeadComission}
-                        value={this.state.IndPercentHeadComission}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                {this.state.DealType === 'АН' &&
-                <DocFieldsWrapper color='indigo' customClass='i_sec'>
-                    <React.Fragment>
-                    <TextField
-                        id = "RealEstateAgency"
-                        label = "Агентство недвижимости:"
-                        value={this.state.RealEstateAgency}
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "EstateAgent"
-                        label = "Сотрудник агентства:"
-                        value={this.state.EstateAgent}
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "IndPercentAgencyComission"
-                        label ={serverSideData.dictionary.IndPercentAgencyComission}
-                        value={this.state.IndPercentAgencyComission}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    </React.Fragment>  
-                </DocFieldsWrapper>
-                }
-                <DocFieldsWrapper color='indigo' customClass='i_sec'>
-                    <TextField
-                        id = "ClientName"
-                        label = "ФИО клиента:"
-                        value={this.state.ClientName}
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "ShareInOwnership"
-                        label = {serverSideData.dictionary.ShareInOwnership}
-                        value={this.state.ShareInOwnership}
-                        formatRule='float-under-one'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <Select
-                        id = "OwnershipType"
-                        label = {serverSideData.dictionary.OwnershipType}
-                        value = {getSingleCol("ownership_type", "utilitySheet")}
-
-                        oldValue={this.state.OwnershipType}
-                        onChange={this.handleChildChange}
-                    />
-                    
-                    <TextField
-                        id = "PhoneNumber"
-                        label = {serverSideData.dictionary.PhoneNumber}
-                        value={this.state.PhoneNumber}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                    {this.state.PhoneNumber !== '' &&
-                    <TextField
-                        id = "SecondPhoneNumber"
-                        label = {serverSideData.dictionary.SecondPhoneNumber}
-                        value={this.state.SecondPhoneNumber}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                    <TextField
-                        id = "Passport"
-                        label = {serverSideData.dictionary.Passport}
-                        purpose = "area"
-                        value={this.state.Passport}
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "HomeAddres"
-                        label = {serverSideData.dictionary.HomeAddres}
-                        purpose = "area"
-                        value={this.state.HomeAddres}
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>                                                              
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <Select
-                        id = "PayMethod"
-                        label =  {serverSideData.dictionary.PayMethod}
-                        value = {getSingleCol("pay_method", "utilitySheet")}
-
-                        oldValue={this.state.PayMethod}
-                        onChange={this.handleChildChange}
-                    />
-                    <Select
-                        id = "InitialPaymentType"
-                        label = {serverSideData.dictionary.InitialPaymentType}
-                        value = {getSingleCol("initial_payment_type", "utilitySheet")}
-
-                        oldValue={this.state.InitialPaymentType ? this.state.InitialPaymentType : ''}
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "DaysBeforeInitialPayment"
-                        label =  {serverSideData.dictionary.DaysBeforeInitialPayment}
-                        value={this.state.DaysBeforeInitialPayment}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "PaymentForRemoteDeal"
-                        label =  {serverSideData.dictionary.PaymentForRemoteDeal}
-                        value={this.state.PaymentForRemoteDeal}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    {!this.state.LegalServiceNoPayment &&
-                    <TextField
-                        id = "LegalServiceCost"
-                        label = {serverSideData.dictionary.LegalServiceCost}
-                        value={this.state.LegalServiceCost ? this.state.LegalServiceCost : ''}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                    {!this.state.LegalServiceCost &&
-                    <Select
-                        id = "LegalServiceNoPayment"
-                        label = {serverSideData.dictionary.LegalServiceNoPayment}
-                        value = {getSingleCol("legal_service_no_payment", "utilitySheet")}
-
-                        oldValue={this.state.LegalServiceNoPayment ? this.state.LegalServiceNoPayment : ''}
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                    {!this.state.DiscountOnFlat &&
-                    <TextField
-                        id = "DiscountPerOneSquareMeter"
-                        label = {serverSideData.dictionary.DiscountPerOneSquareMeter}
-                        value={this.state.DiscountPerOneSquareMeter ? this.state.DiscountPerOneSquareMeter : ''}
-                        formatRule='float-all'
-
-                        onChange={this.handleChildChange}
-                    />
-                    }
-                    {!this.state.DiscountPerOneSquareMeter &&
-                    <TextField
-                        id = "DiscountOnFlat"
-                        label = {serverSideData.dictionary.DiscountOnFlat}
-                        value={this.state.DiscountOnFlat ? this.state.DiscountOnFlat : ''}
-                        formatRule='float-all'
-
-                        onChange={this.handleChildChange}
-                    />
-                    }
-
-                </DocFieldsWrapper>
-                {(this.state.PayMethod === 'Ипотека' ||
-                 this.state.PayMethod === 'Ипотека без ПВ' ||
-                 this.state.PayMethod === '100% оплата' ||
-                 this.state.PayMethod === 'Рассрочка' ||
-                 this.state.PayMethod === 'Субсидия и Ипотека' ||
-                 this.state.PayMethod === 'Субсидия и Рассрочка' ||
-                 this.state.PayMethod === 'Субсидия и ПВ') &&
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <TextField
-                        id = "InitialPaymentFromClient"
-                        label =  {serverSideData.dictionary.InitialPaymentFromClient}
-                        value={this.state.InitialPaymentFromClient}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                }
-                {new String(this.state.PayMethod).includes("Субсидия") &&
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <TextField
-                        id = "FirstSubsidyPayment"
-                        label =  {serverSideData.dictionary.FirstSubsidyPayment}
-                        value={this.state.FirstSubsidyPayment}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "DaysBeforeFirstSubsidy"
-                        label =  {serverSideData.dictionary.DaysBeforeFirstSubsidy}
-                        value={this.state.DaysBeforeFirstSubsidy}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "SecondSubsidyPayment"
-                        label =  {serverSideData.dictionary.SecondSubsidyPayment}
-                        value={this.state.SecondSubsidyPayment}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "DaysBeforeSecondSubsidy"
-                        label =  {serverSideData.dictionary.DaysBeforeSecondSubsidy}
-                        value={this.state.DaysBeforeSecondSubsidy}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                }
-                {new String(this.state.PayMethod).includes("Ипотека") &&
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <TextField
-                        id = "BankLoanPayment"
-                        label =  {serverSideData.dictionary.BankLoanPayment}
-                        value={this.state.BankLoanPayment}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "DaysBeforeBankLoan"
-                        label =  {serverSideData.dictionary.DaysBeforeBankLoan}
-                        value={this.state.DaysBeforeBankLoan}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                }
-                {this.state.PayMethod === "Ипотека без ПВ" &&
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <TextField
-                        id = "PaymentFromDeveloper"
-                        label =  {serverSideData.dictionary.PaymentFromDeveloper}
-                        value={this.state.PaymentFromDeveloper}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "FoolTaxPaymentInBankLoan"
-                        label =  {serverSideData.dictionary.FoolTaxPaymentInBankLoan}
-                        value={this.state.FoolTaxPaymentInBankLoan}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "FoolTaxPaymentFromClient"
-                        label =  {serverSideData.dictionary.FoolTaxPaymentFromClient}
-                        value={this.state.FoolTaxPaymentFromClient}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "CashFromClient"
-                        label =  {serverSideData.dictionary.CashFromClient}
-                        value={this.state.CashFromClient}
-                        formatRule='float-positive'
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                }
-                {new String(this.state.PayMethod).includes("Рассрочка") &&
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    <TextField
-                        id = "InstallmentMonthsNumber"
-                        label =  {serverSideData.dictionary.InstallmentMonthsNumber}
-                        value={this.state.InstallmentMonthsNumber}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                    <TextField
-                        id = "InstallmentPaymentsNumber"
-                        label =  {serverSideData.dictionary.InstallmentPaymentsNumber}
-                        value={this.state.InstallmentPaymentsNumber}
-                        formatRule='int'
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                }
-                {parseInt(this.state.InstallmentPaymentsNumber,10) > 0 &&
-                <DocFieldsWrapper color='deep-purple' customClass='dp_sec'>
-                    {generateInstallmentPayments.call(this)}
-                </DocFieldsWrapper>
-                }
-                <DocFieldsWrapper color='indigo' customClass='i_sec'>
-                    <TextField
-                        id = "Comment"
-                        label = "Комментарий к документу:"
-                        purpose = "area"
-                        value={this.state.Comment}
-
-                        onChange={this.handleChildChange}
-                    />
-                </DocFieldsWrapper>
-                </div>
-                {/* таблица с рассчитываемыми полями */}
-                <div className='col s5 calculated_fields_table'>
-                    <EditScreenCalculatedFields 
-                    id='calculated-fields-table'
-                    docObj={this.state}
-                    />
-                </div>
-                </div>
-                <div className="section">
-                <div className="section row">
-                        <a className="waves-effect waves-light btn-large col s6 offset-s3 indigo lighten-3" 
-                        onClick={this.handleSaveBtn}>Сохранить</a>
-                    </div>
-                </div>
-            
-            </React.Fragment>
-        )
     }
-};
-
-class DocFieldsWrapper extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-    render() {
-        return (
-            <div className={"row " + this.props.customClass}>
-                <div className={"card-panel lighten-5 " + this.props.color}>
-                    <div className="section"></div>
-                        {this.props.children}
-                    <div className="section"></div>
-                </div>
-            </div>
-        );
-    }
-}
 </script>
